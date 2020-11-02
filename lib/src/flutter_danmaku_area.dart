@@ -49,7 +49,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   }
 
   // 修改弹幕速率 0~1
-  bool changeRate(double rate) {
+  void changeRate(double rate) {
     FlutterDanmakuConfig.bulletRate = rate;
   }
 

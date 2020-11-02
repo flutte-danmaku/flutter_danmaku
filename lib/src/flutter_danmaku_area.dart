@@ -15,16 +15,16 @@ class FlutterDanmakuArea extends StatefulWidget {
 
 class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   List<FlutterDanmakuTrack> tracks = [];
-  FlutterDanmakuManager danmakuMagaer = FlutterDanmakuManager();
+  FlutterDanmakuManager danmakuManager = FlutterDanmakuManager();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((Duration callback) {
       initArea();
-      danmakuMagaer.addDanmaku(context, '我曹尼啊');
+      danmakuManager.addDanmaku(context, '我曹尼啊');
       Future.delayed(Duration(milliseconds: 300), () {
-        danmakuMagaer.run(() {
+        danmakuManager.run(() {
           setState(() {});
         });
       });
@@ -32,7 +32,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   }
 
   void addDanmaku(String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
-    widget.key.currentState.danmakuMagaer.addDanmaku(context, text, bulletType: bulletType);
+    widget.key.currentState.danmakuManager.addDanmaku(context, text, bulletType: bulletType);
   }
 
   void changeRate(double rate) {

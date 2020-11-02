@@ -17,14 +17,11 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   List<FlutterDanmakuTrack> tracks = [];
   FlutterDanmakuManager danmakuManager = FlutterDanmakuManager();
 
-  bool get isPause => FlutterDanmakuConfig.pause;
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((Duration callback) {
       _initArea();
-      danmakuManager.addDanmaku(context, '我曹尼啊');
       Future.delayed(Duration(milliseconds: 300), () {
         danmakuManager.run(() {
           setState(() {});
@@ -33,28 +30,37 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
     });
   }
 
+  // 是否暂停
+  bool get isPause => FlutterDanmakuConfig.pause;
+
+  // 添加弹幕
   void addDanmaku(String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
     widget.key.currentState.danmakuManager.addDanmaku(context, text, bulletType: bulletType);
   }
 
+  // 暂停
   void pause() {
     FlutterDanmakuConfig.pause = true;
   }
 
+  // 播放
   void play() {
     FlutterDanmakuConfig.pause = false;
   }
 
-  void changeRate(double rate) {
+  // 修改弹幕速率 0~1
+  bool changeRate(double rate) {
     FlutterDanmakuConfig.bulletRate = rate;
   }
 
-  void changeLableSize(double size) {
-    FlutterDanmakuConfig.bulletLableSize = size;
+  // 修改文字大小
+  void changeLableSize(int size) {
+    FlutterDanmakuConfig.bulletLableSize = size.toDouble();
     FlutterDanmakuTrackManager.recountTrackOffset();
     FlutterDanmakuBulletUtils.recountBulletsOffset();
   }
 
+  // 修改弹幕最大可展示场景的百分比
   void changeShowArea(double percent) {
     if (percent > 1 || percent < 0) return;
     if (percent < FlutterDanmakuConfig.showAreaPercent) {

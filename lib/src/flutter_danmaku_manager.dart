@@ -6,6 +6,15 @@ import 'package:flutter_danmaku/src/flutter_danmaku_bullet.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_bullet_manager.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_track.dart';
 
+enum AddBulletResCode { success, noSpace }
+
+class AddBulletResBody {
+  AddBulletResCode code = AddBulletResCode.success;
+  String message = '';
+  dynamic data;
+  AddBulletResBody(this.code, {this.message, this.data});
+}
+
 class FlutterDanmakuManager {
   static int framerate = 60;
   static int unitTimer = 1000 ~/ FlutterDanmakuManager.framerate;
@@ -27,7 +36,8 @@ class FlutterDanmakuManager {
     });
   }
 
-  void addDanmaku(BuildContext context, String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
+  // 成功返回AddBulletResBody.data为bulletId
+  AddBulletResBody addDanmaku(BuildContext context, String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
     // 先获取子弹尺寸
     Size bulletSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText(text);
     // 寻找可用的轨道
@@ -36,7 +46,10 @@ class FlutterDanmakuManager {
     if (track == null) {
       // 是否允许新建轨道
       bool allowNewTrack = FlutterDanmakuTrackManager.areaAllowBuildNewTrack(bulletSize.height);
-      if (!allowNewTrack) return null;
+      if (!allowNewTrack)
+        return AddBulletResBody(
+          AddBulletResCode.noSpace,
+        );
       track = FlutterDanmakuTrackManager.buildTrack(bulletSize.height);
     }
     FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletUtils.initBullet(text, track.id, bulletSize, track.offsetTop, bulletType: bulletType);
@@ -46,6 +59,7 @@ class FlutterDanmakuManager {
       track.bindFixedBulletId = bullet.id;
     }
     FlutterDanmakuBulletUtils.buildBulletToScreen(context, bullet);
+    return AddBulletResBody(AddBulletResCode.success, data: bullet.id);
   }
 
   _nextFramerate(FlutterDanmakuBulletModel bulletModel) {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -67,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
     danmuarea.currentState.changeRate(rate);
   }
 
-  void changeLableSize(double size) {
+  void changeLableSize(int size) {
     danmuarea.currentState.changeLableSize(size);
   }
 
@@ -80,14 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _incrementCounter() {
-    final wordPair = WordPair.random();
-    danmuarea.currentState.addDanmaku(wordPair.asPascalCase);
-    final wordPair1 = WordPair.random(maxSyllables: 50);
-    danmuarea.currentState.addDanmaku(wordPair1.asPascalCase);
-    final wordPair2 = WordPair.random(maxSyllables: 50);
-    danmuarea.currentState.addDanmaku(wordPair2.asPascalCase);
-    danmuarea.currentState.addDanmaku(wordPair2.asPascalCase, bulletType: FlutterDanmakuBulletType.fixed);
-    Calculator().addOne(121);
+    int random = Random().nextInt(20);
+    danmuarea.currentState.addDanmaku('s' + 's' * random);
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below

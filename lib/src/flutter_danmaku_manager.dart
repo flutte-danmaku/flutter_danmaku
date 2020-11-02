@@ -14,25 +14,17 @@ class FlutterDanmakuManager {
 
   Timer timer;
 
-  void pause() {
-    timer.cancel();
-  }
-
   void run(Function callBack) {
     timer = Timer(Duration(milliseconds: unitTimer), () {
-      // 防止数据在迭代时删除
-      Map<UniqueKey, FlutterDanmakuBulletModel> bulletsCopy = Map.from(FlutterDanmakuManager.bullets);
-      bulletsCopy.forEach((UniqueKey key, FlutterDanmakuBulletModel value) => nextFramerate(value));
-      callBack();
+      // 暂停不执行
+      if (!FlutterDanmakuConfig.pause) {
+        // 防止数据在迭代时删除
+        Map<UniqueKey, FlutterDanmakuBulletModel> bulletsCopy = Map.from(FlutterDanmakuManager.bullets);
+        bulletsCopy.forEach((UniqueKey key, FlutterDanmakuBulletModel value) => _nextFramerate(value));
+        callBack();
+      }
       run(callBack);
     });
-  }
-
-  nextFramerate(FlutterDanmakuBulletModel bulletModel) {
-    bulletModel.runDistance += bulletModel.everyFrameRunDistance * FlutterDanmakuConfig.bulletRate;
-    if (bulletModel.runDistance > bulletModel.maxRunDistance) {
-      FlutterDanmakuBulletUtils.removeBulletById(bulletModel.id, bulletType: bulletModel.bulletType);
-    }
   }
 
   void addDanmaku(BuildContext context, String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
@@ -54,5 +46,12 @@ class FlutterDanmakuManager {
       track.bindFixedBulletId = bullet.id;
     }
     FlutterDanmakuBulletUtils.buildBulletToScreen(context, bullet);
+  }
+
+  _nextFramerate(FlutterDanmakuBulletModel bulletModel) {
+    bulletModel.runDistance += bulletModel.everyFrameRunDistance * FlutterDanmakuConfig.bulletRate;
+    if (bulletModel.runDistance > bulletModel.maxRunDistance) {
+      FlutterDanmakuBulletUtils.removeBulletById(bulletModel.id, bulletType: bulletModel.bulletType);
+    }
   }
 }

@@ -72,7 +72,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void parsud() {
-    danmuarea.currentState.danmakuManager.pause();
+    if (danmuarea.currentState.isPause) {
+      danmuarea.currentState.play();
+    } else {
+      danmuarea.currentState.pause();
+    }
   }
 
   void _incrementCounter() {

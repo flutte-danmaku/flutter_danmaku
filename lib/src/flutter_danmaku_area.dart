@@ -17,11 +17,13 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   List<FlutterDanmakuTrack> tracks = [];
   FlutterDanmakuManager danmakuManager = FlutterDanmakuManager();
 
+  bool get isPause => FlutterDanmakuConfig.pause;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((Duration callback) {
-      initArea();
+      _initArea();
       danmakuManager.addDanmaku(context, '我曹尼啊');
       Future.delayed(Duration(milliseconds: 300), () {
         danmakuManager.run(() {
@@ -33,6 +35,14 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
 
   void addDanmaku(String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
     widget.key.currentState.danmakuManager.addDanmaku(context, text, bulletType: bulletType);
+  }
+
+  void pause() {
+    FlutterDanmakuConfig.pause = true;
+  }
+
+  void play() {
+    FlutterDanmakuConfig.pause = false;
   }
 
   void changeRate(double rate) {
@@ -59,7 +69,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
     FlutterDanmakuConfig.showAreaPercent = percent;
   }
 
-  void initArea() {
+  void _initArea() {
     FlutterDanmakuConfig.areaSize = context.size;
   }
 

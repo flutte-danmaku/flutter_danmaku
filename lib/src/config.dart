@@ -11,6 +11,8 @@ class FlutterDanmakuConfig {
   static Size areaSize;
   // 展示区域百分比
   static double showAreaPercent = 1.0;
+
+  static bool pause = false;
 }
 
 class FlutterDanmakuUtils {

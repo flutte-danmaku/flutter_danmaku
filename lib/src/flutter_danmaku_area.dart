@@ -31,8 +31,8 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
     });
   }
 
-  void addDanmaku(String text) {
-    widget.key.currentState.danmakuMagaer.addDanmaku(context, text);
+  void addDanmaku(String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
+    widget.key.currentState.danmakuMagaer.addDanmaku(context, text, bulletType: bulletType);
   }
 
   void changeRate(double rate) {
@@ -42,6 +42,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   void changeLableSize(double size) {
     FlutterDanmakuConfig.bulletLableSize = size;
     FlutterDanmakuTrackManager.recountTrackOffset();
+    FlutterDanmakuBulletUtils.recountBulletsOffset();
   }
 
   void changeShowArea(double percent) {

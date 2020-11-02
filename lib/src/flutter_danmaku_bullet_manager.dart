@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_danmaku/src/config.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_bullet.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_manager.dart';
+import 'package:flutter_danmaku/src/flutter_danmaku_track.dart';
 
 class FlutterDanmakuBulletUtils {
   // 计算文字尺寸
@@ -32,11 +33,12 @@ class FlutterDanmakuBulletUtils {
   }
 
   // 初始化一个子弹
-  static FlutterDanmakuBulletModel initBullet(String text, UniqueKey trackId, Size bulletSize, double offsetY) {
+  static FlutterDanmakuBulletModel initBullet(String text, UniqueKey trackId, Size bulletSize, double offsetY,
+      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
     UniqueKey bulletId = UniqueKey();
     double everyRunDistance = FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(bulletSize.width);
     FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletModel(
-        id: bulletId, trackId: trackId, text: text, bulletSize: bulletSize, offsetY: offsetY, everyFrameRunDistance: everyRunDistance);
+        id: bulletId, trackId: trackId, text: text, bulletSize: bulletSize, offsetY: offsetY, everyFrameRunDistance: everyRunDistance, bulletType: bulletType);
     // 记录到表上
     FlutterDanmakuManager.bullets[bullet.id] = bullet;
     return bullet;
@@ -48,9 +50,18 @@ class FlutterDanmakuBulletUtils {
     return baseRunDistance + (bulletWidth / 150);
   }
 
-  static void removeBulletById(UniqueKey bulletId) {
+  static void removeBulletById(UniqueKey bulletId, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
     FlutterDanmakuManager.bullets.remove(bulletId);
-    FlutterDanmakuManager.tracks.removeWhere((element) => element.lastBulletId == bulletId);
+    int lastBulletIdx;
+    if (bulletType == FlutterDanmakuBulletType.scroll) {
+      lastBulletIdx = FlutterDanmakuManager.tracks.indexWhere((element) => element.lastBulletId == bulletId);
+      if (lastBulletIdx == -1) return;
+      FlutterDanmakuManager.tracks[lastBulletIdx].lastBulletId = null;
+    } else {
+      lastBulletIdx = FlutterDanmakuManager.tracks.indexWhere((element) => element.bindFixedBulletId == bulletId);
+      if (lastBulletIdx == -1) return;
+      FlutterDanmakuManager.tracks[lastBulletIdx].bindFixedBulletId = null;
+    }
   }
 
   // 剩余多少帧离开屏幕
@@ -62,10 +73,24 @@ class FlutterDanmakuBulletUtils {
   // 构建子弹
   static Widget buildBulletToScreen(BuildContext context, FlutterDanmakuBulletModel bulletModel) {
     FlutterDanmakuBullet bullet = FlutterDanmakuBullet(bulletModel.id, bulletModel.text);
-    return Positioned(right: bulletModel.runDistance - bulletModel.bulletSize.width, top: bulletModel.offsetY, child: bullet);
+    double right = bulletModel.bulletType == FlutterDanmakuBulletType.scroll
+        ? bulletModel.runDistance - bulletModel.bulletSize.width
+        : FlutterDanmakuConfig.areaSize.width / 2 - (bulletModel.bulletSize.width / 2);
+    return Positioned(right: right, top: bulletModel.offsetY, child: bullet);
   }
 
   static List<Widget> buildAllBullet(BuildContext context) {
     return FlutterDanmakuManager.bullets.values.toList().map((e) => buildBulletToScreen(context, e)).toList();
+  }
+
+  // 重制子弹数值
+  static recountBulletsOffset() {
+    // 写的非常脏 但是太累了
+    FlutterDanmakuManager.bullets.forEach((key, value) {
+      dynamic tracks = FlutterDanmakuManager.tracks.where((element) => element.id == value.trackId);
+      if (tracks.isEmpty) return;
+      value.offsetY = tracks.first.offsetTop;
+      value.bulletSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText(value.text);
+    });
   }
 }

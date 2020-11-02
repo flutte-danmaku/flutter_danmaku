@@ -8,24 +8,22 @@ import 'package:flutter_danmaku/src/config.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_bullet_manager.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_manager.dart';
 
-enum FlutterDanmakuTrackType { scroll, fixed }
-
 class FlutterDanmakuTrack {
-  UniqueKey id;
+  UniqueKey id = UniqueKey();
 
   UniqueKey lastBulletId;
+
+  UniqueKey bindFixedBulletId; // 绑定的静止定位弹幕ID
 
   double offsetTop;
 
   double trackHeight;
 
-  FlutterDanmakuTrackType trackType = FlutterDanmakuTrackType.scroll;
-
   FlutterDanmakuTrack(this.trackHeight, this.offsetTop);
 }
 
 class FlutterDanmakuTrackManager {
-  static FlutterDanmakuTrack findAvailableTrack(Size bulletSize) {
+  static FlutterDanmakuTrack findAvailableTrack(Size bulletSize, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
     FlutterDanmakuTrack _track;
     // 轨道列表为空
     if (FlutterDanmakuManager.tracks.isEmpty) return null;
@@ -34,7 +32,7 @@ class FlutterDanmakuTrackManager {
       // 轨道是否溢出工作区
       bool isTrackOverflow = FlutterDanmakuTrackManager.isTrackOverflowArea(FlutterDanmakuManager.tracks[i]);
       if (isTrackOverflow) break;
-      bool allowInsert = FlutterDanmakuTrackManager.trackAllowInsert(FlutterDanmakuManager.tracks[i], bulletSize);
+      bool allowInsert = FlutterDanmakuTrackManager.trackAllowInsert(FlutterDanmakuManager.tracks[i], bulletSize, bulletType: bulletType);
       if (allowInsert) {
         _track = FlutterDanmakuManager.tracks[i];
         break;
@@ -75,10 +73,16 @@ class FlutterDanmakuTrackManager {
   }
 
   // 轨道是否允许被插入
-  static bool trackAllowInsert(FlutterDanmakuTrack track, Size needInsertBulletSize) {
-    if (track.lastBulletId == null) return true;
-    UniqueKey lastBulletId = track.lastBulletId;
+  static bool trackAllowInsert(FlutterDanmakuTrack track, Size needInsertBulletSize, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
+    UniqueKey lastBulletId;
+    if (bulletType == FlutterDanmakuBulletType.scroll) {
+      if (track.lastBulletId == null) return true;
+      lastBulletId = track.lastBulletId;
+    } else if (bulletType == FlutterDanmakuBulletType.fixed) {
+      return track.bindFixedBulletId == null;
+    }
     FlutterDanmakuBulletModel lastBullet = FlutterDanmakuManager.bullets[lastBulletId];
+    if (lastBullet == null) return true;
     // 是否离开了右边的墙壁
     bool hasAllOutRight = lastBullet.runDistance > lastBullet.bulletSize.width;
     if (!hasAllOutRight) return false;

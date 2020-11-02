@@ -71,6 +71,10 @@ class _MyHomePageState extends State<MyHomePage> {
     danmuarea.currentState.changeLableSize(size);
   }
 
+  void parsud() {
+    danmuarea.currentState.danmakuMagaer.pause();
+  }
+
   void _incrementCounter() {
     final wordPair = WordPair.random();
     danmuarea.currentState.addDanmaku(wordPair.asPascalCase);
@@ -78,6 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
     danmuarea.currentState.addDanmaku(wordPair1.asPascalCase);
     final wordPair2 = WordPair.random(maxSyllables: 50);
     danmuarea.currentState.addDanmaku(wordPair2.asPascalCase);
+    danmuarea.currentState.addDanmaku(wordPair2.asPascalCase, bulletType: FlutterDanmakuBulletType.fixed);
     Calculator().addOne(121);
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -155,6 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
               MaterialButton(onPressed: () => changeShowAreaP(0.3), child: Text('change show area 0.3')),
               MaterialButton(onPressed: () => changeShowAreaP(0.5), child: Text('change show area 0.5')),
               MaterialButton(onPressed: () => changeShowAreaP(1.0), child: Text('change show area 1')),
+              MaterialButton(onPressed: () => parsud(), child: Text('暂停')),
             ],
           ),
         ),

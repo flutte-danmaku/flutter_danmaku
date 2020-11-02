@@ -5,6 +5,8 @@ import 'package:flutter_danmaku/flutter_danmaku.dart';
 import 'package:flutter_danmaku/src/config.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_manager.dart';
 
+enum FlutterDanmakuBulletType { scroll, fixed }
+
 class FlutterDanmakuBulletModel {
   UniqueKey id;
   UniqueKey trackId;
@@ -14,12 +16,11 @@ class FlutterDanmakuBulletModel {
   double runDistance = 0;
   double everyFrameRunDistance = 1;
 
+  FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll;
+
   double get maxRunDistance => bulletSize.width + FlutterDanmakuConfig.areaSize.width;
 
-  // create time
-  final int timestamp = DateTime.now().millisecondsSinceEpoch;
-
-  FlutterDanmakuBulletModel({this.id, this.trackId, this.text, this.bulletSize, this.offsetY, this.everyFrameRunDistance});
+  FlutterDanmakuBulletModel({this.id, this.trackId, this.text, this.bulletSize, this.offsetY, this.everyFrameRunDistance, this.bulletType});
 }
 
 class FlutterDanmakuBullet extends StatelessWidget {

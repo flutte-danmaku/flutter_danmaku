@@ -14,6 +14,10 @@ class FlutterDanmakuManager {
 
   Timer timer;
 
+  void pause() {
+    timer.cancel();
+  }
+
   void run(Function callBack) {
     timer = Timer(Duration(milliseconds: unitTimer), () {
       // 防止数据在迭代时删除
@@ -27,15 +31,15 @@ class FlutterDanmakuManager {
   nextFramerate(FlutterDanmakuBulletModel bulletModel) {
     bulletModel.runDistance += bulletModel.everyFrameRunDistance * FlutterDanmakuConfig.bulletRate;
     if (bulletModel.runDistance > bulletModel.maxRunDistance) {
-      FlutterDanmakuBulletUtils.removeBulletById(bulletModel.id);
+      FlutterDanmakuBulletUtils.removeBulletById(bulletModel.id, bulletType: bulletModel.bulletType);
     }
   }
 
-  void addDanmaku(BuildContext context, String text) {
+  void addDanmaku(BuildContext context, String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
     // 先获取子弹尺寸
     Size bulletSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText(text);
     // 寻找可用的轨道
-    FlutterDanmakuTrack track = FlutterDanmakuTrackManager.findAvailableTrack(bulletSize);
+    FlutterDanmakuTrack track = FlutterDanmakuTrackManager.findAvailableTrack(bulletSize, bulletType: bulletType);
     // 如果没有找到可用的轨道
     if (track == null) {
       // 是否允许新建轨道
@@ -43,8 +47,12 @@ class FlutterDanmakuManager {
       if (!allowNewTrack) return null;
       track = FlutterDanmakuTrackManager.buildTrack(bulletSize.height);
     }
-    FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletUtils.initBullet(text, track.id, bulletSize, track.offsetTop);
-    track.lastBulletId = bullet.id;
+    FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletUtils.initBullet(text, track.id, bulletSize, track.offsetTop, bulletType: bulletType);
+    if (bulletType == FlutterDanmakuBulletType.scroll) {
+      track.lastBulletId = bullet.id;
+    } else {
+      track.bindFixedBulletId = bullet.id;
+    }
     FlutterDanmakuBulletUtils.buildBulletToScreen(context, bullet);
   }
 }

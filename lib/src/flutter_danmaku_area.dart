@@ -79,6 +79,11 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
     FlutterDanmakuConfig.areaSize = context.size;
   }
 
+  // 销毁前需要调用取消监听器
+  void dipose() {
+    danmakuManager.timer.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(

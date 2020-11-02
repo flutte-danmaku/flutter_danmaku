@@ -71,13 +71,18 @@ class _MyHomePageState extends State<MyHomePage> {
     danmuarea.currentState.changeLableSize(size);
   }
 
+  void parsud() {
+    danmuarea.currentState.danmakuMagaer.pause();
+  }
+
   void _incrementCounter() {
     final wordPair = WordPair.random();
-    danmuarea.currentState.appendDanmaku(wordPair.asPascalCase);
+    danmuarea.currentState.addDanmaku(wordPair.asPascalCase);
     final wordPair1 = WordPair.random(maxSyllables: 50);
-    danmuarea.currentState.appendDanmaku(wordPair1.asPascalCase);
+    danmuarea.currentState.addDanmaku(wordPair1.asPascalCase);
     final wordPair2 = WordPair.random(maxSyllables: 50);
-    danmuarea.currentState.appendDanmaku(wordPair2.asPascalCase);
+    danmuarea.currentState.addDanmaku(wordPair2.asPascalCase);
+    danmuarea.currentState.addDanmaku(wordPair2.asPascalCase, bulletType: FlutterDanmakuBulletType.fixed);
     Calculator().addOne(121);
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -96,11 +101,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   appendDanmaku() {
-    const timeout = const Duration(milliseconds: 500);
-    Timer(timeout, () {
-      _incrementCounter();
-      appendDanmaku();
-    });
+    // const timeout = const Duration(milliseconds: 500);
+    // Timer(timeout, () {
+    //   _incrementCounter();
+    //   appendDanmaku();
+    // });
   }
 
   hengshuping() {
@@ -155,6 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
               MaterialButton(onPressed: () => changeShowAreaP(0.3), child: Text('change show area 0.3')),
               MaterialButton(onPressed: () => changeShowAreaP(0.5), child: Text('change show area 0.5')),
               MaterialButton(onPressed: () => changeShowAreaP(1.0), child: Text('change show area 1')),
+              MaterialButton(onPressed: () => parsud(), child: Text('暂停')),
             ],
           ),
         ),

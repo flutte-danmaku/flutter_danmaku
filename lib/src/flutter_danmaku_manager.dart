@@ -37,7 +37,7 @@ class FlutterDanmakuManager {
   }
 
   // 成功返回AddBulletResBody.data为bulletId
-  AddBulletResBody addDanmaku(BuildContext context, String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
+  AddBulletResBody addDanmaku(BuildContext context, String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, color}) {
     // 先获取子弹尺寸
     Size bulletSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText(text);
     // 寻找可用的轨道
@@ -52,7 +52,7 @@ class FlutterDanmakuManager {
         );
       track = FlutterDanmakuTrackManager.buildTrack(bulletSize.height);
     }
-    FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletUtils.initBullet(text, track.id, bulletSize, track.offsetTop, bulletType: bulletType);
+    FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletUtils.initBullet(text, track.id, bulletSize, track.offsetTop, bulletType: bulletType, color: color);
     if (bulletType == FlutterDanmakuBulletType.scroll) {
       track.lastBulletId = bullet.id;
     } else {

@@ -34,11 +34,18 @@ class FlutterDanmakuBulletUtils {
 
   // 初始化一个子弹
   static FlutterDanmakuBulletModel initBullet(String text, UniqueKey trackId, Size bulletSize, double offsetY,
-      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
+      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, color}) {
     UniqueKey bulletId = UniqueKey();
     double everyRunDistance = FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(bulletSize.width);
     FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletModel(
-        id: bulletId, trackId: trackId, text: text, bulletSize: bulletSize, offsetY: offsetY, everyFrameRunDistance: everyRunDistance, bulletType: bulletType);
+        color: color,
+        id: bulletId,
+        trackId: trackId,
+        text: text,
+        bulletSize: bulletSize,
+        offsetY: offsetY,
+        everyFrameRunDistance: everyRunDistance,
+        bulletType: bulletType);
     // 记录到表上
     FlutterDanmakuManager.bullets[bullet.id] = bullet;
     return bullet;
@@ -72,7 +79,7 @@ class FlutterDanmakuBulletUtils {
 
   // 构建子弹
   static Widget buildBulletToScreen(BuildContext context, FlutterDanmakuBulletModel bulletModel) {
-    FlutterDanmakuBullet bullet = FlutterDanmakuBullet(bulletModel.id, bulletModel.text);
+    FlutterDanmakuBullet bullet = FlutterDanmakuBullet(bulletModel.id, bulletModel.text, color: bulletModel.color);
     double right = bulletModel.bulletType == FlutterDanmakuBulletType.scroll
         ? bulletModel.runDistance - bulletModel.bulletSize.width
         : FlutterDanmakuConfig.areaSize.width / 2 - (bulletModel.bulletSize.width / 2);

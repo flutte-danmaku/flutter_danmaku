@@ -34,8 +34,8 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   bool get isPause => FlutterDanmakuConfig.pause;
 
   // 添加弹幕
-  void addDanmaku(String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
-    widget.key.currentState.danmakuManager.addDanmaku(context, text, bulletType: bulletType);
+  void addDanmaku(String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color = FlutterDanmakuConfig.defaultColor}) {
+    widget.key.currentState.danmakuManager.addDanmaku(context, text, bulletType: bulletType, color: color);
   }
 
   // 暂停
@@ -51,6 +51,10 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   // 修改弹幕速率 0~1
   void changeRate(double rate) {
     FlutterDanmakuConfig.bulletRate = rate;
+  }
+
+  void changeOpacity(double opacity) {
+    FlutterDanmakuConfig.opacity = opacity;
   }
 
   // 修改文字大小

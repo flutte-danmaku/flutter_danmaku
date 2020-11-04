@@ -15,19 +15,21 @@ class FlutterDanmakuBulletModel {
   double offsetY;
   double runDistance = 0;
   double everyFrameRunDistance = 1;
+  Color color = Colors.black;
 
   FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll;
 
   double get maxRunDistance => bulletSize.width + FlutterDanmakuConfig.areaSize.width;
 
-  FlutterDanmakuBulletModel({this.id, this.trackId, this.text, this.bulletSize, this.offsetY, this.everyFrameRunDistance, this.bulletType});
+  FlutterDanmakuBulletModel({this.id, this.trackId, this.text, this.bulletSize, this.offsetY, this.everyFrameRunDistance, this.bulletType, this.color});
 }
 
 class FlutterDanmakuBullet extends StatelessWidget {
-  FlutterDanmakuBullet(this.danmakuId, this.text);
+  FlutterDanmakuBullet(this.danmakuId, this.text, {this.color});
 
   String text;
   UniqueKey danmakuId;
+  Color color = Colors.black;
 
   GlobalKey key;
 
@@ -36,7 +38,7 @@ class FlutterDanmakuBullet extends StatelessWidget {
     return Text(
       text,
       key: key,
-      style: TextStyle(fontSize: FlutterDanmakuConfig.bulletLableSize, color: Colors.blueGrey),
+      style: TextStyle(fontSize: FlutterDanmakuConfig.bulletLableSize, color: color.withOpacity(FlutterDanmakuConfig.opacity)),
     );
   }
 }

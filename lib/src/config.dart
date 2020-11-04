@@ -11,6 +11,12 @@ class FlutterDanmakuConfig {
   static Size areaSize;
   // 展示区域百分比
   static double showAreaPercent = 1.0;
+
+  static double opacity = 1.0;
+
+  static bool pause = false;
+
+  static const Color defaultColor = Colors.black;
 }
 
 class FlutterDanmakuUtils {

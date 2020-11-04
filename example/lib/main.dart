@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -67,23 +68,25 @@ class _MyHomePageState extends State<MyHomePage> {
     danmuarea.currentState.changeRate(rate);
   }
 
-  void changeLableSize(double size) {
+  void changeLableSize(int size) {
     danmuarea.currentState.changeLableSize(size);
   }
 
+  void changeShowOpacity(double opacity) {
+    danmuarea.currentState.changeOpacity(opacity);
+  }
+
   void parsud() {
-    danmuarea.currentState.danmakuMagaer.pause();
+    if (danmuarea.currentState.isPause) {
+      danmuarea.currentState.play();
+    } else {
+      danmuarea.currentState.pause();
+    }
   }
 
   void _incrementCounter() {
-    final wordPair = WordPair.random();
-    danmuarea.currentState.addDanmaku(wordPair.asPascalCase);
-    final wordPair1 = WordPair.random(maxSyllables: 50);
-    danmuarea.currentState.addDanmaku(wordPair1.asPascalCase);
-    final wordPair2 = WordPair.random(maxSyllables: 50);
-    danmuarea.currentState.addDanmaku(wordPair2.asPascalCase);
-    danmuarea.currentState.addDanmaku(wordPair2.asPascalCase, bulletType: FlutterDanmakuBulletType.fixed);
-    Calculator().addOne(121);
+    int random = Random().nextInt(20);
+    danmuarea.currentState.addDanmaku('s' + 's' * random, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
@@ -149,18 +152,30 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               FlutterDanmakuArea(key: danmuarea, child: Container(color: Colors.red, height: 320, width: 300)),
-              MaterialButton(onPressed: () => changeRate(0.5), child: Text('变倍率0.5')),
-              MaterialButton(onPressed: () => changeRate(0.8), child: Text('变倍率0.8')),
-              MaterialButton(onPressed: () => changeRate(1.2), child: Text('变倍率1.2')),
-              MaterialButton(onPressed: () => changeRate(1.5), child: Text('变倍率1.5')),
-              MaterialButton(onPressed: () => changeRate(3), child: Text('变倍率3')),
-              MaterialButton(onPressed: () => changeLableSize(12), child: Text('change lable Size 12')),
-              MaterialButton(onPressed: () => changeLableSize(16), child: Text('change lable Size 24')),
-              MaterialButton(onPressed: () => changeLableSize(24), child: Text('change lable Size 48')),
-              MaterialButton(onPressed: () => changeShowAreaP(0.3), child: Text('change show area 0.3')),
-              MaterialButton(onPressed: () => changeShowAreaP(0.5), child: Text('change show area 0.5')),
-              MaterialButton(onPressed: () => changeShowAreaP(1.0), child: Text('change show area 1')),
-              MaterialButton(onPressed: () => parsud(), child: Text('暂停')),
+              Container(
+                  height: 500,
+                  child: GridView(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3, //横轴三个子widget
+                        childAspectRatio: 3),
+                    children: [
+                      MaterialButton(onPressed: () => changeRate(0.5), child: Text('变倍率0.5')),
+                      MaterialButton(onPressed: () => changeRate(0.8), child: Text('变倍率0.8')),
+                      MaterialButton(onPressed: () => changeRate(1.2), child: Text('变倍率1.2')),
+                      MaterialButton(onPressed: () => changeRate(1.5), child: Text('变倍率1.5')),
+                      MaterialButton(onPressed: () => changeRate(3), child: Text('变倍率3')),
+                      MaterialButton(onPressed: () => changeLableSize(12), child: Text('change lable Size 12')),
+                      MaterialButton(onPressed: () => changeLableSize(16), child: Text('change lable Size 24')),
+                      MaterialButton(onPressed: () => changeLableSize(24), child: Text('change lable Size 48')),
+                      MaterialButton(onPressed: () => changeShowAreaP(0.3), child: Text('change show area 0.3')),
+                      MaterialButton(onPressed: () => changeShowAreaP(0.5), child: Text('change show area 0.5')),
+                      MaterialButton(onPressed: () => changeShowAreaP(1.0), child: Text('change show area 1')),
+                      MaterialButton(onPressed: () => changeShowOpacity(1.0), child: Text('change show opacity 1')),
+                      MaterialButton(onPressed: () => changeShowOpacity(0.5), child: Text('change show opacity 0.5')),
+                      MaterialButton(onPressed: () => changeShowOpacity(0.2), child: Text('change show opacity 0.2')),
+                      MaterialButton(onPressed: () => parsud(), child: Text('暂停'))
+                    ],
+                  )),
             ],
           ),
         ),

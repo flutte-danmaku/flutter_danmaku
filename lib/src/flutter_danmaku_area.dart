@@ -15,36 +15,56 @@ class FlutterDanmakuArea extends StatefulWidget {
 
 class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   List<FlutterDanmakuTrack> tracks = [];
-  FlutterDanmakuManager danmakuMagaer = FlutterDanmakuManager();
+  FlutterDanmakuManager danmakuManager = FlutterDanmakuManager();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((Duration callback) {
-      initArea();
-      danmakuMagaer.addDanmaku(context, '我曹尼啊');
+      _initArea();
       Future.delayed(Duration(milliseconds: 300), () {
-        danmakuMagaer.run(() {
+        danmakuManager.run(() {
           setState(() {});
         });
       });
     });
   }
 
-  void addDanmaku(String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
-    widget.key.currentState.danmakuMagaer.addDanmaku(context, text, bulletType: bulletType);
+  // 是否暂停
+  bool get isPause => FlutterDanmakuConfig.pause;
+
+  // 添加弹幕
+  void addDanmaku(String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color = FlutterDanmakuConfig.defaultColor}) {
+    widget.key.currentState.danmakuManager.addDanmaku(context, text, bulletType: bulletType, color: color);
   }
 
+  // 暂停
+  void pause() {
+    FlutterDanmakuConfig.pause = true;
+  }
+
+  // 播放
+  void play() {
+    FlutterDanmakuConfig.pause = false;
+  }
+
+  // 修改弹幕速率 0~1
   void changeRate(double rate) {
     FlutterDanmakuConfig.bulletRate = rate;
   }
 
-  void changeLableSize(double size) {
-    FlutterDanmakuConfig.bulletLableSize = size;
+  void changeOpacity(double opacity) {
+    FlutterDanmakuConfig.opacity = opacity;
+  }
+
+  // 修改文字大小
+  void changeLableSize(int size) {
+    FlutterDanmakuConfig.bulletLableSize = size.toDouble();
     FlutterDanmakuTrackManager.recountTrackOffset();
     FlutterDanmakuBulletUtils.recountBulletsOffset();
   }
 
+  // 修改弹幕最大可展示场景的百分比
   void changeShowArea(double percent) {
     if (percent > 1 || percent < 0) return;
     if (percent < FlutterDanmakuConfig.showAreaPercent) {
@@ -59,8 +79,13 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
     FlutterDanmakuConfig.showAreaPercent = percent;
   }
 
-  void initArea() {
+  void _initArea() {
     FlutterDanmakuConfig.areaSize = context.size;
+  }
+
+  // 销毁前需要调用取消监听器
+  void dipose() {
+    danmakuManager.timer.cancel();
   }
 
   @override

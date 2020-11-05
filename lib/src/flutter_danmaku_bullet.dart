@@ -35,10 +35,28 @@ class FlutterDanmakuBullet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      key: key,
-      style: TextStyle(fontSize: FlutterDanmakuConfig.bulletLableSize, color: color.withOpacity(FlutterDanmakuConfig.opacity)),
+    return Stack(
+      children: <Widget>[
+        // Stroked text as border.
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: FlutterDanmakuConfig.bulletLableSize,
+            foreground: Paint()
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 0.5
+              ..color = Colors.white,
+          ),
+        ),
+        // Solid text as fill.
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: FlutterDanmakuConfig.bulletLableSize,
+            color: color.withOpacity(FlutterDanmakuConfig.opacity),
+          ),
+        ),
+      ],
     );
   }
 }

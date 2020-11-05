@@ -56,7 +56,7 @@ class FlutterDanmakuTrackManager {
 
   // 重新计算轨道高度和距顶
   static void recountTrackOffset() {
-    Size currentLabelSize = FlutterDanmakuUtils.getDanmakuBulletSizeByText('s');
+    Size currentLabelSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText('s');
     for (int i = 0; i < FlutterDanmakuManager.tracks.length; i++) {
       FlutterDanmakuManager.tracks[i].offsetTop = i * currentLabelSize.height;
       FlutterDanmakuManager.tracks[i].trackHeight = currentLabelSize.height;

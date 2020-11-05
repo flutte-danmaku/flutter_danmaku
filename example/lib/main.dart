@@ -103,15 +103,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    appendDanmaku();
-  }
-
-  appendDanmaku() {
-    // const timeout = const Duration(milliseconds: 500);
-    // Timer(timeout, () {
-    //   _incrementCounter();
-    //   appendDanmaku();
-    // });
+    Future.delayed(Duration(milliseconds: 500), () {
+      danmuarea.currentState.init();
+    });
   }
 
   hengshuping() {
@@ -167,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // horizontal).
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              FlutterDanmakuArea(key: danmuarea, child: Container(color: Colors.red, height: heng ? 500 : 220, width: double.infinity)),
+              FlutterDanmakuArea(key: danmuarea, child: Container(color: Colors.black, height: heng ? 500 : 220, width: double.infinity)),
               Container(
                   height: 500,
                   child: GridView(

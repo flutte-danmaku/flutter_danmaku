@@ -7,8 +7,11 @@ import 'package:flutter_danmaku/src/flutter_danmaku_manager.dart';
 
 class FlutterDanmakuArea extends StatefulWidget {
   FlutterDanmakuArea({this.key, @required this.child}) : super(key: key);
-  Widget child;
-  GlobalKey<FlutterDanmakuAreaState> key;
+
+  final Widget child;
+
+  final GlobalKey<FlutterDanmakuAreaState> key;
+
   @override
   State<FlutterDanmakuArea> createState() => FlutterDanmakuAreaState();
 }
@@ -19,19 +22,16 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
 
   void _initArea() {
     FlutterDanmakuConfig.areaSize = context.size;
+    Future.delayed(Duration(milliseconds: 300), () {
+      _danmakuManager.run(() {
+        setState(() {});
+      });
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((Duration callback) {
-      _initArea();
-      Future.delayed(Duration(milliseconds: 300), () {
-        _danmakuManager.run(() {
-          setState(() {});
-        });
-      });
-    });
   }
 
   // 是否暂停
@@ -40,6 +40,11 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   // 添加弹幕
   void addDanmaku(String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color = FlutterDanmakuConfig.defaultColor}) {
     widget.key.currentState._danmakuManager.addDanmaku(context, text, bulletType: bulletType, color: color);
+  }
+
+  // 初始化
+  void init() {
+    _initArea();
   }
 
   // 暂停

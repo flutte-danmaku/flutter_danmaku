@@ -45,7 +45,7 @@ class FlutterDanmakuBullet extends StatelessWidget {
             foreground: Paint()
               ..style = PaintingStyle.stroke
               ..strokeWidth = 0.5
-              ..color = Colors.white,
+              ..color = Colors.white.withOpacity(FlutterDanmakuConfig.opacity),
           ),
         ),
         // Solid text as fill.

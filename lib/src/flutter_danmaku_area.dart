@@ -64,6 +64,11 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
     FlutterDanmakuBulletUtils.recountBulletsOffset();
   }
 
+  // 改变视图尺寸后调用，比如全屏
+  void resizeArea() {
+    _initArea();
+  }
+
   // 修改弹幕最大可展示场景的百分比
   void changeShowArea(double percent) {
     if (percent > 1 || percent < 0) return;

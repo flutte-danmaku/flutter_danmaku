@@ -34,7 +34,10 @@ class FlutterDanmakuBulletUtils {
 
   // 初始化一个子弹
   static FlutterDanmakuBulletModel initBullet(String text, UniqueKey trackId, Size bulletSize, double offsetY,
-      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, color}) {
+      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color}) {
+    assert(bulletSize.height > 0);
+    assert(bulletSize.width > 0);
+    assert(offsetY >= 0);
     UniqueKey bulletId = UniqueKey();
     double everyRunDistance = FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(bulletSize.width);
     FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletModel(
@@ -53,6 +56,7 @@ class FlutterDanmakuBulletUtils {
 
   // 根据文字长度计算每一帧需要run多少距离
   static double getBulletEveryFramerateRunDistance(double bulletWidth) {
+    assert(bulletWidth > 0);
     double baseRunDistance = 1;
     return baseRunDistance + (bulletWidth / 150);
   }
@@ -73,6 +77,9 @@ class FlutterDanmakuBulletUtils {
 
   // 剩余多少帧离开屏幕
   static double remainderTimeLeaveScreen(double runDistance, double textWidth, double everyFramerateDistance) {
+    assert(runDistance >= 0);
+    assert(textWidth >= 0);
+    assert(everyFramerateDistance > 0);
     double remanderDistance = (FlutterDanmakuConfig.areaSize.width + textWidth) - runDistance;
     return remanderDistance / everyFramerateDistance;
   }

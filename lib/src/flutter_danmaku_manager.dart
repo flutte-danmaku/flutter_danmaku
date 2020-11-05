@@ -27,9 +27,10 @@ class FlutterDanmakuManager {
     timer = Timer(Duration(milliseconds: unitTimer), () {
       // 暂停不执行
       if (!FlutterDanmakuConfig.pause) {
-        // 防止数据在迭代时删除
-        Map<UniqueKey, FlutterDanmakuBulletModel> bulletsCopy = Map.from(FlutterDanmakuManager.bullets);
-        bulletsCopy.forEach((UniqueKey key, FlutterDanmakuBulletModel value) => _nextFramerate(value));
+        for (int i = FlutterDanmakuManager.bullets.length - 1; i >= 0; i--) {
+          UniqueKey key = FlutterDanmakuManager.bullets.keys.toList()[i];
+          _nextFramerate(FlutterDanmakuManager.bullets[key]);
+        }
         callBack();
       }
       run(callBack);
@@ -37,7 +38,8 @@ class FlutterDanmakuManager {
   }
 
   // 成功返回AddBulletResBody.data为bulletId
-  AddBulletResBody addDanmaku(BuildContext context, String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, color}) {
+  AddBulletResBody addDanmaku(BuildContext context, String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color}) {
+    assert(text.isNotEmpty);
     // 先获取子弹尺寸
     Size bulletSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText(text);
     // 寻找可用的轨道

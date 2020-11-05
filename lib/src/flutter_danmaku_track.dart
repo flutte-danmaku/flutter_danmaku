@@ -24,6 +24,8 @@ class FlutterDanmakuTrack {
 
 class FlutterDanmakuTrackManager {
   static FlutterDanmakuTrack findAvailableTrack(Size bulletSize, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
+    assert(bulletSize.height > 0);
+    assert(bulletSize.width > 0);
     FlutterDanmakuTrack _track;
     // 轨道列表为空
     if (FlutterDanmakuManager.tracks.isEmpty) return null;
@@ -42,6 +44,7 @@ class FlutterDanmakuTrackManager {
   }
 
   static FlutterDanmakuTrack buildTrack(double trackHeight) {
+    assert(trackHeight > 0);
     double trackOffsetTop = 0;
     if (FlutterDanmakuManager.tracks.isNotEmpty) {
       trackOffsetTop = FlutterDanmakuManager.tracks.last.offsetTop + FlutterDanmakuManager.tracks.last.trackHeight;
@@ -67,6 +70,7 @@ class FlutterDanmakuTrackManager {
 
   // 是否允许建立新轨道
   static bool areaAllowBuildNewTrack(double needBuildTrackHeight) {
+    assert(needBuildTrackHeight > 0);
     if (FlutterDanmakuManager.tracks.isEmpty) return true;
     double currentAllTrackHeight = FlutterDanmakuManager.tracks.last.offsetTop + FlutterDanmakuManager.tracks.last.trackHeight;
     return FlutterDanmakuConfig.areaSize.height * FlutterDanmakuConfig.showAreaPercent - currentAllTrackHeight >= needBuildTrackHeight;
@@ -75,6 +79,8 @@ class FlutterDanmakuTrackManager {
   // 轨道是否允许被插入
   static bool trackAllowInsert(FlutterDanmakuTrack track, Size needInsertBulletSize, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
     UniqueKey lastBulletId;
+    assert(needInsertBulletSize.height > 0);
+    assert(needInsertBulletSize.width > 0);
     if (bulletType == FlutterDanmakuBulletType.scroll) {
       if (track.lastBulletId == null) return true;
       lastBulletId = track.lastBulletId;

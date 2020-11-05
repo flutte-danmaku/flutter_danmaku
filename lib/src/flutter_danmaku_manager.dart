@@ -27,8 +27,9 @@ class FlutterDanmakuManager {
     timer = Timer(Duration(milliseconds: unitTimer), () {
       // 暂停不执行
       if (!FlutterDanmakuConfig.pause) {
+        List<UniqueKey> bulletKeys = FlutterDanmakuManager.bullets.keys.toList();
         for (int i = FlutterDanmakuManager.bullets.length - 1; i >= 0; i--) {
-          UniqueKey key = FlutterDanmakuManager.bullets.keys.toList()[i];
+          UniqueKey key = bulletKeys[i];
           _nextFramerate(FlutterDanmakuManager.bullets[key]);
         }
         callBack();

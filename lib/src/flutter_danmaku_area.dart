@@ -19,9 +19,12 @@ class FlutterDanmakuArea extends StatefulWidget {
 class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   List<FlutterDanmakuTrack> _tracks = [];
   FlutterDanmakuManager _danmakuManager = FlutterDanmakuManager();
+  bool _inited = false;
 
   void _initArea() {
     FlutterDanmakuConfig.areaSize = context.size;
+    if (_inited) return;
+    _inited = true;
     Future.delayed(Duration(milliseconds: 300), () {
       _danmakuManager.run(() {
         setState(() {});

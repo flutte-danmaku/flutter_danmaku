@@ -1,4 +1,4 @@
-# flutter_danmaku
+# 👏 Flutter Danmaku
 
 A new Flutter package project.
 

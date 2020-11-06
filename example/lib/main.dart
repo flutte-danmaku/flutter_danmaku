@@ -57,6 +57,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  bool heng = false;
 
   GlobalKey<FlutterDanmakuAreaState> danmuarea = GlobalKey();
 
@@ -87,6 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void _incrementCounter() {
     int random = Random().nextInt(20);
     danmuarea.currentState.addDanmaku('s' + 's' * random, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
+    danmuarea.currentState
+        .addDanmaku('s' + 's' * random, bulletType: FlutterDanmakuBulletType.fixed, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
@@ -100,20 +103,32 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    appendDanmaku();
-  }
-
-  appendDanmaku() {
-    // const timeout = const Duration(milliseconds: 500);
-    // Timer(timeout, () {
-    //   _incrementCounter();
-    //   appendDanmaku();
-    // });
+    Future.delayed(Duration(milliseconds: 500), () {
+      danmuarea.currentState.init();
+    });
   }
 
   hengshuping() {
     // 强制横屏
     SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    setState(() {
+      heng = true;
+    });
+    Future.delayed(Duration(milliseconds: 500), () {
+      danmuarea.currentState.resizeArea();
+    });
+  }
+
+  resethengshuping() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    setState(() {
+      heng = false;
+    });
+    Future.delayed(Duration(milliseconds: 500), () {
+      danmuarea.currentState.resizeArea();
+    });
   }
 
   @override
@@ -125,11 +140,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -151,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // horizontal).
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              FlutterDanmakuArea(key: danmuarea, child: Container(color: Colors.red, height: 320, width: 300)),
+              FlutterDanmakuArea(key: danmuarea, child: Container(color: Colors.black, height: heng ? 500 : 220, width: double.infinity)),
               Container(
                   height: 500,
                   child: GridView(
@@ -159,6 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         crossAxisCount: 3, //横轴三个子widget
                         childAspectRatio: 3),
                     children: [
+                      MaterialButton(onPressed: () => resethengshuping(), child: Text('复原横屏')),
                       MaterialButton(onPressed: () => changeRate(0.5), child: Text('变倍率0.5')),
                       MaterialButton(onPressed: () => changeRate(0.8), child: Text('变倍率0.8')),
                       MaterialButton(onPressed: () => changeRate(1.2), child: Text('变倍率1.2')),
@@ -173,6 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       MaterialButton(onPressed: () => changeShowOpacity(1.0), child: Text('change show opacity 1')),
                       MaterialButton(onPressed: () => changeShowOpacity(0.5), child: Text('change show opacity 0.5')),
                       MaterialButton(onPressed: () => changeShowOpacity(0.2), child: Text('change show opacity 0.2')),
+                      MaterialButton(onPressed: () => hengshuping(), child: Text('横屏')),
                       MaterialButton(onPressed: () => parsud(), child: Text('暂停'))
                     ],
                   )),

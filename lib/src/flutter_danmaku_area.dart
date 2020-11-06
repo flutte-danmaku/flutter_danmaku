@@ -7,27 +7,34 @@ import 'package:flutter_danmaku/src/flutter_danmaku_manager.dart';
 
 class FlutterDanmakuArea extends StatefulWidget {
   FlutterDanmakuArea({this.key, @required this.child}) : super(key: key);
-  Widget child;
-  GlobalKey<FlutterDanmakuAreaState> key;
+
+  final Widget child;
+
+  final GlobalKey<FlutterDanmakuAreaState> key;
+
   @override
   State<FlutterDanmakuArea> createState() => FlutterDanmakuAreaState();
 }
 
 class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
-  List<FlutterDanmakuTrack> tracks = [];
-  FlutterDanmakuManager danmakuManager = FlutterDanmakuManager();
+  List<FlutterDanmakuTrack> _tracks = [];
+  FlutterDanmakuManager _danmakuManager = FlutterDanmakuManager();
+  bool _inited = false;
+
+  void _initArea() {
+    FlutterDanmakuConfig.areaSize = context.size;
+    if (_inited) return;
+    _inited = true;
+    Future.delayed(Duration(milliseconds: 300), () {
+      _danmakuManager.run(() {
+        setState(() {});
+      });
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((Duration callback) {
-      _initArea();
-      Future.delayed(Duration(milliseconds: 300), () {
-        danmakuManager.run(() {
-          setState(() {});
-        });
-      });
-    });
   }
 
   // 是否暂停
@@ -35,7 +42,12 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
 
   // 添加弹幕
   void addDanmaku(String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color = FlutterDanmakuConfig.defaultColor}) {
-    widget.key.currentState.danmakuManager.addDanmaku(context, text, bulletType: bulletType, color: color);
+    widget.key.currentState._danmakuManager.addDanmaku(context, text, bulletType: bulletType, color: color);
+  }
+
+  // 初始化
+  void init() {
+    _initArea();
   }
 
   // 暂停
@@ -48,30 +60,41 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
     FlutterDanmakuConfig.pause = false;
   }
 
-  // 修改弹幕速率 0~1
+  // 修改弹幕速率
   void changeRate(double rate) {
+    assert(rate > 0);
     FlutterDanmakuConfig.bulletRate = rate;
   }
 
   void changeOpacity(double opacity) {
+    assert(opacity <= 1);
+    assert(opacity >= 0);
     FlutterDanmakuConfig.opacity = opacity;
   }
 
   // 修改文字大小
   void changeLableSize(int size) {
+    assert(size > 0);
     FlutterDanmakuConfig.bulletLableSize = size.toDouble();
     FlutterDanmakuTrackManager.recountTrackOffset();
     FlutterDanmakuBulletUtils.recountBulletsOffset();
   }
 
+  // 改变视图尺寸后调用，比如全屏
+  void resizeArea() {
+    _initArea();
+  }
+
   // 修改弹幕最大可展示场景的百分比
   void changeShowArea(double percent) {
+    assert(percent <= 1);
+    assert(percent >= 0);
     if (percent > 1 || percent < 0) return;
     if (percent < FlutterDanmakuConfig.showAreaPercent) {
-      for (int i = 0; i < tracks.length; i++) {
+      for (int i = 0; i < _tracks.length; i++) {
         // 把溢出的轨道之后全部删掉
-        if (FlutterDanmakuTrackManager.isTrackOverflowArea(tracks[i])) {
-          tracks.removeRange(i, tracks.length);
+        if (FlutterDanmakuTrackManager.isTrackOverflowArea(_tracks[i])) {
+          _tracks.removeRange(i, _tracks.length);
           break;
         }
       }
@@ -79,13 +102,9 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
     FlutterDanmakuConfig.showAreaPercent = percent;
   }
 
-  void _initArea() {
-    FlutterDanmakuConfig.areaSize = context.size;
-  }
-
   // 销毁前需要调用取消监听器
   void dipose() {
-    danmakuManager.timer.cancel();
+    _danmakuManager.timer.cancel();
   }
 
   @override

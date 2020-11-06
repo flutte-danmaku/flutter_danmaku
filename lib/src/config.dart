@@ -18,28 +18,3 @@ class FlutterDanmakuConfig {
 
   static const Color defaultColor = Colors.black;
 }
-
-class FlutterDanmakuUtils {
-  // 获取文字的长度
-  static Size getDanmakuBulletSizeByText(String text) {
-    final constraints = BoxConstraints(
-      maxWidth: 999.0, // maxwidth calculated
-      minHeight: 0.0,
-      minWidth: 0.0,
-    );
-    RenderParagraph renderParagraph = RenderParagraph(
-      TextSpan(
-        text: text,
-        style: TextStyle(
-          fontSize: FlutterDanmakuConfig.bulletLableSize,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-      maxLines: 1,
-    );
-    renderParagraph.layout(constraints);
-    double textwidth = renderParagraph.getMinIntrinsicWidth(FlutterDanmakuConfig.bulletLableSize).ceilToDouble();
-    double textheight = renderParagraph.getMinIntrinsicHeight(999).ceilToDouble();
-    return Size(textwidth, textheight);
-  }
-}

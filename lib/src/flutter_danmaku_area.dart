@@ -42,7 +42,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
 
   // 添加弹幕
   void addDanmaku(String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color = FlutterDanmakuConfig.defaultColor}) {
-    widget.key.currentState._danmakuManager.addDanmaku(context, text, bulletType: bulletType, color: color);
+    _danmakuManager.addDanmaku(context, text, bulletType: bulletType, color: color);
   }
 
   // 初始化

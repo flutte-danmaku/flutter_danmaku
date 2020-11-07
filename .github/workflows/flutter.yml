@@ -1,9 +1,7 @@
-name: Dart CI
+name: Flutter CI
 
 on:
   push:
-    branches: [ dev ]
-  pull_request:
     branches: [ dev ]
 
 jobs:
@@ -11,13 +9,14 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    container:
-      image:  google/dart:latest
-
     steps:
     - uses: actions/checkout@v2
-    # Setup the flutter environment.
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
     - uses: subosito/flutter-action@v1
+      with:
+        channel: 'stable'
     - name: Install dependencies
       run: flutter pub get
     - name: Run tests

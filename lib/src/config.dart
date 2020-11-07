@@ -21,4 +21,7 @@ class FlutterDanmakuConfig {
   static int baseRunDistance = 1;
 
   static int everyFramerateRunDistanceScale = 150;
+
+  // 展示高度
+  static double get showAreaHeight => FlutterDanmakuConfig.areaSize.height * FlutterDanmakuConfig.showAreaPercent;
 }

@@ -19,16 +19,19 @@ class FlutterDanmakuArea extends StatefulWidget {
 class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   List<FlutterDanmakuTrack> _tracks = [];
   FlutterDanmakuManager _danmakuManager = FlutterDanmakuManager();
+
+  bool get inited => _inited;
+  FlutterDanmakuManager get danmakuManager => _danmakuManager;
+  List<FlutterDanmakuTrack> get tracks => _tracks;
+
   bool _inited = false;
 
   void _initArea() {
-    FlutterDanmakuConfig.areaSize = context.size;
+    resizeArea();
     if (_inited) return;
     _inited = true;
-    Future.delayed(Duration(milliseconds: 300), () {
-      _danmakuManager.run(() {
-        setState(() {});
-      });
+    _danmakuManager.run(() {
+      setState(() {});
     });
   }
 
@@ -81,15 +84,14 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   }
 
   // 改变视图尺寸后调用，比如全屏
-  void resizeArea() {
-    _initArea();
+  void resizeArea({Size size = const Size(0, 0)}) {
+    FlutterDanmakuConfig.areaSize = context?.size ?? size;
   }
 
   // 修改弹幕最大可展示场景的百分比
   void changeShowArea(double percent) {
     assert(percent <= 1);
     assert(percent >= 0);
-    if (percent > 1 || percent < 0) return;
     if (percent < FlutterDanmakuConfig.showAreaPercent) {
       for (int i = 0; i < _tracks.length; i++) {
         // 把溢出的轨道之后全部删掉

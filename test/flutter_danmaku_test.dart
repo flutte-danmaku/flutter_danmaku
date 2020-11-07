@@ -7,20 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_danmaku/flutter_danmaku.dart';
 
 void main() {
-  // test('test something', () {
-  //   Size bulletSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText('hello world!');
-  //   assert(bulletSize.runtimeType == Size);
-  //   FlutterDanmakuTrack track = FlutterDanmakuTrackManager.findAvailableTrack(bulletSize);
-  //   assert(track == null);
-  //   track = FlutterDanmakuTrackManager.buildTrack(bulletSize.height);
-  //   assert(FlutterDanmakuManager.tracks.length == 1);
-  //   assert(track.offsetTop == 0);
-  //   assert(track.trackHeight == bulletSize.height);
-  //   assert(track.id.runtimeType == UniqueKey);
-  //   assert(track.lastBulletId == null);
-  //   assert(track.bindFixedBulletId == null);
-  // });
-
   group('bullet', () {
     test("bullet default prototype", () {
       FlutterDanmakuConfig.areaSize = Size(20, 20);
@@ -75,6 +61,15 @@ void main() {
     });
   });
 
+  group('FlutterDanmakuConfig config', () {
+    test('showAreaHeight', () {
+      double areaHeight = 10;
+      FlutterDanmakuConfig.areaSize = Size(10, areaHeight);
+      FlutterDanmakuConfig.showAreaPercent = 0.5;
+      expect(FlutterDanmakuConfig.showAreaHeight, areaHeight * FlutterDanmakuConfig.showAreaPercent);
+    });
+  });
+
   group('FlutterDanmakuTrackManager', () {
     test('buildTrack', () {
       double trackHeight = 10;
@@ -88,6 +83,43 @@ void main() {
       FlutterDanmakuTrack trackSecend = FlutterDanmakuManager.tracks.last;
       expect(trackSecend.offsetTop, trackFirst.offsetTop + trackFirst.trackHeight);
       expect(FlutterDanmakuManager.tracks.length, 2);
+    });
+  });
+
+  group('FlutterDanmakuAreaState', () {
+    test('play status', () {
+      FlutterDanmakuAreaState flutterDanmakuAreaState = FlutterDanmakuAreaState();
+      expect(flutterDanmakuAreaState.isPause, FlutterDanmakuConfig.pause);
+      flutterDanmakuAreaState.play();
+      expect(flutterDanmakuAreaState.isPause, FlutterDanmakuConfig.pause);
+      expect(flutterDanmakuAreaState.isPause, false);
+      flutterDanmakuAreaState.pause();
+      expect(flutterDanmakuAreaState.isPause, FlutterDanmakuConfig.pause);
+      expect(flutterDanmakuAreaState.isPause, true);
+    });
+
+    test('init dispose', () {
+      FlutterDanmakuAreaState flutterDanmakuAreaState = FlutterDanmakuAreaState();
+      expect(flutterDanmakuAreaState.inited, false);
+      expect(flutterDanmakuAreaState.danmakuManager.timer, null);
+      flutterDanmakuAreaState.init();
+      expect(flutterDanmakuAreaState.inited, true);
+      expect(flutterDanmakuAreaState.danmakuManager.timer.isActive, true);
+      flutterDanmakuAreaState.dipose();
+      expect(flutterDanmakuAreaState.danmakuManager.timer.isActive, false);
+    });
+
+    test('changeShowArea', () {
+      FlutterDanmakuAreaState flutterDanmakuAreaState = FlutterDanmakuAreaState();
+      double targetPercent = 0.5;
+      flutterDanmakuAreaState.changeShowArea(targetPercent);
+      expect(FlutterDanmakuConfig.showAreaPercent, targetPercent);
+    });
+
+    test('resizeArea', () {
+      FlutterDanmakuAreaState flutterDanmakuAreaState = FlutterDanmakuAreaState();
+      flutterDanmakuAreaState.resizeArea(size: Size(10, 50));
+      expect(FlutterDanmakuConfig.areaSize, Size(10, 50));
     });
   });
 }

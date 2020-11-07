@@ -1,5 +1,7 @@
 # 👏 Flutter Danmaku
 
+[![Coverage Status](https://coveralls.io/repos/github/flutte-danmaku/flutter_danmaku/badge.svg?branch=dev)](https://coveralls.io/github/flutte-danmaku/flutter_danmaku?branch=dev)
+
 A new Flutter package project.
 
 ## Getting Started

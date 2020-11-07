@@ -57,8 +57,7 @@ class FlutterDanmakuBulletUtils {
   // 根据文字长度计算每一帧需要run多少距离
   static double getBulletEveryFramerateRunDistance(double bulletWidth) {
     assert(bulletWidth > 0);
-    double baseRunDistance = 1;
-    return baseRunDistance + (bulletWidth / 150);
+    return FlutterDanmakuConfig.baseRunDistance + (bulletWidth / FlutterDanmakuConfig.everyFramerateRunDistanceScale);
   }
 
   static void removeBulletById(UniqueKey bulletId, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {

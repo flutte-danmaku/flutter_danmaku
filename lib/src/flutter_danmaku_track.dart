@@ -45,11 +45,7 @@ class FlutterDanmakuTrackManager {
 
   static FlutterDanmakuTrack buildTrack(double trackHeight) {
     assert(trackHeight > 0);
-    double trackOffsetTop = 0;
-    if (FlutterDanmakuManager.tracks.isNotEmpty) {
-      trackOffsetTop = FlutterDanmakuManager.tracks.last.offsetTop + FlutterDanmakuManager.tracks.last.trackHeight;
-    }
-    FlutterDanmakuTrack track = FlutterDanmakuTrack(trackHeight, trackOffsetTop);
+    FlutterDanmakuTrack track = FlutterDanmakuTrack(trackHeight, FlutterDanmakuManager.allTrackHeight);
     FlutterDanmakuManager.tracks.add(track);
     return track;
   }
@@ -72,8 +68,7 @@ class FlutterDanmakuTrackManager {
   static bool areaAllowBuildNewTrack(double needBuildTrackHeight) {
     assert(needBuildTrackHeight > 0);
     if (FlutterDanmakuManager.tracks.isEmpty) return true;
-    double currentAllTrackHeight = FlutterDanmakuManager.tracks.last.offsetTop + FlutterDanmakuManager.tracks.last.trackHeight;
-    return FlutterDanmakuConfig.areaSize.height * FlutterDanmakuConfig.showAreaPercent - currentAllTrackHeight >= needBuildTrackHeight;
+    return FlutterDanmakuConfig.showAreaHeight - FlutterDanmakuManager.allTrackHeight >= needBuildTrackHeight;
   }
 
   // 轨道是否允许被插入
@@ -81,28 +76,26 @@ class FlutterDanmakuTrackManager {
     UniqueKey lastBulletId;
     assert(needInsertBulletSize.height > 0);
     assert(needInsertBulletSize.width > 0);
-    if (bulletType == FlutterDanmakuBulletType.scroll) {
-      if (track.lastBulletId == null) return true;
-      lastBulletId = track.lastBulletId;
-    } else if (bulletType == FlutterDanmakuBulletType.fixed) {
-      return track.bindFixedBulletId == null;
-    }
-    FlutterDanmakuBulletModel lastBullet = FlutterDanmakuManager.bullets[lastBulletId];
+    if (bulletType == FlutterDanmakuBulletType.fixed) return track.bindFixedBulletId == null;
+    if (track.lastBulletId == null) return true;
+    lastBulletId = track.lastBulletId;
+    FlutterDanmakuBulletModel lastBullet = FlutterDanmakuManager.bulletsMap[lastBulletId];
     if (lastBullet == null) return true;
     // 是否离开了右边的墙壁
-    bool hasAllOutRight = lastBullet.runDistance > lastBullet.bulletSize.width;
-    if (!hasAllOutRight) return false;
+    if (!lastBullet.allOutRight) return false;
+    return trackInsertBulletHasBump(lastBullet, needInsertBulletSize);
+  }
+
+  // 轨道注入子弹是否为碰撞
+  static bool trackInsertBulletHasBump(FlutterDanmakuBulletModel trackLastBullet, Size needInsertBulletSize) {
     double willInsertBulletEveryFramerateRunDistance = FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(needInsertBulletSize.width);
     // 要插入的节点速度比上一个快
-    if (willInsertBulletEveryFramerateRunDistance > lastBullet.everyFrameRunDistance) {
+    if (willInsertBulletEveryFramerateRunDistance > trackLastBullet.everyFrameRunDistance) {
       // 是否会追尾
-      // 上一个弹幕全部离开需要的时间
-      double lastLeaveScreenRemainderTime =
-          FlutterDanmakuBulletUtils.remainderTimeLeaveScreen(lastBullet.runDistance, lastBullet.bulletSize.width, lastBullet.everyFrameRunDistance);
       // 将要插入的弹幕全部离开减去上一个弹幕宽度需要的时间
       double willInsertBulletLeaveScreenRemainderTime =
           FlutterDanmakuBulletUtils.remainderTimeLeaveScreen(0, 0, FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(needInsertBulletSize.width));
-      return !(lastLeaveScreenRemainderTime > willInsertBulletLeaveScreenRemainderTime);
+      return !(trackLastBullet.leaveScreenRemainderTime > willInsertBulletLeaveScreenRemainderTime);
     } else {
       return true;
     }
@@ -110,7 +103,7 @@ class FlutterDanmakuTrackManager {
 
   // 轨道是否溢出
   static bool isTrackOverflowArea(FlutterDanmakuTrack track) {
-    return (track.offsetTop + track.trackHeight) > FlutterDanmakuConfig.areaSize.height * FlutterDanmakuConfig.showAreaPercent;
+    return (track.offsetTop + track.trackHeight) > FlutterDanmakuConfig.showAreaHeight;
   }
 
   static void removeTrackByBulletId(UniqueKey bulletId) {

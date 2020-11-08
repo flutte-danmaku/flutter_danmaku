@@ -15,8 +15,7 @@ void main() {
       String danmakuText = 'hello world';
       FlutterDanmakuBullet bullet = FlutterDanmakuBullet(danmakuId, danmakuText);
       Size bulletSize = Size(10, 10);
-      FlutterDanmakuBulletModel bulletModel =
-          FlutterDanmakuBulletModel(id: danmakuId, bulletSize: bulletSize, trackId: trackId, text: danmakuText, offsetY: 0, everyFrameRunDistance: 0);
+      FlutterDanmakuBulletModel bulletModel = FlutterDanmakuBulletModel(id: danmakuId, bulletSize: bulletSize, trackId: trackId, text: danmakuText, offsetY: 0);
       expect(bullet.text, danmakuText);
       expect(bullet.danmakuId, danmakuId);
       expect(bulletModel.id, danmakuId);
@@ -27,6 +26,7 @@ void main() {
       expect(bulletModel.offsetX, bulletModel.runDistance - bulletSize.width);
       bulletModel.bulletType = FlutterDanmakuBulletType.fixed;
       expect(bulletModel.offsetX, FlutterDanmakuConfig.areaSize.width / 2 - bulletSize.width / 2);
+      expect(bulletModel.allOutRight, false);
     });
   });
 
@@ -45,7 +45,7 @@ void main() {
       expect(bulletModel.runtimeType, FlutterDanmakuBulletModel);
       expect(bulletModel.id.runtimeType, UniqueKey);
       expect(FlutterDanmakuManager.bullets.length, 1);
-      expect(FlutterDanmakuManager.bullets[bulletModel.id], bulletModel);
+      expect(FlutterDanmakuManager.bulletsMap[bulletModel.id], bulletModel);
       expect(bulletModel.everyFrameRunDistance, FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(bulletSize.width));
     });
 
@@ -62,10 +62,10 @@ void main() {
       double offsetY = 0;
       FlutterDanmakuBulletModel bullet1 = FlutterDanmakuBulletUtils.initBullet(bulletText, trackId, bulletSize, offsetY);
       UniqueKey bullet1Key = bullet1.id;
-      expect(FlutterDanmakuManager.bullets[bullet1Key], bullet1);
-      expect(FlutterDanmakuManager.bullets.containsKey(bullet1Key), true);
+      expect(FlutterDanmakuManager.bulletsMap[bullet1Key], bullet1);
+      expect(FlutterDanmakuManager.bulletsMap.containsKey(bullet1Key), true);
       FlutterDanmakuBulletUtils.removeBulletById(bullet1Key);
-      expect(FlutterDanmakuManager.bullets.containsKey(bullet1Key), false);
+      expect(FlutterDanmakuManager.bulletsMap.containsKey(bullet1Key), false);
     });
   });
 

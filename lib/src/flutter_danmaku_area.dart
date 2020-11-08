@@ -30,9 +30,13 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
     resizeArea();
     if (_inited) return;
     _inited = true;
-    _danmakuManager.run(() {
+    runDanmukaEngine(() {
       setState(() {});
     });
+  }
+
+  runDanmukaEngine(Function callBack) {
+    _danmakuManager.run(callBack);
   }
 
   @override
@@ -45,6 +49,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
 
   // 添加弹幕
   void addDanmaku(String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color = FlutterDanmakuConfig.defaultColor}) {
+    assert(text.isNotEmpty);
     _danmakuManager.addDanmaku(context, text, bulletType: bulletType, color: color);
   }
 
@@ -86,6 +91,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   // 改变视图尺寸后调用，比如全屏
   void resizeArea({Size size = const Size(0, 0)}) {
     FlutterDanmakuConfig.areaSize = context?.size ?? size;
+    if (FlutterDanmakuConfig.pause) {}
   }
 
   // 修改弹幕最大可展示场景的百分比
@@ -106,7 +112,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
 
   // 销毁前需要调用取消监听器
   void dipose() {
-    _danmakuManager.timer.cancel();
+    _danmakuManager.dispose();
   }
 
   @override

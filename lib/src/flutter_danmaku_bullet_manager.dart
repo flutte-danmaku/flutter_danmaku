@@ -39,18 +39,10 @@ class FlutterDanmakuBulletUtils {
     assert(bulletSize.width > 0);
     assert(offsetY >= 0);
     UniqueKey bulletId = UniqueKey();
-    double everyRunDistance = FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(bulletSize.width);
-    FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletModel(
-        color: color,
-        id: bulletId,
-        trackId: trackId,
-        text: text,
-        bulletSize: bulletSize,
-        offsetY: offsetY,
-        everyFrameRunDistance: everyRunDistance,
-        bulletType: bulletType);
+    FlutterDanmakuBulletModel bullet =
+        FlutterDanmakuBulletModel(color: color, id: bulletId, trackId: trackId, text: text, bulletSize: bulletSize, offsetY: offsetY, bulletType: bulletType);
     // 记录到表上
-    FlutterDanmakuManager.bullets[bullet.id] = bullet;
+    FlutterDanmakuManager.recordBullet = bullet;
     return bullet;
   }
 
@@ -61,9 +53,19 @@ class FlutterDanmakuBulletUtils {
   }
 
   static void removeBulletById(UniqueKey bulletId, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
-    assert(FlutterDanmakuManager.bullets.containsKey(bulletId));
-    FlutterDanmakuManager.bullets.remove(bulletId);
+    assert(FlutterDanmakuManager.hasBulletKey(bulletId));
+    FlutterDanmakuManager.removeBulletByKey(bulletId);
     FlutterDanmakuTrackManager.removeTrackByBulletId(bulletId);
+  }
+
+  // 构建子弹
+  static Widget buildBulletToScreen(BuildContext context, FlutterDanmakuBulletModel bulletModel) {
+    FlutterDanmakuBullet bullet = FlutterDanmakuBullet(bulletModel.id, bulletModel.text, color: bulletModel.color);
+    return Positioned(right: bulletModel.offsetX, top: bulletModel.offsetY, child: bullet);
+  }
+
+  static List<Widget> buildAllBullet(BuildContext context) {
+    return FlutterDanmakuManager.bullets.map((e) => buildBulletToScreen(context, e)).toList();
   }
 
   // 剩余多少帧离开屏幕
@@ -75,24 +77,14 @@ class FlutterDanmakuBulletUtils {
     return remanderDistance / everyFramerateDistance;
   }
 
-  // 构建子弹
-  static Widget buildBulletToScreen(BuildContext context, FlutterDanmakuBulletModel bulletModel) {
-    FlutterDanmakuBullet bullet = FlutterDanmakuBullet(bulletModel.id, bulletModel.text, color: bulletModel.color);
-    return Positioned(right: bulletModel.offsetX, top: bulletModel.offsetY, child: bullet);
-  }
-
-  static List<Widget> buildAllBullet(BuildContext context) {
-    return FlutterDanmakuManager.bullets.values.toList().map((e) => buildBulletToScreen(context, e)).toList();
-  }
-
   // 重制子弹数值
   static recountBulletsOffset() {
     // 写的非常脏 但是太累了
-    FlutterDanmakuManager.bullets.forEach((key, value) {
-      dynamic tracks = FlutterDanmakuManager.tracks.where((element) => element.id == value.trackId);
+    FlutterDanmakuManager.bullets.map((FlutterDanmakuBulletModel bullet) {
+      dynamic tracks = FlutterDanmakuManager.tracks.where((element) => element.id == bullet.trackId);
       if (tracks.isEmpty) return;
-      value.offsetY = tracks.first.offsetTop;
-      value.bulletSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText(value.text);
+      bullet.offsetY = tracks.first.offsetTop;
+      bullet.bulletSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText(bullet.text);
     });
   }
 }

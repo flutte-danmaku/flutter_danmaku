@@ -19,18 +19,36 @@ class FlutterDanmakuManager {
   static int framerate = 60;
   static int unitTimer = 1000 ~/ FlutterDanmakuManager.framerate;
   static List<FlutterDanmakuTrack> tracks = [];
-  static Map<UniqueKey, FlutterDanmakuBulletModel> bullets = {};
+  static Map<UniqueKey, FlutterDanmakuBulletModel> _bullets = {};
+
+  static List<FlutterDanmakuBulletModel> get bullets => _bullets.values.toList();
+  static List<UniqueKey> get bulletKeys => _bullets.keys.toList();
+  static Map<UniqueKey, FlutterDanmakuBulletModel> get bulletsMap => _bullets;
+  static double get allTrackHeight {
+    if (tracks.isEmpty) return 0;
+    return tracks.last.offsetTop + tracks.last.trackHeight;
+  }
+
+  static set recordBullet(FlutterDanmakuBulletModel bullet) {
+    _bullets[bullet.id] = bullet;
+  }
+
+  static bool hasBulletKey(UniqueKey id) => _bullets.containsKey(id);
+
+  static void removeBulletByKey(UniqueKey id) => _bullets.remove(id);
 
   Timer timer;
+
+  void dispose() {
+    timer?.cancel();
+  }
 
   void run(Function callBack) {
     timer = Timer(Duration(milliseconds: unitTimer), () {
       // 暂停不执行
       if (!FlutterDanmakuConfig.pause) {
-        List<UniqueKey> bulletKeys = FlutterDanmakuManager.bullets.keys.toList();
         for (int i = FlutterDanmakuManager.bullets.length - 1; i >= 0; i--) {
-          UniqueKey key = bulletKeys[i];
-          _nextFramerate(FlutterDanmakuManager.bullets[key]);
+          _nextFramerate(FlutterDanmakuManager.bullets[i]);
         }
         callBack();
       }
@@ -66,8 +84,8 @@ class FlutterDanmakuManager {
   }
 
   _nextFramerate(FlutterDanmakuBulletModel bulletModel) {
-    bulletModel.runDistance += bulletModel.everyFrameRunDistance * FlutterDanmakuConfig.bulletRate;
-    if (bulletModel.runDistance > bulletModel.maxRunDistance) {
+    bulletModel.runNextFrame();
+    if (bulletModel.allOutLeave) {
       FlutterDanmakuBulletUtils.removeBulletById(bulletModel.id, bulletType: bulletModel.bulletType);
     }
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_danmaku/flutter_danmaku.dart';
 import 'package:flutter_danmaku/src/config.dart';
+import 'package:flutter_danmaku/src/flutter_danmaku_bullet_manager.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_manager.dart';
 
 enum FlutterDanmakuBulletType { scroll, fixed }
@@ -13,25 +14,39 @@ class FlutterDanmakuBulletModel {
   Size bulletSize;
   String text;
   double offsetY;
-  double runDistance = 0;
-  double everyFrameRunDistance = 1;
+  double _runDistance = 0;
+  double everyFrameRunDistance;
   Color color = Colors.black;
 
   FlutterDanmakuBulletType bulletType;
 
   double get offsetX =>
-      bulletType == FlutterDanmakuBulletType.scroll ? runDistance - bulletSize.width : FlutterDanmakuConfig.areaSize.width / 2 - (bulletSize.width / 2);
+      bulletType == FlutterDanmakuBulletType.scroll ? _runDistance - bulletSize.width : FlutterDanmakuConfig.areaSize.width / 2 - (bulletSize.width / 2);
+  // 子弹最大可跑距离 子弹宽度+墙宽度
   double get maxRunDistance => bulletSize.width + FlutterDanmakuConfig.areaSize.width;
+  // 子弹整体脱离右边墙壁
+  bool get allOutRight => _runDistance > bulletSize.width;
+  // 子弹整体离开屏幕
+  bool get allOutLeave => _runDistance > maxRunDistance;
 
-  FlutterDanmakuBulletModel(
-      {this.id,
-      this.trackId,
-      this.text,
-      this.bulletSize,
-      this.offsetY,
-      this.everyFrameRunDistance,
-      this.bulletType = FlutterDanmakuBulletType.scroll,
-      this.color});
+  double get runDistance => _runDistance;
+
+  // 离开屏幕剩余需要的时间
+  double get leaveScreenRemainderTime {
+    assert(runDistance >= 0);
+    assert(bulletSize.width >= 0);
+    assert(everyFrameRunDistance > 0);
+    double remanderDistance = (FlutterDanmakuConfig.areaSize.width + bulletSize.width) - runDistance;
+    return remanderDistance / everyFrameRunDistance;
+  }
+
+  void runNextFrame() {
+    _runDistance += everyFrameRunDistance * FlutterDanmakuConfig.bulletRate;
+  }
+
+  FlutterDanmakuBulletModel({this.id, this.trackId, this.text, this.bulletSize, this.offsetY, this.bulletType = FlutterDanmakuBulletType.scroll, this.color}) {
+    everyFrameRunDistance = FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(bulletSize.width);
+  }
 }
 
 class FlutterDanmakuBullet extends StatelessWidget {

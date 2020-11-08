@@ -24,6 +24,9 @@ void main() {
       expect(bulletModel.trackId, trackId);
       expect(bulletModel.text, danmakuText);
       expect(bulletModel.maxRunDistance, bulletModel.bulletSize.width + FlutterDanmakuConfig.areaSize.width);
+      expect(bulletModel.offsetX, bulletModel.runDistance - bulletSize.width);
+      bulletModel.bulletType = FlutterDanmakuBulletType.fixed;
+      expect(bulletModel.offsetX, FlutterDanmakuConfig.areaSize.width / 2 - bulletSize.width / 2);
     });
   });
 
@@ -50,6 +53,19 @@ void main() {
       double bulletWidth = 5;
       expect(FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(bulletWidth),
           FlutterDanmakuConfig.baseRunDistance + (bulletWidth / FlutterDanmakuConfig.everyFramerateRunDistanceScale));
+    });
+
+    test('removeBulletById', () {
+      UniqueKey trackId = UniqueKey();
+      Size bulletSize = Size(10, 10);
+      String bulletText = 'hello world';
+      double offsetY = 0;
+      FlutterDanmakuBulletModel bullet1 = FlutterDanmakuBulletUtils.initBullet(bulletText, trackId, bulletSize, offsetY);
+      UniqueKey bullet1Key = bullet1.id;
+      expect(FlutterDanmakuManager.bullets[bullet1Key], bullet1);
+      expect(FlutterDanmakuManager.bullets.containsKey(bullet1Key), true);
+      FlutterDanmakuBulletUtils.removeBulletById(bullet1Key);
+      expect(FlutterDanmakuManager.bullets.containsKey(bullet1Key), false);
     });
   });
 

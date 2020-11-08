@@ -112,4 +112,15 @@ class FlutterDanmakuTrackManager {
   static bool isTrackOverflowArea(FlutterDanmakuTrack track) {
     return (track.offsetTop + track.trackHeight) > FlutterDanmakuConfig.areaSize.height * FlutterDanmakuConfig.showAreaPercent;
   }
+
+  static void removeTrackByBulletId(UniqueKey bulletId) {
+    int lastBulletIdx;
+    lastBulletIdx = FlutterDanmakuManager.tracks.indexWhere((element) => element.lastBulletId == bulletId || element.bindFixedBulletId == bulletId);
+    if (lastBulletIdx == -1) return;
+    if (FlutterDanmakuManager.tracks[lastBulletIdx].bindFixedBulletId == bulletId) {
+      FlutterDanmakuManager.tracks[lastBulletIdx].bindFixedBulletId = null;
+    } else {
+      FlutterDanmakuManager.tracks[lastBulletIdx].lastBulletId = null;
+    }
+  }
 }

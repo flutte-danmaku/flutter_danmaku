@@ -61,17 +61,9 @@ class FlutterDanmakuBulletUtils {
   }
 
   static void removeBulletById(UniqueKey bulletId, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
+    assert(FlutterDanmakuManager.bullets.containsKey(bulletId));
     FlutterDanmakuManager.bullets.remove(bulletId);
-    int lastBulletIdx;
-    if (bulletType == FlutterDanmakuBulletType.scroll) {
-      lastBulletIdx = FlutterDanmakuManager.tracks.indexWhere((element) => element.lastBulletId == bulletId);
-      if (lastBulletIdx == -1) return;
-      FlutterDanmakuManager.tracks[lastBulletIdx].lastBulletId = null;
-    } else {
-      lastBulletIdx = FlutterDanmakuManager.tracks.indexWhere((element) => element.bindFixedBulletId == bulletId);
-      if (lastBulletIdx == -1) return;
-      FlutterDanmakuManager.tracks[lastBulletIdx].bindFixedBulletId = null;
-    }
+    FlutterDanmakuTrackManager.removeTrackByBulletId(bulletId);
   }
 
   // 剩余多少帧离开屏幕
@@ -86,10 +78,7 @@ class FlutterDanmakuBulletUtils {
   // 构建子弹
   static Widget buildBulletToScreen(BuildContext context, FlutterDanmakuBulletModel bulletModel) {
     FlutterDanmakuBullet bullet = FlutterDanmakuBullet(bulletModel.id, bulletModel.text, color: bulletModel.color);
-    double right = bulletModel.bulletType == FlutterDanmakuBulletType.scroll
-        ? bulletModel.runDistance - bulletModel.bulletSize.width
-        : FlutterDanmakuConfig.areaSize.width / 2 - (bulletModel.bulletSize.width / 2);
-    return Positioned(right: right, top: bulletModel.offsetY, child: bullet);
+    return Positioned(right: bulletModel.offsetX, top: bulletModel.offsetY, child: bullet);
   }
 
   static List<Widget> buildAllBullet(BuildContext context) {

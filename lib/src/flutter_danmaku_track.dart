@@ -43,6 +43,14 @@ class FlutterDanmakuTrackManager {
     return _track;
   }
 
+  // 补足屏幕内轨道
+  static void buildTrackFullScreen() {
+    Size singleTextSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText('s');
+    while (FlutterDanmakuManager.allTrackHeight < FlutterDanmakuConfig.showAreaHeight) {
+      buildTrack(singleTextSize.height);
+    }
+  }
+
   static FlutterDanmakuTrack buildTrack(double trackHeight) {
     assert(trackHeight > 0);
     FlutterDanmakuTrack track = FlutterDanmakuTrack(trackHeight, FlutterDanmakuManager.allTrackHeight);
@@ -62,6 +70,7 @@ class FlutterDanmakuTrackManager {
         break;
       }
     }
+    buildTrackFullScreen();
   }
 
   // 是否允许建立新轨道

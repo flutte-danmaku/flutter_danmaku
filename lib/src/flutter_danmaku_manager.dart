@@ -45,6 +45,7 @@ class FlutterDanmakuManager {
 
   void run(Function callBack) {
     timer = Timer(Duration(milliseconds: unitTimer), () {
+      print(tracks.length);
       // 暂停不执行
       if (!FlutterDanmakuConfig.pause) {
         for (int i = FlutterDanmakuManager.bullets.length - 1; i >= 0; i--) {
@@ -64,15 +65,10 @@ class FlutterDanmakuManager {
     // 寻找可用的轨道
     FlutterDanmakuTrack track = FlutterDanmakuTrackManager.findAvailableTrack(bulletSize, bulletType: bulletType);
     // 如果没有找到可用的轨道
-    if (track == null) {
-      // 是否允许新建轨道
-      bool allowNewTrack = FlutterDanmakuTrackManager.areaAllowBuildNewTrack(bulletSize.height);
-      if (!allowNewTrack)
-        return AddBulletResBody(
-          AddBulletResCode.noSpace,
-        );
-      track = FlutterDanmakuTrackManager.buildTrack(bulletSize.height);
-    }
+    if (track == null)
+      return AddBulletResBody(
+        AddBulletResCode.noSpace,
+      );
     FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletUtils.initBullet(text, track.id, bulletSize, track.offsetTop, bulletType: bulletType, color: color);
     if (bulletType == FlutterDanmakuBulletType.scroll) {
       track.lastBulletId = bullet.id;

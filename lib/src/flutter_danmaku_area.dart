@@ -28,6 +28,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
 
   void _initArea() {
     resizeArea();
+    FlutterDanmakuTrackManager.buildTrackFullScreen();
     if (_inited) return;
     _inited = true;
     runDanmukaEngine(() {
@@ -91,6 +92,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   // 改变视图尺寸后调用，比如全屏
   void resizeArea({Size size = const Size(0, 0)}) {
     FlutterDanmakuConfig.areaSize = context?.size ?? size;
+    FlutterDanmakuTrackManager.recountTrackOffset();
     if (FlutterDanmakuConfig.pause) {}
   }
 
@@ -108,6 +110,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
       }
     }
     FlutterDanmakuConfig.showAreaPercent = percent;
+    FlutterDanmakuTrackManager.buildTrackFullScreen();
   }
 
   // 销毁前需要调用取消监听器

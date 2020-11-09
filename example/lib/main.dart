@@ -85,9 +85,16 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _incrementCounter() {
+  addDanmaku() {
     int random = Random().nextInt(20);
     danmuarea.currentState.addDanmaku('s' + 's' * random, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
+  }
+
+  void _incrementCounter() {
+    addDanmaku();
+    addDanmaku();
+    addDanmaku();
+    int random = Random().nextInt(20);
     danmuarea.currentState
         .addDanmaku('s' + 's' * random, bulletType: FlutterDanmakuBulletType.fixed, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
     setState(() {

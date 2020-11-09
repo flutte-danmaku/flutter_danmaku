@@ -8,7 +8,7 @@ class FlutterDanmakuConfig {
 
   static double bulletRate = 1.0;
 
-  static Size areaSize;
+  static Size areaSize = Size(0, 0);
   // 展示区域百分比
   static double showAreaPercent = 1.0;
 
@@ -17,4 +17,11 @@ class FlutterDanmakuConfig {
   static bool pause = false;
 
   static const Color defaultColor = Colors.black;
+
+  static int baseRunDistance = 1;
+
+  static int everyFramerateRunDistanceScale = 150;
+
+  // 展示高度
+  static double get showAreaHeight => FlutterDanmakuConfig.areaSize.height * FlutterDanmakuConfig.showAreaPercent;
 }

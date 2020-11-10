@@ -5,6 +5,18 @@
 
 A new Flutter package project.
 
+## Features
+* Color barrag
+* Floating barrage
+* Scroll barrage
+* Bottom barrage
+* Variable speed
+* Variable font size
+* Configure transparency
+* Display area ratio
+* pause & play
+
+
 ## Getting Started
 
 This project is a starting point for a Dart

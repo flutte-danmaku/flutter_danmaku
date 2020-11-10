@@ -29,7 +29,8 @@ class FlutterDanmakuManager {
     return tracks.last.offsetTop + tracks.last.trackHeight;
   }
 
-  static set recordBullet(FlutterDanmakuBulletModel bullet) {
+  // 记录子弹到map中
+  static recordBullet(FlutterDanmakuBulletModel bullet) {
     _bullets[bullet.id] = bullet;
   }
 
@@ -58,12 +59,15 @@ class FlutterDanmakuManager {
   }
 
   // 成功返回AddBulletResBody.data为bulletId
-  AddBulletResBody addDanmaku(BuildContext context, String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color}) {
+  AddBulletResBody addDanmaku(BuildContext context, String text,
+      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll,
+      Color color,
+      FlutterDanmakuBulletPosition position = FlutterDanmakuBulletPosition.any}) {
     assert(text.isNotEmpty);
     // 先获取子弹尺寸
     Size bulletSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText(text);
     // 寻找可用的轨道
-    FlutterDanmakuTrack track = FlutterDanmakuTrackManager.findAvailableTrack(bulletSize, bulletType: bulletType);
+    FlutterDanmakuTrack track = FlutterDanmakuTrackManager.findAvailableTrack(bulletSize, bulletType: bulletType, position: position);
     // 如果没有找到可用的轨道
     if (track == null)
       return AddBulletResBody(

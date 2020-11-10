@@ -7,6 +7,7 @@ import 'package:flutter_danmaku/src/flutter_danmaku_bullet_manager.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_manager.dart';
 
 enum FlutterDanmakuBulletType { scroll, fixed }
+enum FlutterDanmakuBulletPosition { any, bottom }
 
 class FlutterDanmakuBulletModel {
   UniqueKey id;

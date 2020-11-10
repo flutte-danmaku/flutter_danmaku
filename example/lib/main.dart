@@ -126,6 +126,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void dibudanmu() {
+    int random = Random().nextInt(20);
+    danmuarea.currentState.addDanmaku('s' + 's' * random,
+        bulletType: FlutterDanmakuBulletType.fixed,
+        position: FlutterDanmakuBulletPosition.bottom,
+        color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
+  }
+
   resethengshuping() {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -176,6 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         crossAxisCount: 3, //横轴三个子widget
                         childAspectRatio: 3),
                     children: [
+                      MaterialButton(onPressed: () => dibudanmu(), child: Text('底部弹幕')),
                       MaterialButton(onPressed: () => resethengshuping(), child: Text('复原横屏')),
                       MaterialButton(onPressed: () => changeRate(0.5), child: Text('变倍率0.5')),
                       MaterialButton(onPressed: () => changeRate(0.8), child: Text('变倍率0.8')),

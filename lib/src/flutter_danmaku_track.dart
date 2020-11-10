@@ -1,7 +1,4 @@
 // 弹幕轨道
-
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_danmaku/flutter_danmaku.dart';
 import 'package:flutter_danmaku/src/config.dart';
@@ -23,12 +20,36 @@ class FlutterDanmakuTrack {
 }
 
 class FlutterDanmakuTrackManager {
-  static FlutterDanmakuTrack findAvailableTrack(Size bulletSize, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
+  static FlutterDanmakuTrack findAvailableTrack(Size bulletSize,
+      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, FlutterDanmakuBulletPosition position = FlutterDanmakuBulletPosition.any}) {
     assert(bulletSize.height > 0);
     assert(bulletSize.width > 0);
-    FlutterDanmakuTrack _track;
     // 轨道列表为空
     if (FlutterDanmakuManager.tracks.isEmpty) return null;
+    if (position == FlutterDanmakuBulletPosition.any) {
+      return _findAllowInsertTrack(bulletSize, bulletType: bulletType);
+    } else {
+      return _findAllowInsertBottomTrack(bulletSize);
+    }
+  }
+
+  // 查找允许插入的底部轨道
+  static FlutterDanmakuTrack _findAllowInsertBottomTrack(Size bulletSize) {
+    FlutterDanmakuTrack _track;
+    // 在现有轨道里找
+    // 底部弹幕 指的是 最后几条轨道 从最底下往上发
+    for (int i = FlutterDanmakuManager.tracks.length - 1; i >= FlutterDanmakuManager.tracks.length - 3; i--) {
+      // 底部弹幕仅支持静止弹幕
+      if (FlutterDanmakuManager.tracks[i].bindFixedBulletId == null) {
+        _track = FlutterDanmakuManager.tracks[i];
+        break;
+      }
+    }
+    return _track;
+  }
+
+  static FlutterDanmakuTrack _findAllowInsertTrack(Size bulletSize, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
+    FlutterDanmakuTrack _track;
     // 在现有轨道里找
     for (int i = 0; i < FlutterDanmakuManager.tracks.length; i++) {
       // 轨道是否溢出工作区

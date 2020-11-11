@@ -118,7 +118,6 @@ void main() {
       expect(trackSecend.offsetTop, trackFirst.offsetTop + trackFirst.trackHeight);
       expect(FlutterDanmakuManager.tracks.length, 2);
     });
-
     test('findAvailableTrack', () async {
       // FlutterDanmakuConfig.areaSize = Size(999, 999);
       double trackHeight = 10;

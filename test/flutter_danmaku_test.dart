@@ -7,6 +7,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_danmaku/flutter_danmaku.dart';
 
 void main() {
+  setUp(() async {
+    FlutterDanmakuManager.tracks = [];
+  });
   group('bullet', () {
     test("bullet default prototype", () {
       FlutterDanmakuConfig.areaSize = Size(20, 20);
@@ -30,7 +33,8 @@ void main() {
     });
 
     test("bullet model handle", () {
-      FlutterDanmakuConfig.areaSize = Size(20, 20);
+      double width = 20;
+      FlutterDanmakuConfig.areaSize = Size(width, 20);
       UniqueKey danmakuId = UniqueKey();
       UniqueKey trackId = UniqueKey();
       String danmakuText = 'hello world';
@@ -45,6 +49,9 @@ void main() {
       expect(bulletModel.runDistance, bulletModel.everyFrameRunDistance * FlutterDanmakuConfig.bulletRate * 2);
       double runDistance = bulletModel.runDistance;
       expect(runDistance > bulletModel.maxRunDistance, bulletModel.allOutLeave);
+      expect(bulletModel.needRunDistace, width + bulletModel.bulletSize.width);
+      expect(bulletModel.remanderDistance, bulletModel.needRunDistace - bulletModel.runDistance);
+      expect(bulletModel.leaveScreenRemainderTime, bulletModel.remanderDistance / bulletModel.everyFrameRunDistance);
     });
   });
 
@@ -99,14 +106,14 @@ void main() {
 
   group('FlutterDanmakuConfig config', () {
     test('showAreaHeight', () {
-      double areaHeight = 10;
+      double areaHeight = 80;
+      double trackHeight = 10;
       FlutterDanmakuConfig.areaSize = Size(10, areaHeight);
       FlutterDanmakuConfig.showAreaPercent = 0.5;
       expect(FlutterDanmakuConfig.showAreaHeight, areaHeight * FlutterDanmakuConfig.showAreaPercent);
-    });
-
-    test('remainderHeight', () {
-      // expect(FlutterDanmakuConfig.remainderHeight, )
+      FlutterDanmakuTrackManager.buildTrack(trackHeight);
+      FlutterDanmakuTrackManager.buildTrack(trackHeight);
+      expect(FlutterDanmakuConfig.remainderHeight, FlutterDanmakuConfig.showAreaHeight - trackHeight - trackHeight);
     });
   });
 

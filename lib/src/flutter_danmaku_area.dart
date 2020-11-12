@@ -103,15 +103,6 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   void changeShowArea(double percent) {
     assert(percent <= 1);
     assert(percent >= 0);
-    if (percent < FlutterDanmakuConfig.showAreaPercent) {
-      for (int i = 0; i < _tracks.length; i++) {
-        // 把溢出的轨道之后全部删掉
-        if (FlutterDanmakuTrackManager.isTrackOverflowArea(_tracks[i])) {
-          _tracks.removeRange(i, _tracks.length);
-          break;
-        }
-      }
-    }
     FlutterDanmakuConfig.showAreaPercent = percent;
     FlutterDanmakuTrackManager.buildTrackFullScreen();
   }

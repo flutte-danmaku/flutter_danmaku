@@ -32,14 +32,14 @@ class FlutterDanmakuBulletModel {
 
   double get runDistance => _runDistance;
 
+  // 剩余离开的距离
+  double get remanderDistance => needRunDistace - runDistance;
+
+  // 需要走的距离
+  double get needRunDistace => FlutterDanmakuConfig.areaSize.width + bulletSize.width;
+
   // 离开屏幕剩余需要的时间
-  double get leaveScreenRemainderTime {
-    assert(runDistance >= 0);
-    assert(bulletSize.width >= 0);
-    assert(everyFrameRunDistance > 0);
-    double remanderDistance = (FlutterDanmakuConfig.areaSize.width + bulletSize.width) - runDistance;
-    return remanderDistance / everyFrameRunDistance;
-  }
+  double get leaveScreenRemainderTime => remanderDistance / everyFrameRunDistance;
 
   void runNextFrame() {
     _runDistance += everyFrameRunDistance * FlutterDanmakuConfig.bulletRate;

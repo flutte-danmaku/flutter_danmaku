@@ -98,7 +98,7 @@ class FlutterDanmakuTrackManager {
   static bool areaAllowBuildNewTrack(double needBuildTrackHeight) {
     assert(needBuildTrackHeight > 0);
     if (FlutterDanmakuManager.tracks.isEmpty) return true;
-    return FlutterDanmakuConfig.showAreaHeight - FlutterDanmakuManager.allTrackHeight >= needBuildTrackHeight;
+    return FlutterDanmakuConfig.remainderHeight >= needBuildTrackHeight;
   }
 
   // 轨道是否允许被插入

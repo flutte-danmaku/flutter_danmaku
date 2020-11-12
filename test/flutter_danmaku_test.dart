@@ -59,11 +59,13 @@ void main() {
       Size bulletSize = Size(10, 10);
       String text = 'hello world';
       double offsetY = 0;
+      expect(FlutterDanmakuManager.bulletKeys.isEmpty, true);
       FlutterDanmakuBulletModel bulletModel = FlutterDanmakuBulletUtils.initBullet(text, trackId, bulletSize, offsetY);
       expect(bulletModel.runtimeType, FlutterDanmakuBulletModel);
       expect(bulletModel.id.runtimeType, UniqueKey);
       expect(FlutterDanmakuManager.bullets.length, 1);
       expect(FlutterDanmakuManager.bulletsMap[bulletModel.id], bulletModel);
+      expect(FlutterDanmakuManager.bulletKeys[0], bulletModel.id);
       expect(bulletModel.everyFrameRunDistance, FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(bulletSize.width));
     });
 
@@ -102,6 +104,10 @@ void main() {
       FlutterDanmakuConfig.showAreaPercent = 0.5;
       expect(FlutterDanmakuConfig.showAreaHeight, areaHeight * FlutterDanmakuConfig.showAreaPercent);
     });
+
+    test('remainderHeight', () {
+      // expect(FlutterDanmakuConfig.remainderHeight, )
+    });
   });
 
   group('FlutterDanmakuTrackManager', () {
@@ -132,10 +138,12 @@ void main() {
       UniqueKey bulletId = UniqueKey();
       track5.bindFixedBulletId = bulletId;
       expect(FlutterDanmakuTrackManager.findAvailableTrack(bulletSize, position: FlutterDanmakuBulletPosition.bottom).id, track4.id);
-      // expect(FlutterDanmakuTrackManager.findAvailableTrack(bulletSize, position: FlutterDanmakuBulletPosition.any).id, track1.id);
-      // UniqueKey bulletId1 = UniqueKey();
-      // track1.lastBulletId = bulletId1;
-      // expect(FlutterDanmakuTrackManager.findAvailableTrack(bulletSize).id, track2.id);
+    });
+
+    test('areaAllowBuildNewTrack', () {
+      FlutterDanmakuManager.tracks = [];
+      bool allow = FlutterDanmakuTrackManager.areaAllowBuildNewTrack(50);
+      expect(allow, true);
     });
   });
 

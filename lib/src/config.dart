@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_danmaku/flutter_danmaku.dart';
+import 'package:flutter_danmaku/src/flutter_danmaku_manager.dart';
 
 class FlutterDanmakuConfig {
-  static Duration bulletBaseShowDuration = Duration(seconds: 3);
+  static Duration bulletBaseShowDuration = const Duration(seconds: 3);
   static double bulletLableSize = 14;
 
   static double bulletRate = 1.0;
@@ -24,4 +25,7 @@ class FlutterDanmakuConfig {
 
   // 展示高度
   static double get showAreaHeight => FlutterDanmakuConfig.areaSize.height * FlutterDanmakuConfig.showAreaPercent;
+
+  // 剩余可用高度
+  static double get remainderHeight => FlutterDanmakuConfig.showAreaHeight - FlutterDanmakuManager.allTrackHeight;
 }

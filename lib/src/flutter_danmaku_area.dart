@@ -49,12 +49,12 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   bool get isPause => FlutterDanmakuConfig.pause;
 
   // 添加弹幕
-  void addDanmaku(String text,
+  AddBulletResBody addDanmaku(String text,
       {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll,
       Color color = FlutterDanmakuConfig.defaultColor,
       FlutterDanmakuBulletPosition position = FlutterDanmakuBulletPosition.any}) {
     assert(text.isNotEmpty);
-    _danmakuManager.addDanmaku(context, text, bulletType: bulletType, color: color, position: position);
+    return _danmakuManager.addDanmaku(context, text, bulletType: bulletType, color: color, position: position);
   }
 
   // 初始化

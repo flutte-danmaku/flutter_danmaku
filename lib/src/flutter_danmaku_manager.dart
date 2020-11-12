@@ -38,6 +38,10 @@ class FlutterDanmakuManager {
 
   static void removeBulletByKey(UniqueKey id) => _bullets.remove(id);
 
+  static void removeAllBullet() {
+    _bullets = {};
+  }
+
   Timer timer;
 
   void dispose() {

@@ -118,6 +118,7 @@ void main() {
       FlutterDanmakuTrackManager.buildTrack(trackHeight);
       FlutterDanmakuTrackManager.buildTrack(trackHeight);
       expect(FlutterDanmakuConfig.remainderHeight, FlutterDanmakuConfig.showAreaHeight - trackHeight - trackHeight);
+      expect(FlutterDanmakuConfig.bulletBaseShowDuration.runtimeType, Duration);
     });
   });
 
@@ -186,6 +187,20 @@ void main() {
   });
 
   group('FlutterDanmakuAreaState', () {
+    test('addDanmaku', () {
+      FlutterDanmakuManager.removeAllBullet();
+      String text = 'text';
+      FlutterDanmakuAreaState flutterDanmakuAreaState = FlutterDanmakuAreaState();
+      expect(flutterDanmakuAreaState.tracks.isEmpty, true);
+      AddBulletResBody resBody = flutterDanmakuAreaState.addDanmaku(text);
+      expect(resBody.code, AddBulletResCode.noSpace);
+      Size textSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText(text);
+      FlutterDanmakuTrack track = FlutterDanmakuTrackManager.buildTrack(textSize.height);
+      AddBulletResBody resBody1 = flutterDanmakuAreaState.addDanmaku(text);
+      expect(resBody1.code, AddBulletResCode.success);
+      expect(track.lastBulletId, FlutterDanmakuManager.bullets[0].id);
+    });
+
     test('play status', () {
       FlutterDanmakuAreaState flutterDanmakuAreaState = FlutterDanmakuAreaState();
       expect(flutterDanmakuAreaState.isPause, FlutterDanmakuConfig.pause);

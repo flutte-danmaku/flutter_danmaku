@@ -12,11 +12,21 @@ class FlutterDanmakuTrack {
 
   UniqueKey bindFixedBulletId; // 绑定的静止定位弹幕ID
 
+  FlutterDanmakuTrack(this._trackHeight, this.offsetTop);
+
   double offsetTop;
 
-  double trackHeight;
+  double _trackHeight;
 
-  FlutterDanmakuTrack(this.trackHeight, this.offsetTop);
+  double get trackHeight => _trackHeight;
+
+  // 允许插入禁止弹幕
+  bool get allowInsertFixedBullet => bindFixedBulletId == null;
+
+  set trackHeight(double height) {
+    offsetTop = FlutterDanmakuManager.allTrackHeight;
+    _trackHeight = height;
+  }
 }
 
 class FlutterDanmakuTrackManager {
@@ -43,7 +53,7 @@ class FlutterDanmakuTrackManager {
     // 底部弹幕 指的是 最后几条轨道 从最底下往上发
     for (int i = FlutterDanmakuManager.tracks.length - 1; i >= FlutterDanmakuManager.tracks.length - 3; i--) {
       // 底部弹幕仅支持静止弹幕
-      if (FlutterDanmakuManager.tracks[i].bindFixedBulletId == null) {
+      if (FlutterDanmakuManager.tracks[i].allowInsertFixedBullet) {
         _track = FlutterDanmakuManager.tracks[i];
         break;
       }
@@ -85,7 +95,6 @@ class FlutterDanmakuTrackManager {
   static void recountTrackOffset() {
     Size currentLabelSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText('s');
     for (int i = 0; i < FlutterDanmakuManager.tracks.length; i++) {
-      FlutterDanmakuManager.tracks[i].offsetTop = i * currentLabelSize.height;
       FlutterDanmakuManager.tracks[i].trackHeight = currentLabelSize.height;
       // 把溢出可用区域的轨道之后全部删掉
       if (FlutterDanmakuTrackManager.isTrackOverflowArea) {
@@ -109,7 +118,7 @@ class FlutterDanmakuTrackManager {
     assert(needInsertBulletSize.height > 0);
     assert(needInsertBulletSize.width > 0);
     // 非底部弹幕 超出配置的可视区域 就不可插入
-    if (bulletType == FlutterDanmakuBulletType.fixed) return track.bindFixedBulletId == null;
+    if (bulletType == FlutterDanmakuBulletType.fixed) return track.allowInsertFixedBullet;
     if (track.lastBulletId == null) return true;
     lastBulletId = track.lastBulletId;
     FlutterDanmakuBulletModel lastBullet = FlutterDanmakuManager.bulletsMap[lastBulletId];

@@ -74,6 +74,10 @@ void main() {
       expect(FlutterDanmakuManager.bulletsMap[bulletModel.id], bulletModel);
       expect(FlutterDanmakuManager.bulletKeys[0], bulletModel.id);
       expect(bulletModel.everyFrameRunDistance, FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(bulletSize.width));
+      AddBulletResBody addBulletResBody = AddBulletResBody(AddBulletResCode.success);
+      expect(addBulletResBody.code, AddBulletResCode.success);
+      AddBulletResBody addBulletResBody1 = AddBulletResBody(AddBulletResCode.noSpace);
+      expect(addBulletResBody1.code, AddBulletResCode.noSpace);
     });
 
     test('getBulletEveryFramerateRunDistance', () {
@@ -126,10 +130,17 @@ void main() {
       expect(trackFirst.offsetTop, 0);
       expect(trackFirst.trackHeight, trackHeight);
       trackFirst.offsetTop = 0;
-      FlutterDanmakuTrackManager.buildTrack(trackHeight);
+      FlutterDanmakuTrack track = FlutterDanmakuTrackManager.buildTrack(trackHeight);
       FlutterDanmakuTrack trackSecend = FlutterDanmakuManager.tracks.last;
       expect(trackSecend.offsetTop, trackFirst.offsetTop + trackFirst.trackHeight);
       expect(FlutterDanmakuManager.tracks.length, 2);
+      double trackHeight2 = 80;
+      track.trackHeight = trackHeight2;
+      expect(track.offsetTop, FlutterDanmakuManager.allTrackHeight - trackHeight2);
+      expect(track.allowInsertFixedBullet, true);
+      UniqueKey bulletId = UniqueKey();
+      track.bindFixedBulletId = bulletId;
+      expect(track.allowInsertFixedBullet, false);
     });
     test('findAvailableTrack', () async {
       // FlutterDanmakuConfig.areaSize = Size(999, 999);
@@ -151,6 +162,26 @@ void main() {
       FlutterDanmakuManager.tracks = [];
       bool allow = FlutterDanmakuTrackManager.areaAllowBuildNewTrack(50);
       expect(allow, true);
+    });
+
+    test('isTrackOverflowArea and isEnableTrackOverflowArea', () {
+      Size areaSize = Size(120, 120);
+      double trackHeight = 50;
+      FlutterDanmakuManager.tracks = [];
+      FlutterDanmakuConfig.areaSize = areaSize;
+      FlutterDanmakuTrack track = FlutterDanmakuTrackManager.buildTrack(trackHeight);
+      expect(FlutterDanmakuTrackManager.isTrackOverflowArea, false);
+      expect(FlutterDanmakuTrackManager.isEnableTrackOverflowArea(track), false);
+      FlutterDanmakuConfig.showAreaPercent = 0.3;
+      expect(FlutterDanmakuTrackManager.isEnableTrackOverflowArea(track), true);
+      FlutterDanmakuTrackManager.buildTrack(trackHeight);
+      FlutterDanmakuTrackManager.buildTrack(trackHeight);
+      expect(FlutterDanmakuTrackManager.isTrackOverflowArea, true);
+      FlutterDanmakuConfig.showAreaPercent = 1;
+      FlutterDanmakuTrack availableTrack = FlutterDanmakuTrackManager.findAvailableTrack(Size(20, trackHeight));
+      expect(availableTrack.id, track.id);
+      FlutterDanmakuConfig.showAreaPercent = 0.5;
+      expect(FlutterDanmakuTrackManager.areaAllowBuildNewTrack(trackHeight), false);
     });
   });
 

@@ -51,11 +51,11 @@ class FlutterDanmakuBulletModel {
 }
 
 class FlutterDanmakuBullet extends StatelessWidget {
-  FlutterDanmakuBullet(this.danmakuId, this.text, {this.color});
+  FlutterDanmakuBullet(this.danmakuId, this.text, {this.color = Colors.black});
 
   String text;
   UniqueKey danmakuId;
-  Color color = Colors.black;
+  Color color;
 
   GlobalKey key;
 

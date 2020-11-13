@@ -5,15 +5,10 @@ import 'package:flutter_danmaku/src/flutter_danmaku_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_danmaku/flutter_danmaku.dart';
-import 'package:mockito/mockito.dart';
-
-class MockBuildContext extends Mock implements BuildContext {}
 
 void main() {
-  MockBuildContext _mockContext;
   setUp(() async {
     FlutterDanmakuManager.tracks = [];
-    _mockContext = MockBuildContext();
   });
   group('bullet', () {
     test("bullet default prototype", () {

@@ -1,5 +1,5 @@
 # 👏 Flutter Danmaku
-<img src="https://socialify.git.ci/flutte-danmaku/flutter_danmaku/image?description=1&descriptionEditable=a%20normal%20danmaku%20by%20flutter.%20live%20comment%20hohoho%F0%9F%98%8A%20all%20in%20dart.&font=Source%20Code%20Pro&language=1&pattern=Overlapping%20Hexagons&theme=Light" alt="flutter_danmaku" width="300" />  <br />
+<img src="https://socialify.git.ci/flutte-danmaku/flutter_danmaku/image?description=1&descriptionEditable=a%20normal%20danmaku%20by%20flutter.%20live%20comment%20hohoho%F0%9F%98%8A%20all%20in%20dart.&font=Source%20Code%20Pro&language=1&pattern=Overlapping%20Hexagons&theme=Light" alt="flutter_danmaku" width="400" />  <br />
 [![Coverage Status](https://coveralls.io/repos/github/flutte-danmaku/flutter_danmaku/badge.svg?branch=dev)](https://coveralls.io/github/flutte-danmaku/flutter_danmaku?branch=dev)
 ![Flutter CI](https://github.com/flutte-danmaku/flutter_danmaku/workflows/Flutter%20CI/badge.svg)
 
@@ -64,50 +64,50 @@ class _MyHomePageState extends State<MyHomePage> {
 
 通过调用addDanmaku来将弹幕展示在屏幕上
 
-| Params |  Type | Description | default |
-| ------ | -------- | ----------  | ------- |
-|  text  | String |   弹幕的文字（必填  | / |
-|  color  | Color |   弹幕的颜色 | Colors.black|
+| Params |  Type | Description | default |  
+| ------ | -------- | ----------  | ------- |  
+|  text  | String |   弹幕的文字（必填  | / |  
+|  color  | Color |   弹幕的颜色 | Colors.black|  
 | bulletType | FlutterDanmakuBulletType | 弹幕从右边滚动到左边 或者 弹幕居中静止展示 | FlutterDanmakuBulletType.scroll|
-| position | FlutterDanmakuBulletPosition | 按顺序插入弹幕 或者 只插入到底部弹幕（插入的弹幕只为静止弹幕 |FlutterDanmakuBulletPosition.any |
-| builder | Widget Function(Text) | 需要自定义弹幕背景 通过编写builder函数来实现 | null |
+| position | FlutterDanmakuBulletPosition | 按顺序插入弹幕 或者 只插入到底部弹幕（插入的弹幕只为静止弹幕 |FlutterDanmakuBulletPosition.any |  
+| builder | Widget Function(Text) | 需要自定义弹幕背景 通过编写builder函数来实现 | null |  
 
 
 ### resizeArea
 
-| Params |  Type | Description | default |
-| ------ | -------- | ----------  | ------- | ------|
-| size | Size | 改变子视图尺寸并等待视图渲染完成后调用 通常用于切换全屏 参数可选 不传默认为子组件context.size | context.size |
+| Params |  Type | Description | default |  
+| ------ | -------- | ----------  | ------- |  
+| size | Size | 改变子视图尺寸并等待视图渲染完成后调用 通常用于切换全屏 参数可选 不传默认为子组件context.size | context.size |  
 
 ### pause & play
 
 暂停或者播放弹幕
 
-| Params |  Type | Description | default |
-| ------ | -------- | ----------  | ------- | ------|
-| / | / | / | / |
+| Params |  Type | Description | default |  
+| ------ | -------- | ----------  | ------- |  
+| / | / | / | / |  
 
 ### changeShowArea
 改变显示区域百分比
-| Params |  Type | Description | default |
-| ------ | -------- | ----------  | ------- | ------|
-| parcent | double | 展示显示区域百分比 0～1 | 1 |
+| Params |  Type | Description | default |  
+| ------ | -------- | ----------  | ------- |  
+| parcent | double | 展示显示区域百分比 0～1 | 1 |  
 
 ### changeRate
 改变弹幕播放速率
 | Params |  Type | Description | default |
-| ------ | -------- | ----------  | ------- | ------|
+| ------ | -------- | ----------  | ------- |
 | rate | double | 修改弹幕播放速率，通常用于倍速播放 大于0即可 1为正常速度 | 1 |
 
 ### changeLableSize
 改变文字大小
 | Params |  Type | Description | default |
-| ------ | -------- | ----------  | ------- | ------|
+| ------ | -------- | ----------  | ------- |
 | size | int | 修改文字大小 会将所有弹幕文字大小调整 | 14
 
 ### changeOpacity
 改变弹幕透明度
 | Params |  Type | Description | default |
-| ------ | -------- | ----------  | ------- | ------|
+| ------ | -------- | ----------  | ------- |
 | opacity | double | 修改文字透明度 会将所有弹幕文字透明度调整 0 ～ 1 | 1
 

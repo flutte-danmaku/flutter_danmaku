@@ -98,6 +98,22 @@ void main() {
       FlutterDanmakuBulletUtils.removeBulletById(bullet1Key);
       expect(FlutterDanmakuManager.bulletsMap.containsKey(bullet1Key), false);
     });
+
+    test('remainderTimeLeaveScreen', () {
+      FlutterDanmakuConfig.areaSize = Size(500, 500);
+      double remainderFrame = FlutterDanmakuBulletUtils.remainderTimeLeaveScreen(80, 10, 5);
+      expect(remainderFrame, ((500 + 10) - 80) / 5);
+    });
+
+    test('recountBulletsOffset', () {
+      FlutterDanmakuAreaState flutterDanmakuAreaState = FlutterDanmakuAreaState();
+      flutterDanmakuAreaState.resizeArea(size: Size(500, 500));
+      flutterDanmakuAreaState.addDanmaku('hello world');
+      flutterDanmakuAreaState.addDanmaku('hello world');
+      flutterDanmakuAreaState.addDanmaku('hello world');
+      flutterDanmakuAreaState.addDanmaku('hello world');
+      FlutterDanmakuBulletUtils.recountBulletsOffset();
+    });
   });
 
   group('bullet', () {
@@ -218,7 +234,6 @@ void main() {
       FlutterDanmakuTrackManager.removeTrackByBulletId(bullet.id);
       expect(FlutterDanmakuManager.tracks.where((element) => element.id == bullet.trackId).first.lastBulletId, null);
       AddBulletResBody bulletResBody1 = flutterDanmakuAreaState.addDanmaku(text, bulletType: FlutterDanmakuBulletType.fixed);
-      FlutterDanmakuBulletUtils.recountBulletsOffset();
       FlutterDanmakuTrackManager.removeTrackByBulletId(bulletResBody1.data);
       expect(FlutterDanmakuManager.tracks.where((element) => element.id == bullet.trackId).first.bindFixedBulletId, null);
       FlutterDanmakuTrackManager.recountTrackOffset();

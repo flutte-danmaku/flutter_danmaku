@@ -32,13 +32,13 @@ class FlutterDanmakuBulletUtils {
 
   // 初始化一个子弹
   static FlutterDanmakuBulletModel initBullet(String text, UniqueKey trackId, Size bulletSize, double offsetY,
-      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color}) {
+      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color, Widget Function(Text) builder}) {
     assert(bulletSize.height > 0);
     assert(bulletSize.width > 0);
     assert(offsetY >= 0);
     UniqueKey bulletId = UniqueKey();
-    FlutterDanmakuBulletModel bullet =
-        FlutterDanmakuBulletModel(color: color, id: bulletId, trackId: trackId, text: text, bulletSize: bulletSize, offsetY: offsetY, bulletType: bulletType);
+    FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletModel(
+        color: color, id: bulletId, trackId: trackId, text: text, bulletSize: bulletSize, offsetY: offsetY, bulletType: bulletType, builder: builder);
     // 记录到表上
     FlutterDanmakuManager.recordBullet(bullet);
     return bullet;
@@ -57,7 +57,10 @@ class FlutterDanmakuBulletUtils {
   }
 
   // 构建子弹
-  static Widget buildBulletToScreen(BuildContext context, FlutterDanmakuBulletModel bulletModel) {
+  static Widget buildBulletToScreen(BuildContext context, FlutterDanmakuBulletModel bulletModel, {Widget Function(Text) builder}) {
+    if (builder != null) {
+      print('builder');
+    }
     FlutterDanmakuBullet bullet = FlutterDanmakuBullet(bulletModel.id, bulletModel.text, color: bulletModel.color);
     return Positioned(right: bulletModel.offsetX, top: bulletModel.offsetY, child: bullet);
   }

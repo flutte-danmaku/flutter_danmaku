@@ -90,10 +90,20 @@ class _MyHomePageState extends State<MyHomePage> {
     danmuarea.currentState.addDanmaku('s' + 's' * random, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
   }
 
+  addBuilderDanmaku() {
+    int random = Random().nextInt(20);
+    danmuarea.currentState.addDanmaku('s' + 's' * random, builder: (Text textWidget) {
+      return Container(
+        child: textWidget,
+        decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+      );
+    }, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
+  }
+
   void _incrementCounter() {
     addDanmaku();
     addDanmaku();
-    addDanmaku();
+    addBuilderDanmaku();
     int random = Random().nextInt(20);
     danmuarea.currentState
         .addDanmaku('s' + 's' * random, bulletType: FlutterDanmakuBulletType.fixed, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);

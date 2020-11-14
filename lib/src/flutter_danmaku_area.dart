@@ -52,9 +52,11 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   AddBulletResBody addDanmaku(String text,
       {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll,
       Color color = FlutterDanmakuConfig.defaultColor,
-      FlutterDanmakuBulletPosition position = FlutterDanmakuBulletPosition.any}) {
+      FlutterDanmakuBulletPosition position = FlutterDanmakuBulletPosition.any,
+      Widget Function(Text) builder}) {
     assert(text.isNotEmpty);
-    return _danmakuManager.addDanmaku(context, text, bulletType: bulletType, color: color, position: position);
+    if (builder != null) print('builder');
+    return _danmakuManager.addDanmaku(context, text, bulletType: bulletType, color: color, position: position, builder: builder);
   }
 
   // 初始化

@@ -19,6 +19,8 @@ class FlutterDanmakuBulletModel {
   double everyFrameRunDistance;
   Color color = Colors.black;
 
+  Widget Function(Text) builder;
+
   FlutterDanmakuBulletType bulletType;
 
   double get offsetX =>
@@ -45,7 +47,8 @@ class FlutterDanmakuBulletModel {
     _runDistance += everyFrameRunDistance * FlutterDanmakuConfig.bulletRate;
   }
 
-  FlutterDanmakuBulletModel({this.id, this.trackId, this.text, this.bulletSize, this.offsetY, this.bulletType = FlutterDanmakuBulletType.scroll, this.color}) {
+  FlutterDanmakuBulletModel(
+      {this.id, this.trackId, this.text, this.bulletSize, this.offsetY, this.bulletType = FlutterDanmakuBulletType.scroll, this.color, this.builder}) {
     everyFrameRunDistance = FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(bulletSize.width);
   }
 }
@@ -59,29 +62,45 @@ class FlutterDanmakuBullet extends StatelessWidget {
 
   GlobalKey key;
 
+  Widget buildText() {
+    Text textWidget = Text(
+      text,
+      style: TextStyle(
+        fontSize: FlutterDanmakuConfig.bulletLableSize,
+        color: color.withOpacity(FlutterDanmakuConfig.opacity),
+      ),
+    );
+    if (FlutterDanmakuManager.bulletsMap[danmakuId] != null && FlutterDanmakuManager.bulletsMap[danmakuId].builder != null) {
+      return FlutterDanmakuManager.bulletsMap[danmakuId].builder(textWidget);
+    }
+    return textWidget;
+  }
+
+  Widget buildStrokeText() {
+    Text textWidget = Text(
+      text,
+      style: TextStyle(
+        fontSize: FlutterDanmakuConfig.bulletLableSize,
+        foreground: Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.5
+          ..color = Colors.white.withOpacity(FlutterDanmakuConfig.opacity),
+      ),
+    );
+    if (FlutterDanmakuManager.bulletsMap[danmakuId] != null && FlutterDanmakuManager.bulletsMap[danmakuId].builder != null) {
+      return FlutterDanmakuManager.bulletsMap[danmakuId].builder(textWidget);
+    }
+    return textWidget;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
         // Stroked text as border.
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: FlutterDanmakuConfig.bulletLableSize,
-            foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 0.5
-              ..color = Colors.white.withOpacity(FlutterDanmakuConfig.opacity),
-          ),
-        ),
+        buildStrokeText(),
         // Solid text as fill.
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: FlutterDanmakuConfig.bulletLableSize,
-            color: color.withOpacity(FlutterDanmakuConfig.opacity),
-          ),
-        ),
+        buildText()
       ],
     );
   }

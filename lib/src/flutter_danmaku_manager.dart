@@ -64,6 +64,7 @@ class FlutterDanmakuManager {
   AddBulletResBody addDanmaku(BuildContext context, String text,
       {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll,
       Color color,
+      Widget Function(Text) builder,
       FlutterDanmakuBulletPosition position = FlutterDanmakuBulletPosition.any}) {
     assert(text.isNotEmpty);
     // 先获取子弹尺寸
@@ -75,13 +76,13 @@ class FlutterDanmakuManager {
       return AddBulletResBody(
         AddBulletResCode.noSpace,
       );
-    FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletUtils.initBullet(text, track.id, bulletSize, track.offsetTop, bulletType: bulletType, color: color);
+    FlutterDanmakuBulletModel bullet =
+        FlutterDanmakuBulletUtils.initBullet(text, track.id, bulletSize, track.offsetTop, bulletType: bulletType, color: color, builder: builder);
     if (bulletType == FlutterDanmakuBulletType.scroll) {
       track.lastBulletId = bullet.id;
     } else {
       track.bindFixedBulletId = bullet.id;
     }
-    FlutterDanmakuBulletUtils.buildBulletToScreen(context, bullet);
     return AddBulletResBody(AddBulletResCode.success, data: bullet.id);
   }
 

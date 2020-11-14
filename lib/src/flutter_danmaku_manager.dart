@@ -49,7 +49,7 @@ class FlutterDanmakuManager {
   }
 
   void run(Function callBack) {
-    timer = Timer(Duration(milliseconds: unitTimer), () {
+    timer = Timer.periodic(Duration(milliseconds: unitTimer), (Timer timer) {
       // 暂停不执行
       if (!FlutterDanmakuConfig.pause) {
         for (int i = FlutterDanmakuManager.bullets.length - 1; i >= 0; i--) {
@@ -57,7 +57,6 @@ class FlutterDanmakuManager {
         }
         callBack();
       }
-      run(callBack);
     });
   }
 

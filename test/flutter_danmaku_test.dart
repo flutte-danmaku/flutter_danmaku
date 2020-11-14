@@ -207,13 +207,31 @@ void main() {
       expect(bullet.runtimeType, FlutterDanmakuBulletModel);
       bool willBump = FlutterDanmakuTrackManager.trackInsertBulletHasBump(bullet, textSize);
       expect(willBump, true);
-      print(bullet.leaveScreenRemainderTime);
+      bool willBump2 = FlutterDanmakuTrackManager.trackInsertBulletHasBump(bullet, FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText(text * 2));
+      expect(willBump2, true);
       for (int i = 0; i < 200; i++) {
         bullet.runNextFrame();
       }
-      print(bullet.leaveScreenRemainderTime);
       bool willBump1 = FlutterDanmakuTrackManager.trackInsertBulletHasBump(bullet, textSize);
       expect(willBump1, false);
+      expect(FlutterDanmakuTrackManager.trackAllowInsert(FlutterDanmakuManager.tracks[0], textSize), true);
+      FlutterDanmakuTrackManager.removeTrackByBulletId(bullet.id);
+      expect(FlutterDanmakuManager.tracks.where((element) => element.id == bullet.trackId).first.lastBulletId, null);
+      AddBulletResBody bulletResBody1 = flutterDanmakuAreaState.addDanmaku(text, bulletType: FlutterDanmakuBulletType.fixed);
+      FlutterDanmakuBulletUtils.recountBulletsOffset();
+      FlutterDanmakuTrackManager.removeTrackByBulletId(bulletResBody1.data);
+      expect(FlutterDanmakuManager.tracks.where((element) => element.id == bullet.trackId).first.bindFixedBulletId, null);
+      FlutterDanmakuTrackManager.recountTrackOffset();
+    });
+  });
+
+  group('FlutterDanmakuManager', () {
+    test('run', () async {
+      int mycount = 0;
+      FlutterDanmakuManager flutterDanmakuManager = FlutterDanmakuManager();
+      flutterDanmakuManager.run(() => {if (mycount == 3) flutterDanmakuManager.dispose(), mycount += 1});
+      await Future.delayed(Duration(seconds: 1));
+      expect(mycount, 4);
     });
   });
 

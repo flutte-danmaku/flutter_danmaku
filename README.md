@@ -1,5 +1,5 @@
 # 👏 Flutter Danmaku
-<img src="https://socialify.git.ci/flutte-danmaku/flutter_danmaku/image?description=1&descriptionEditable=a%20normal%20danmaku%20by%20flutter.%20live%20comment%20hohoho%F0%9F%98%8A%20all%20in%20dart.&font=Source%20Code%20Pro&language=1&pattern=Overlapping%20Hexagons&theme=Light" alt="flutter_danmaku" width="400" />  <br />
+<img src="https://socialify.git.ci/flutte-danmaku/flutter_danmaku/image?description=1&descriptionEditable=a%20normal%20danmaku%20by%20flutter.%20live%20comment%20hohoho%F0%9F%98%8A%20all%20in%20dart.&font=Source%20Code%20Pro&language=1&pattern=Overlapping%20Hexagons&theme=Light&submit" alt="flutter_danmaku" width="400" />  <br />
 [![Coverage Status](https://coveralls.io/repos/github/flutte-danmaku/flutter_danmaku/badge.svg?branch=dev)](https://coveralls.io/github/flutte-danmaku/flutter_danmaku?branch=dev)
 ![Flutter CI](https://github.com/flutte-danmaku/flutter_danmaku/workflows/Flutter%20CI/badge.svg)
 
@@ -111,3 +111,14 @@ class _MyHomePageState extends State<MyHomePage> {
 | ------ | -------- | ----------  | ------- |
 | opacity | double | 修改文字透明度 会将所有弹幕文字透明度调整 0 ～ 1 | 1
 
+
+
+<hr>
+<hr>
+
+## 特别鸣谢
+
+感谢[@sxsdjkk](https://github.com/sxsdjkk)对本项目的code review以及相关指导和修改意见。 
+
+
+感谢我的直属领导@银翼的魔术师。带领的团队拥有非常open的技术氛围，给予我较为宽松的技术成长环境。

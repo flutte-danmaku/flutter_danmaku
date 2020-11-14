@@ -123,13 +123,13 @@ class FlutterDanmakuTrackManager {
     lastBulletId = track.lastBulletId;
     FlutterDanmakuBulletModel lastBullet = FlutterDanmakuManager.bulletsMap[lastBulletId];
     if (lastBullet == null) return true;
-    // 是否离开了右边的墙壁
-    if (!lastBullet.allOutRight) return false;
-    return trackInsertBulletHasBump(lastBullet, needInsertBulletSize);
+    return !trackInsertBulletHasBump(lastBullet, needInsertBulletSize);
   }
 
-  // 轨道注入子弹是否为碰撞
+  // 轨道注入子弹是否会碰撞
   static bool trackInsertBulletHasBump(FlutterDanmakuBulletModel trackLastBullet, Size needInsertBulletSize) {
+    // 是否离开了右边的墙壁
+    if (!trackLastBullet.allOutRight) return true;
     double willInsertBulletEveryFramerateRunDistance = FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(needInsertBulletSize.width);
     // 要插入的节点速度比上一个快
     if (willInsertBulletEveryFramerateRunDistance > trackLastBullet.everyFrameRunDistance) {
@@ -137,9 +137,9 @@ class FlutterDanmakuTrackManager {
       // 将要插入的弹幕全部离开减去上一个弹幕宽度需要的时间
       double willInsertBulletLeaveScreenRemainderTime =
           FlutterDanmakuBulletUtils.remainderTimeLeaveScreen(0, 0, FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(needInsertBulletSize.width));
-      return !(trackLastBullet.leaveScreenRemainderTime > willInsertBulletLeaveScreenRemainderTime);
+      return trackLastBullet.leaveScreenRemainderTime > willInsertBulletLeaveScreenRemainderTime;
     } else {
-      return true;
+      return false;
     }
   }
 

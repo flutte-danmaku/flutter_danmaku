@@ -196,6 +196,25 @@ void main() {
       FlutterDanmakuConfig.showAreaPercent = 0.5;
       expect(FlutterDanmakuTrackManager.areaAllowBuildNewTrack(trackHeight), false);
     });
+
+    test('trackInsertBulletHasBump', () async {
+      String text = 'hello world';
+      Size textSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText(text);
+      FlutterDanmakuAreaState flutterDanmakuAreaState = FlutterDanmakuAreaState();
+      flutterDanmakuAreaState.resizeArea(size: Size(500, 500));
+      AddBulletResBody bulletResBody = flutterDanmakuAreaState.addDanmaku(text);
+      FlutterDanmakuBulletModel bullet = FlutterDanmakuManager.bulletsMap[bulletResBody.data];
+      expect(bullet.runtimeType, FlutterDanmakuBulletModel);
+      bool willBump = FlutterDanmakuTrackManager.trackInsertBulletHasBump(bullet, textSize);
+      expect(willBump, true);
+      print(bullet.leaveScreenRemainderTime);
+      for (int i = 0; i < 200; i++) {
+        bullet.runNextFrame();
+      }
+      print(bullet.leaveScreenRemainderTime);
+      bool willBump1 = FlutterDanmakuTrackManager.trackInsertBulletHasBump(bullet, textSize);
+      expect(willBump1, false);
+    });
   });
 
   group('FlutterDanmakuAreaState', () {
@@ -211,6 +230,28 @@ void main() {
       AddBulletResBody resBody1 = flutterDanmakuAreaState.addDanmaku(text);
       expect(resBody1.code, AddBulletResCode.success);
       expect(track.lastBulletId, FlutterDanmakuManager.bullets[0].id);
+      FlutterDanmakuArea(child: Container(height: 500, width: 500));
+    });
+
+    //     testWidgets('FlutterDanmakuBullet', (WidgetTester tester) async {
+    //   String text = 'hello world';
+    //   // Create the widget by telling the tester to build it.
+    //   await tester.pumpWidget(Directionality(
+    //       textDirection: TextDirection.ltr,
+    //       child: FlutterDanmakuBullet(
+    //         UniqueKey(),
+    //         text,
+    //         color: Colors.red,
+    //       )));
+    // });
+
+    testWidgets('FlutterDanmakuArea', (WidgetTester tester) async {
+      Widget childArea = Container(height: 400, width: 400);
+      await tester.pumpWidget(Directionality(
+          textDirection: TextDirection.ltr,
+          child: FlutterDanmakuArea(
+            child: childArea,
+          )));
     });
 
     test('play status', () {

@@ -98,7 +98,10 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   void resizeArea({Size size = const Size(0, 0)}) {
     FlutterDanmakuConfig.areaSize = context?.size ?? size;
     FlutterDanmakuTrackManager.recountTrackOffset();
-    if (FlutterDanmakuConfig.pause) {}
+    if (FlutterDanmakuConfig.pause) {
+      _danmakuManager.randerNextFrame();
+      setState(() {});
+    }
   }
 
   // 修改弹幕最大可展示场景的百分比

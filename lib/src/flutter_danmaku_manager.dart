@@ -52,12 +52,17 @@ class FlutterDanmakuManager {
     timer = Timer.periodic(Duration(milliseconds: unitTimer), (Timer timer) {
       // 暂停不执行
       if (!FlutterDanmakuConfig.pause) {
-        for (int i = FlutterDanmakuManager.bullets.length - 1; i >= 0; i--) {
-          _nextFramerate(FlutterDanmakuManager.bullets[i]);
-        }
+        randerNextFrame();
         callBack();
       }
     });
+  }
+
+  // 渲染下一帧
+  void randerNextFrame() {
+    for (int i = FlutterDanmakuManager.bullets.length - 1; i >= 0; i--) {
+      _nextFramerate(FlutterDanmakuManager.bullets[i]);
+    }
   }
 
   // 成功返回AddBulletResBody.data为bulletId

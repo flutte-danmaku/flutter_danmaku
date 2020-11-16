@@ -116,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
 <hr>
 <hr>
 
-## 特别鸣谢
+## 感谢
 
 感谢[@sxsdjkk](https://github.com/sxsdjkk)对本项目的code review以及相关指导和修改意见。 
 

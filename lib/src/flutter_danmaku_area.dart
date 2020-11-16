@@ -100,7 +100,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
     FlutterDanmakuTrackManager.recountTrackOffset();
     if (FlutterDanmakuConfig.pause) {
       _danmakuManager.randerNextFrame();
-      setState(() {});
+      if (mounted) setState(() {});
     }
   }
 

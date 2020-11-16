@@ -1,7 +1,4 @@
 // 弹幕轨道
-
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_danmaku/flutter_danmaku.dart';
 import 'package:flutter_danmaku/src/config.dart';
@@ -15,25 +12,61 @@ class FlutterDanmakuTrack {
 
   UniqueKey bindFixedBulletId; // 绑定的静止定位弹幕ID
 
+  FlutterDanmakuTrack(this._trackHeight, this.offsetTop);
+
   double offsetTop;
 
-  double trackHeight;
+  double _trackHeight;
 
-  FlutterDanmakuTrack(this.trackHeight, this.offsetTop);
+  double get trackHeight => _trackHeight;
+
+  // 允许插入禁止弹幕
+  bool get allowInsertFixedBullet => bindFixedBulletId == null;
+
+  set trackHeight(double height) {
+    offsetTop = FlutterDanmakuManager.allTrackHeight;
+    _trackHeight = height;
+  }
 }
 
 class FlutterDanmakuTrackManager {
-  static FlutterDanmakuTrack findAvailableTrack(Size bulletSize, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
+  static FlutterDanmakuTrack findAvailableTrack(Size bulletSize,
+      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, FlutterDanmakuBulletPosition position = FlutterDanmakuBulletPosition.any}) {
     assert(bulletSize.height > 0);
     assert(bulletSize.width > 0);
+    if (position == FlutterDanmakuBulletPosition.any) {
+      return _findAllowInsertTrack(bulletSize, bulletType: bulletType);
+    } else {
+      return _findAllowInsertBottomTrack(bulletSize);
+    }
+  }
+
+  // 算轨道相对区域是否溢出
+  static bool get isTrackOverflowArea => FlutterDanmakuManager.allTrackHeight > FlutterDanmakuConfig.areaSize.height;
+  // 算轨道相对可用区域是否溢出
+  static bool isEnableTrackOverflowArea(FlutterDanmakuTrack track) => track.offsetTop + track.trackHeight > FlutterDanmakuConfig.showAreaHeight;
+
+  // 查找允许插入的底部轨道
+  static FlutterDanmakuTrack _findAllowInsertBottomTrack(Size bulletSize) {
     FlutterDanmakuTrack _track;
-    // 轨道列表为空
-    if (FlutterDanmakuManager.tracks.isEmpty) return null;
+    // 在现有轨道里找
+    // 底部弹幕 指的是 最后几条轨道 从最底下往上发
+    for (int i = FlutterDanmakuManager.tracks.length - 1; i >= FlutterDanmakuManager.tracks.length - 3; i--) {
+      // 底部弹幕仅支持静止弹幕
+      if (FlutterDanmakuManager.tracks[i].allowInsertFixedBullet) {
+        _track = FlutterDanmakuManager.tracks[i];
+        break;
+      }
+    }
+    return _track;
+  }
+
+  static FlutterDanmakuTrack _findAllowInsertTrack(Size bulletSize, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
+    FlutterDanmakuTrack _track;
     // 在现有轨道里找
     for (int i = 0; i < FlutterDanmakuManager.tracks.length; i++) {
-      // 轨道是否溢出工作区
-      bool isTrackOverflow = FlutterDanmakuTrackManager.isTrackOverflowArea(FlutterDanmakuManager.tracks[i]);
-      if (isTrackOverflow) break;
+      // 当前轨道溢出可用轨道
+      if (FlutterDanmakuTrackManager.isEnableTrackOverflowArea(FlutterDanmakuManager.tracks[i])) break;
       bool allowInsert = FlutterDanmakuTrackManager.trackAllowInsert(FlutterDanmakuManager.tracks[i], bulletSize, bulletType: bulletType);
       if (allowInsert) {
         _track = FlutterDanmakuManager.tracks[i];
@@ -46,7 +79,7 @@ class FlutterDanmakuTrackManager {
   // 补足屏幕内轨道
   static void buildTrackFullScreen() {
     Size singleTextSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText('s');
-    while (FlutterDanmakuManager.allTrackHeight < FlutterDanmakuConfig.showAreaHeight) {
+    while (FlutterDanmakuManager.allTrackHeight < FlutterDanmakuConfig.areaSize.height) {
       buildTrack(singleTextSize.height);
     }
   }
@@ -62,10 +95,9 @@ class FlutterDanmakuTrackManager {
   static void recountTrackOffset() {
     Size currentLabelSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText('s');
     for (int i = 0; i < FlutterDanmakuManager.tracks.length; i++) {
-      FlutterDanmakuManager.tracks[i].offsetTop = i * currentLabelSize.height;
       FlutterDanmakuManager.tracks[i].trackHeight = currentLabelSize.height;
-      // 把溢出的轨道之后全部删掉
-      if (FlutterDanmakuTrackManager.isTrackOverflowArea(FlutterDanmakuManager.tracks[i])) {
+      // 把溢出可用区域的轨道之后全部删掉
+      if (FlutterDanmakuTrackManager.isTrackOverflowArea) {
         FlutterDanmakuManager.tracks.removeRange(i, FlutterDanmakuManager.tracks.length);
         break;
       }
@@ -77,7 +109,7 @@ class FlutterDanmakuTrackManager {
   static bool areaAllowBuildNewTrack(double needBuildTrackHeight) {
     assert(needBuildTrackHeight > 0);
     if (FlutterDanmakuManager.tracks.isEmpty) return true;
-    return FlutterDanmakuConfig.showAreaHeight - FlutterDanmakuManager.allTrackHeight >= needBuildTrackHeight;
+    return FlutterDanmakuConfig.remainderHeight >= needBuildTrackHeight;
   }
 
   // 轨道是否允许被插入
@@ -85,18 +117,19 @@ class FlutterDanmakuTrackManager {
     UniqueKey lastBulletId;
     assert(needInsertBulletSize.height > 0);
     assert(needInsertBulletSize.width > 0);
-    if (bulletType == FlutterDanmakuBulletType.fixed) return track.bindFixedBulletId == null;
+    // 非底部弹幕 超出配置的可视区域 就不可插入
+    if (bulletType == FlutterDanmakuBulletType.fixed) return track.allowInsertFixedBullet;
     if (track.lastBulletId == null) return true;
     lastBulletId = track.lastBulletId;
     FlutterDanmakuBulletModel lastBullet = FlutterDanmakuManager.bulletsMap[lastBulletId];
     if (lastBullet == null) return true;
-    // 是否离开了右边的墙壁
-    if (!lastBullet.allOutRight) return false;
-    return trackInsertBulletHasBump(lastBullet, needInsertBulletSize);
+    return !trackInsertBulletHasBump(lastBullet, needInsertBulletSize);
   }
 
-  // 轨道注入子弹是否为碰撞
+  // 轨道注入子弹是否会碰撞
   static bool trackInsertBulletHasBump(FlutterDanmakuBulletModel trackLastBullet, Size needInsertBulletSize) {
+    // 是否离开了右边的墙壁
+    if (!trackLastBullet.allOutRight) return true;
     double willInsertBulletEveryFramerateRunDistance = FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(needInsertBulletSize.width);
     // 要插入的节点速度比上一个快
     if (willInsertBulletEveryFramerateRunDistance > trackLastBullet.everyFrameRunDistance) {
@@ -104,15 +137,10 @@ class FlutterDanmakuTrackManager {
       // 将要插入的弹幕全部离开减去上一个弹幕宽度需要的时间
       double willInsertBulletLeaveScreenRemainderTime =
           FlutterDanmakuBulletUtils.remainderTimeLeaveScreen(0, 0, FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(needInsertBulletSize.width));
-      return !(trackLastBullet.leaveScreenRemainderTime > willInsertBulletLeaveScreenRemainderTime);
+      return trackLastBullet.leaveScreenRemainderTime > willInsertBulletLeaveScreenRemainderTime;
     } else {
-      return true;
+      return false;
     }
-  }
-
-  // 轨道是否溢出
-  static bool isTrackOverflowArea(FlutterDanmakuTrack track) {
-    return (track.offsetTop + track.trackHeight) > FlutterDanmakuConfig.showAreaHeight;
   }
 
   static void removeTrackByBulletId(UniqueKey bulletId) {

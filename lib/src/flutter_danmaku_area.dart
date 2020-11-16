@@ -49,9 +49,14 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   bool get isPause => FlutterDanmakuConfig.pause;
 
   // 添加弹幕
-  void addDanmaku(String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color = FlutterDanmakuConfig.defaultColor}) {
+  AddBulletResBody addDanmaku(String text,
+      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll,
+      Color color = FlutterDanmakuConfig.defaultColor,
+      FlutterDanmakuBulletPosition position = FlutterDanmakuBulletPosition.any,
+      Widget Function(Text) builder}) {
     assert(text.isNotEmpty);
-    _danmakuManager.addDanmaku(context, text, bulletType: bulletType, color: color);
+    if (builder != null) print('builder');
+    return _danmakuManager.addDanmaku(context, text, bulletType: bulletType, color: color, position: position, builder: builder);
   }
 
   // 初始化
@@ -93,22 +98,16 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   void resizeArea({Size size = const Size(0, 0)}) {
     FlutterDanmakuConfig.areaSize = context?.size ?? size;
     FlutterDanmakuTrackManager.recountTrackOffset();
-    if (FlutterDanmakuConfig.pause) {}
+    if (FlutterDanmakuConfig.pause) {
+      _danmakuManager.randerNextFrame();
+      if (mounted) setState(() {});
+    }
   }
 
   // 修改弹幕最大可展示场景的百分比
   void changeShowArea(double percent) {
     assert(percent <= 1);
     assert(percent >= 0);
-    if (percent < FlutterDanmakuConfig.showAreaPercent) {
-      for (int i = 0; i < _tracks.length; i++) {
-        // 把溢出的轨道之后全部删掉
-        if (FlutterDanmakuTrackManager.isTrackOverflowArea(_tracks[i])) {
-          _tracks.removeRange(i, _tracks.length);
-          break;
-        }
-      }
-    }
     FlutterDanmakuConfig.showAreaPercent = percent;
     FlutterDanmakuTrackManager.buildTrackFullScreen();
   }

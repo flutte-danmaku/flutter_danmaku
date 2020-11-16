@@ -29,13 +29,18 @@ class FlutterDanmakuManager {
     return tracks.last.offsetTop + tracks.last.trackHeight;
   }
 
-  static set recordBullet(FlutterDanmakuBulletModel bullet) {
+  // 记录子弹到map中
+  static recordBullet(FlutterDanmakuBulletModel bullet) {
     _bullets[bullet.id] = bullet;
   }
 
   static bool hasBulletKey(UniqueKey id) => _bullets.containsKey(id);
 
   static void removeBulletByKey(UniqueKey id) => _bullets.remove(id);
+
+  static void removeAllBullet() {
+    _bullets = {};
+  }
 
   Timer timer;
 
@@ -44,38 +49,45 @@ class FlutterDanmakuManager {
   }
 
   void run(Function callBack) {
-    timer = Timer(Duration(milliseconds: unitTimer), () {
-      print(tracks.length);
+    timer = Timer.periodic(Duration(milliseconds: unitTimer), (Timer timer) {
       // 暂停不执行
       if (!FlutterDanmakuConfig.pause) {
-        for (int i = FlutterDanmakuManager.bullets.length - 1; i >= 0; i--) {
-          _nextFramerate(FlutterDanmakuManager.bullets[i]);
-        }
+        randerNextFrame();
         callBack();
       }
-      run(callBack);
     });
   }
 
+  // 渲染下一帧
+  void randerNextFrame() {
+    for (int i = FlutterDanmakuManager.bullets.length - 1; i >= 0; i--) {
+      _nextFramerate(FlutterDanmakuManager.bullets[i]);
+    }
+  }
+
   // 成功返回AddBulletResBody.data为bulletId
-  AddBulletResBody addDanmaku(BuildContext context, String text, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color}) {
+  AddBulletResBody addDanmaku(BuildContext context, String text,
+      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll,
+      Color color,
+      Widget Function(Text) builder,
+      FlutterDanmakuBulletPosition position = FlutterDanmakuBulletPosition.any}) {
     assert(text.isNotEmpty);
     // 先获取子弹尺寸
     Size bulletSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText(text);
     // 寻找可用的轨道
-    FlutterDanmakuTrack track = FlutterDanmakuTrackManager.findAvailableTrack(bulletSize, bulletType: bulletType);
+    FlutterDanmakuTrack track = FlutterDanmakuTrackManager.findAvailableTrack(bulletSize, bulletType: bulletType, position: position);
     // 如果没有找到可用的轨道
     if (track == null)
       return AddBulletResBody(
         AddBulletResCode.noSpace,
       );
-    FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletUtils.initBullet(text, track.id, bulletSize, track.offsetTop, bulletType: bulletType, color: color);
+    FlutterDanmakuBulletModel bullet =
+        FlutterDanmakuBulletUtils.initBullet(text, track.id, bulletSize, track.offsetTop, bulletType: bulletType, color: color, builder: builder);
     if (bulletType == FlutterDanmakuBulletType.scroll) {
       track.lastBulletId = bullet.id;
     } else {
       track.bindFixedBulletId = bullet.id;
     }
-    FlutterDanmakuBulletUtils.buildBulletToScreen(context, bullet);
     return AddBulletResBody(AddBulletResCode.success, data: bullet.id);
   }
 

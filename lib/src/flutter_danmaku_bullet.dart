@@ -7,6 +7,7 @@ import 'package:flutter_danmaku/src/flutter_danmaku_bullet_manager.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_manager.dart';
 
 enum FlutterDanmakuBulletType { scroll, fixed }
+enum FlutterDanmakuBulletPosition { any, bottom }
 
 class FlutterDanmakuBulletModel {
   UniqueKey id;
@@ -17,6 +18,8 @@ class FlutterDanmakuBulletModel {
   double _runDistance = 0;
   double everyFrameRunDistance;
   Color color = Colors.black;
+
+  Widget Function(Text) builder;
 
   FlutterDanmakuBulletType bulletType;
 
@@ -31,56 +34,73 @@ class FlutterDanmakuBulletModel {
 
   double get runDistance => _runDistance;
 
+  // 剩余离开的距离
+  double get remanderDistance => needRunDistace - runDistance;
+
+  // 需要走的距离
+  double get needRunDistace => FlutterDanmakuConfig.areaSize.width + bulletSize.width;
+
   // 离开屏幕剩余需要的时间
-  double get leaveScreenRemainderTime {
-    assert(runDistance >= 0);
-    assert(bulletSize.width >= 0);
-    assert(everyFrameRunDistance > 0);
-    double remanderDistance = (FlutterDanmakuConfig.areaSize.width + bulletSize.width) - runDistance;
-    return remanderDistance / everyFrameRunDistance;
-  }
+  double get leaveScreenRemainderTime => remanderDistance / everyFrameRunDistance;
 
   void runNextFrame() {
     _runDistance += everyFrameRunDistance * FlutterDanmakuConfig.bulletRate;
   }
 
-  FlutterDanmakuBulletModel({this.id, this.trackId, this.text, this.bulletSize, this.offsetY, this.bulletType = FlutterDanmakuBulletType.scroll, this.color}) {
+  FlutterDanmakuBulletModel(
+      {this.id, this.trackId, this.text, this.bulletSize, this.offsetY, this.bulletType = FlutterDanmakuBulletType.scroll, this.color, this.builder}) {
     everyFrameRunDistance = FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(bulletSize.width);
   }
 }
 
 class FlutterDanmakuBullet extends StatelessWidget {
-  FlutterDanmakuBullet(this.danmakuId, this.text, {this.color});
+  FlutterDanmakuBullet(this.danmakuId, this.text, {this.color = Colors.black});
 
   String text;
   UniqueKey danmakuId;
-  Color color = Colors.black;
+  Color color;
 
   GlobalKey key;
+
+  Widget buildText() {
+    Text textWidget = Text(
+      text,
+      style: TextStyle(
+        fontSize: FlutterDanmakuConfig.bulletLableSize,
+        color: color.withOpacity(FlutterDanmakuConfig.opacity),
+      ),
+    );
+    if (FlutterDanmakuManager.bulletsMap[danmakuId] != null && FlutterDanmakuManager.bulletsMap[danmakuId].builder != null) {
+      return FlutterDanmakuManager.bulletsMap[danmakuId].builder(textWidget);
+    }
+    return textWidget;
+  }
+
+  Widget buildStrokeText() {
+    Text textWidget = Text(
+      text,
+      style: TextStyle(
+        fontSize: FlutterDanmakuConfig.bulletLableSize,
+        foreground: Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.5
+          ..color = Colors.white.withOpacity(FlutterDanmakuConfig.opacity),
+      ),
+    );
+    if (FlutterDanmakuManager.bulletsMap[danmakuId] != null && FlutterDanmakuManager.bulletsMap[danmakuId].builder != null) {
+      return FlutterDanmakuManager.bulletsMap[danmakuId].builder(textWidget);
+    }
+    return textWidget;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
         // Stroked text as border.
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: FlutterDanmakuConfig.bulletLableSize,
-            foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 0.5
-              ..color = Colors.white.withOpacity(FlutterDanmakuConfig.opacity),
-          ),
-        ),
+        buildStrokeText(),
         // Solid text as fill.
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: FlutterDanmakuConfig.bulletLableSize,
-            color: color.withOpacity(FlutterDanmakuConfig.opacity),
-          ),
-        ),
+        buildText()
       ],
     );
   }

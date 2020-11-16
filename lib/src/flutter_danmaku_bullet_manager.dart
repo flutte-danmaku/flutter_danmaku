@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_danmaku/src/config.dart';
@@ -34,15 +32,15 @@ class FlutterDanmakuBulletUtils {
 
   // 初始化一个子弹
   static FlutterDanmakuBulletModel initBullet(String text, UniqueKey trackId, Size bulletSize, double offsetY,
-      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color}) {
+      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color, Widget Function(Text) builder}) {
     assert(bulletSize.height > 0);
     assert(bulletSize.width > 0);
     assert(offsetY >= 0);
     UniqueKey bulletId = UniqueKey();
-    FlutterDanmakuBulletModel bullet =
-        FlutterDanmakuBulletModel(color: color, id: bulletId, trackId: trackId, text: text, bulletSize: bulletSize, offsetY: offsetY, bulletType: bulletType);
+    FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletModel(
+        color: color, id: bulletId, trackId: trackId, text: text, bulletSize: bulletSize, offsetY: offsetY, bulletType: bulletType, builder: builder);
     // 记录到表上
-    FlutterDanmakuManager.recordBullet = bullet;
+    FlutterDanmakuManager.recordBullet(bullet);
     return bullet;
   }
 
@@ -59,7 +57,7 @@ class FlutterDanmakuBulletUtils {
   }
 
   // 构建子弹
-  static Widget buildBulletToScreen(BuildContext context, FlutterDanmakuBulletModel bulletModel) {
+  static Widget buildBulletToScreen(BuildContext context, FlutterDanmakuBulletModel bulletModel, {Widget Function(Text) builder}) {
     FlutterDanmakuBullet bullet = FlutterDanmakuBullet(bulletModel.id, bulletModel.text, color: bulletModel.color);
     return Positioned(right: bulletModel.offsetX, top: bulletModel.offsetY, child: bullet);
   }
@@ -81,9 +79,9 @@ class FlutterDanmakuBulletUtils {
   static recountBulletsOffset() {
     // 写的非常脏 但是太累了
     FlutterDanmakuManager.bullets.map((FlutterDanmakuBulletModel bullet) {
-      dynamic tracks = FlutterDanmakuManager.tracks.where((element) => element.id == bullet.trackId);
-      if (tracks.isEmpty) return;
-      bullet.offsetY = tracks.first.offsetTop;
+      FlutterDanmakuTrack track = FlutterDanmakuManager.tracks.firstWhere((element) => element.id == bullet.trackId);
+      if (track == null) return;
+      bullet.offsetY = track.offsetTop;
       bullet.bulletSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText(bullet.text);
     });
   }

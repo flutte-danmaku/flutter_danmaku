@@ -32,13 +32,24 @@ class FlutterDanmakuBulletUtils {
 
   // 初始化一个子弹
   static FlutterDanmakuBulletModel initBullet(String text, UniqueKey trackId, Size bulletSize, double offsetY,
-      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, Color color, Widget Function(Text) builder}) {
+      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll,
+      FlutterDanmakuBulletPosition position,
+      Color color,
+      Widget Function(Text) builder}) {
     assert(bulletSize.height > 0);
     assert(bulletSize.width > 0);
     assert(offsetY >= 0);
     UniqueKey bulletId = UniqueKey();
     FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletModel(
-        color: color, id: bulletId, trackId: trackId, text: text, bulletSize: bulletSize, offsetY: offsetY, bulletType: bulletType, builder: builder);
+        color: color,
+        id: bulletId,
+        trackId: trackId,
+        text: text,
+        position: position,
+        bulletSize: bulletSize,
+        offsetY: offsetY,
+        bulletType: bulletType,
+        builder: builder);
     // 记录到表上
     FlutterDanmakuManager.recordBullet(bullet);
     return bullet;
@@ -79,7 +90,7 @@ class FlutterDanmakuBulletUtils {
   static recountBulletsOffset() {
     // 写的非常脏 但是太累了
     FlutterDanmakuManager.bullets.map((FlutterDanmakuBulletModel bullet) {
-      FlutterDanmakuTrack track = FlutterDanmakuManager.tracks.firstWhere((element) => element.id == bullet.trackId);
+      FlutterDanmakuTrack track = FlutterDanmakuManager.tracks.firstWhere((element) => element.id == bullet.trackId, orElse: () => null);
       if (track == null) return;
       bullet.offsetY = track.offsetTop;
       bullet.bulletSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText(bullet.text);

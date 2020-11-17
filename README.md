@@ -62,7 +62,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
 ### addDanmaku
 
+``` dart
+AddBulletResBody addDanmaku(
+    String text,
+    {
+        Color color,
+        FlutterDanmakuBulletType bulletType,
+        FlutterDanmakuBulletPosition position,
+        Widget Function(Text) builder
+    }
+)
+```
+
 通过调用addDanmaku来将弹幕展示在屏幕上
+
+``` dart
+enum AddBulletResBody {
+    noSpace, // 没空间
+    success // 成功
+}
+```
 
 | Params |  Type | Description | default |  
 | ------ | -------- | ----------  | ------- |  
@@ -75,6 +94,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
 ### resizeArea
 
+``` dart
+void resizeArea({
+    Size size // default context.size
+})
+```
+
 | Params |  Type | Description | default |  
 | ------ | -------- | ----------  | ------- |  
 | size | Size | 改变子视图尺寸并等待视图渲染完成后调用 通常用于切换全屏 参数可选 不传默认为子组件context.size | context.size |  
@@ -83,30 +108,53 @@ class _MyHomePageState extends State<MyHomePage> {
 
 暂停或者播放弹幕
 
+``` dart
+void pause()
+void play()
+```
+
 | Params |  Type | Description | default |  
 | ------ | -------- | ----------  | ------- |  
 | / | / | / | / |  
 
 ### changeShowArea
 改变显示区域百分比
+``` dart
+void changeShowArea(double parcent)
+```
 | Params |  Type | Description | default |  
 | ------ | -------- | ----------  | ------- |  
 | parcent | double | 展示显示区域百分比 0～1 | 1 |  
 
 ### changeRate
 改变弹幕播放速率
+
+``` dart
+void changeRate(double rate)
+```
+
 | Params |  Type | Description | default |
 | ------ | -------- | ----------  | ------- |
 | rate | double | 修改弹幕播放速率，通常用于倍速播放 大于0即可 1为正常速度 | 1 |
 
 ### changeLableSize
 改变文字大小
+
+``` dart
+void changeLableSize(int fontSize)
+```
+
 | Params |  Type | Description | default |
 | ------ | -------- | ----------  | ------- |
-| size | int | 修改文字大小 会将所有弹幕文字大小调整 | 14
+| fontSize | int | 修改文字大小 会将所有弹幕文字大小调整 | 14
 
 ### changeOpacity
 改变弹幕透明度
+
+``` dart
+void changeOpacity(int opacity)
+```
+
 | Params |  Type | Description | default |
 | ------ | -------- | ----------  | ------- |
 | opacity | double | 修改文字透明度 会将所有弹幕文字透明度调整 0 ～ 1 | 1

@@ -140,8 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void dibudanmu() {
-    int random = Random().nextInt(20);
-    danmuarea.currentState.addDanmaku('s' + 's' * random,
+    danmuarea.currentState.addDanmaku('我是底部弹幕我是底部弹幕',
         bulletType: FlutterDanmakuBulletType.fixed,
         position: FlutterDanmakuBulletPosition.bottom,
         color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);

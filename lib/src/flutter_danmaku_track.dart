@@ -20,11 +20,10 @@ class FlutterDanmakuTrack {
 
   double get trackHeight => _trackHeight;
 
-  // 允许插入禁止弹幕
+  // 允许插入静止弹幕
   bool get allowInsertFixedBullet => bindFixedBulletId == null;
 
   set trackHeight(double height) {
-    offsetTop = FlutterDanmakuManager.allTrackHeight;
     _trackHeight = height;
   }
 }
@@ -98,6 +97,7 @@ class FlutterDanmakuTrackManager {
     Size currentLabelSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText('s');
     for (int i = 0; i < FlutterDanmakuManager.tracks.length; i++) {
       FlutterDanmakuManager.tracks[i].trackHeight = currentLabelSize.height;
+      FlutterDanmakuManager.tracks[i].offsetTop = currentLabelSize.height * i;
       // 把溢出可用区域的轨道之后全部删掉
       if (FlutterDanmakuTrackManager.isTrackOverflowArea) {
         FlutterDanmakuManager.tracks.removeRange(i, FlutterDanmakuManager.tracks.length);

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_danmaku/flutter_danmaku.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_manager.dart';
 
 class FlutterDanmakuConfig {

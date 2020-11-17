@@ -1,8 +1,7 @@
 name: flutter_danmaku
-description: A new Flutter package project.
+description: normal danmaku by flutter. all in dart. hohoho
 version: 0.0.1
-author:
-homepage:
+homepage: https://github.com/flutte-danmaku/flutter_danmaku
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

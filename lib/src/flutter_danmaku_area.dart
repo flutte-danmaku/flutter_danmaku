@@ -45,10 +45,10 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
     super.initState();
   }
 
-  // 是否暂停
+  /// 是否暂停
   bool get isPause => FlutterDanmakuConfig.pause;
 
-  // 添加弹幕
+  /// 添加弹幕
   AddBulletResBody addDanmaku(String text,
       {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll,
       Color color = FlutterDanmakuConfig.defaultColor,

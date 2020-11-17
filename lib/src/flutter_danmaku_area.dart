@@ -55,7 +55,6 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
       FlutterDanmakuBulletPosition position = FlutterDanmakuBulletPosition.any,
       Widget Function(Text) builder}) {
     assert(text.isNotEmpty);
-    if (builder != null) print('builder');
     return _danmakuManager.addDanmaku(context, text, bulletType: bulletType, color: color, position: position, builder: builder);
   }
 

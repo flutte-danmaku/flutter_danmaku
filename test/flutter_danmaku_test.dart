@@ -52,6 +52,17 @@ void main() {
       expect(bulletModel.needRunDistace, width + bulletModel.bulletSize.width);
       expect(bulletModel.remanderDistance, bulletModel.needRunDistace - bulletModel.runDistance);
       expect(bulletModel.leaveScreenRemainderTime, bulletModel.remanderDistance / bulletModel.everyFrameRunDistance);
+      expect(bullet.buildText().runtimeType, Text);
+      FlutterDanmakuAreaState flutterDanmakuAreaState = FlutterDanmakuAreaState();
+      flutterDanmakuAreaState.resizeArea(size: Size(500, 500));
+      AddBulletResBody addRes = flutterDanmakuAreaState.addDanmaku('hello world', builder: (Text textWidget) => Container(child: textWidget));
+      expect(FlutterDanmakuManager.bulletsMap[addRes.data].builder(Text('hello world')).runtimeType, Container);
+      flutterDanmakuAreaState.changeLableSize(10);
+      expect(FlutterDanmakuManager.bullets.isEmpty, false);
+      for (int i = 0; i < 1000; i++) {
+        flutterDanmakuAreaState.danmakuManager.randerNextFrame();
+      }
+      expect(FlutterDanmakuManager.bullets.isEmpty, true);
     });
   });
 
@@ -62,6 +73,7 @@ void main() {
 
     test('initBullet', () {
       FlutterDanmakuConfig.areaSize = Size(20, 20);
+      FlutterDanmakuManager.removeAllBullet();
       UniqueKey trackId = UniqueKey();
       Size bulletSize = Size(10, 10);
       String text = 'hello world';

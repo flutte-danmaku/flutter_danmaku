@@ -22,6 +22,8 @@ class FlutterDanmakuBulletModel {
 
   Widget Function(Text) builder;
 
+  Widget Function(Text) builder;
+
   FlutterDanmakuBulletType bulletType;
 
   double get offsetX =>

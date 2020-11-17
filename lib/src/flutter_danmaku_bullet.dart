@@ -18,6 +18,7 @@ class FlutterDanmakuBulletModel {
   double _runDistance = 0;
   double everyFrameRunDistance;
   Color color = Colors.black;
+  FlutterDanmakuBulletPosition position = FlutterDanmakuBulletPosition.any;
 
   Widget Function(Text) builder;
 
@@ -48,7 +49,15 @@ class FlutterDanmakuBulletModel {
   }
 
   FlutterDanmakuBulletModel(
-      {this.id, this.trackId, this.text, this.bulletSize, this.offsetY, this.bulletType = FlutterDanmakuBulletType.scroll, this.color, this.builder}) {
+      {this.id,
+      this.trackId,
+      this.text,
+      this.bulletSize,
+      this.offsetY,
+      this.bulletType = FlutterDanmakuBulletType.scroll,
+      this.color,
+      this.builder,
+      this.position}) {
     everyFrameRunDistance = FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(bulletSize.width);
   }
 }

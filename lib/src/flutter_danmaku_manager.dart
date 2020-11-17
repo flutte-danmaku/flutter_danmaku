@@ -22,6 +22,8 @@ class FlutterDanmakuManager {
   static Map<UniqueKey, FlutterDanmakuBulletModel> _bullets = {};
 
   static List<FlutterDanmakuBulletModel> get bullets => _bullets.values.toList();
+  // 返回所有的底部弹幕
+  static List<FlutterDanmakuBulletModel> get bottomBullets => bullets.where((element) => element.position == FlutterDanmakuBulletPosition.bottom).toList();
   static List<UniqueKey> get bulletKeys => _bullets.keys.toList();
   static Map<UniqueKey, FlutterDanmakuBulletModel> get bulletsMap => _bullets;
   static double get allTrackHeight {
@@ -81,12 +83,16 @@ class FlutterDanmakuManager {
       return AddBulletResBody(
         AddBulletResCode.noSpace,
       );
-    FlutterDanmakuBulletModel bullet =
-        FlutterDanmakuBulletUtils.initBullet(text, track.id, bulletSize, track.offsetTop, bulletType: bulletType, color: color, builder: builder);
+    FlutterDanmakuBulletModel bullet = FlutterDanmakuBulletUtils.initBullet(text, track.id, bulletSize, track.offsetTop,
+        position: position, bulletType: bulletType, color: color, builder: builder);
     if (bulletType == FlutterDanmakuBulletType.scroll) {
       track.lastBulletId = bullet.id;
     } else {
-      track.bindFixedBulletId = bullet.id;
+      // 底部弹幕 不记录到轨道上
+      // 查询是否可注入弹幕时 底部弹幕 和普通被插入到底部的静止弹幕可重叠
+      if (position == FlutterDanmakuBulletPosition.any) {
+        track.bindFixedBulletId = bullet.id;
+      }
     }
     return AddBulletResBody(AddBulletResCode.success, data: bullet.id);
   }

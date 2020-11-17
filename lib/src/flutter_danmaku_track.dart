@@ -52,8 +52,10 @@ class FlutterDanmakuTrackManager {
     // 在现有轨道里找
     // 底部弹幕 指的是 最后几条轨道 从最底下往上发
     for (int i = FlutterDanmakuManager.tracks.length - 1; i >= FlutterDanmakuManager.tracks.length - 3; i--) {
-      // 底部弹幕仅支持静止弹幕
-      if (FlutterDanmakuManager.tracks[i].allowInsertFixedBullet) {
+      // 从当前的弹幕里找 有没有在这个轨道上的
+      FlutterDanmakuBulletModel bullet =
+          FlutterDanmakuManager.bottomBullets.firstWhere((element) => element.trackId == FlutterDanmakuManager.tracks[i].id, orElse: () => null);
+      if (bullet == null) {
         _track = FlutterDanmakuManager.tracks[i];
         break;
       }

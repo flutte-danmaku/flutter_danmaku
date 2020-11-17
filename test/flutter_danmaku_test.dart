@@ -182,9 +182,9 @@ void main() {
       FlutterDanmakuTrack track4 = FlutterDanmakuTrackManager.buildTrack(trackHeight);
       FlutterDanmakuTrack track5 = FlutterDanmakuTrackManager.buildTrack(trackHeight);
       expect(FlutterDanmakuTrackManager.findAvailableTrack(bulletSize, position: FlutterDanmakuBulletPosition.bottom).id, track5.id);
-      UniqueKey bulletId = UniqueKey();
-      track5.bindFixedBulletId = bulletId;
+      FlutterDanmakuAreaState().addDanmaku('底部弹幕', position: FlutterDanmakuBulletPosition.bottom, bulletType: FlutterDanmakuBulletType.fixed);
       expect(FlutterDanmakuTrackManager.findAvailableTrack(bulletSize, position: FlutterDanmakuBulletPosition.bottom).id, track4.id);
+      expect(FlutterDanmakuManager.bottomBullets.firstWhere((element) => element.trackId == track5.id).trackId, track5.id);
     });
 
     test('areaAllowBuildNewTrack', () {

@@ -54,6 +54,40 @@ class _MyHomePageState extends State<MyHomePage> {
 
 # API
 
+## FlutterDanmakuArea
+
+``` dart
+@override
+Widget build (BuildContext context) {
+    return FlutterDanmakuArea(
+        key: danmakuarea, 
+        // 子弹单击回调
+        bulletTapCallBack: handleBulletTap,
+        child: Container(height: 220, width: double.infinity)),
+}
+
+void handleBulletTap(FlutterDanmakuBulletModel bulletModel) {
+    print(bulletModel.text);
+}
+```
+
+### Widget child
+将需要展示在弹幕下方的画面放进去
+
+### Function(FlutterDanmakuBulletModel) bulletTapCallBack;
+子弹单击的回调
+
+## FlutterDanmakuAreaState
+通过globalKey调用
+
+``` dart
+GlobalKey<FlutterDanmakuAreaState> danmakuarea = GlobalKey();
+
+FlutterDanmakuArea(key: danmakuarea, child: Container(height: 220, width: double.infinity)),
+
+danmakuarea.currentState.init()
+```
+
 ### init
 在页面渲染之后 需要初始化的时候调用 会启动定时器渲染
 

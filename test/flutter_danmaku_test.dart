@@ -71,6 +71,8 @@ void main() {
       expect(FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText('hello world').runtimeType, Size);
     });
 
+    test('')
+
     test('initBullet', () {
       FlutterDanmakuConfig.areaSize = Size(20, 20);
       FlutterDanmakuManager.removeAllBullet();

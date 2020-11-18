@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_danmaku/flutter_danmaku.dart';
 import 'package:english_words/english_words.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
   runApp(MyApp());
@@ -93,6 +94,18 @@ class _MyHomePageState extends State<MyHomePage> {
         .addDanmaku('s' + 's' * random1, bulletType: FlutterDanmakuBulletType.fixed, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
   }
 
+  handleBulletTap(BuildContext context, FlutterDanmakuBulletModel bulletModel) {
+    print(bulletModel.text);
+    Fluttertoast.showToast(
+        msg: bulletModel.text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
   addBuilderDanmaku() {
     int random = Random().nextInt(20);
     danmuarea.currentState.addDanmaku('s' + 's' * random, builder: (Text textWidget) {
@@ -166,65 +179,70 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: SingleChildScrollView(
-          child: Column(
-            // Column is also a layout widget. It takes a list of children and
-            // arranges them vertically. By default, it sizes itself to fit its
-            // children horizontally, and tries to be as tall as its parent.
-            //
-            // Invoke "debug painting" (press "p" in the console, choose the
-            // "Toggle Debug Paint" action from the Flutter Inspector in Android
-            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-            // to see the wireframe for each widget.
-            //
-            // Column has various properties to control how it sizes itself and
-            // how it positions its children. Here we use mainAxisAlignment to
-            // center the children vertically; the main axis here is the vertical
-            // axis because Columns are vertical (the cross axis would be
-            // horizontal).
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              FlutterDanmakuArea(key: danmuarea, child: Container(color: Colors.black, height: heng ? 500 : 220, width: double.infinity)),
-              Container(
-                  height: 500,
-                  child: GridView(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3, //横轴三个子widget
-                        childAspectRatio: 3),
-                    children: [
-                      MaterialButton(onPressed: () => dibudanmu(), child: Text('底部弹幕')),
-                      MaterialButton(onPressed: () => resethengshuping(), child: Text('复原横屏')),
-                      MaterialButton(onPressed: () => changeRate(0.5), child: Text('变倍率0.5')),
-                      MaterialButton(onPressed: () => changeRate(0.8), child: Text('变倍率0.8')),
-                      MaterialButton(onPressed: () => changeRate(1.2), child: Text('变倍率1.2')),
-                      MaterialButton(onPressed: () => changeRate(1.5), child: Text('变倍率1.5')),
-                      MaterialButton(onPressed: () => changeRate(3), child: Text('变倍率3')),
-                      MaterialButton(onPressed: () => changeLableSize(12), child: Text('change lable Size 12')),
-                      MaterialButton(onPressed: () => changeLableSize(16), child: Text('change lable Size 24')),
-                      MaterialButton(onPressed: () => changeLableSize(24), child: Text('change lable Size 48')),
-                      MaterialButton(onPressed: () => changeShowAreaP(0.3), child: Text('change show area 0.3')),
-                      MaterialButton(onPressed: () => changeShowAreaP(0.5), child: Text('change show area 0.5')),
-                      MaterialButton(onPressed: () => changeShowAreaP(1.0), child: Text('change show area 1')),
-                      MaterialButton(onPressed: () => changeShowOpacity(1.0), child: Text('change show opacity 1')),
-                      MaterialButton(onPressed: () => changeShowOpacity(0.5), child: Text('change show opacity 0.5')),
-                      MaterialButton(onPressed: () => changeShowOpacity(0.2), child: Text('change show opacity 0.2')),
-                      MaterialButton(onPressed: () => hengshuping(), child: Text('横屏')),
-                      MaterialButton(onPressed: () => parsud(), child: Text('暂停'))
-                    ],
-                  )),
-            ],
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          // Center is a layout widget. It takes a single child and positions it
+          // in the middle of the parent.
+          child: SingleChildScrollView(
+            child: Column(
+              // Column is also a layout widget. It takes a list of children and
+              // arranges them vertically. By default, it sizes itself to fit its
+              // children horizontally, and tries to be as tall as its parent.
+              //
+              // Invoke "debug painting" (press "p" in the console, choose the
+              // "Toggle Debug Paint" action from the Flutter Inspector in Android
+              // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+              // to see the wireframe for each widget.
+              //
+              // Column has various properties to control how it sizes itself and
+              // how it positions its children. Here we use mainAxisAlignment to
+              // center the children vertically; the main axis here is the vertical
+              // axis because Columns are vertical (the cross axis would be
+              // horizontal).
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FlutterDanmakuArea(
+                    key: danmuarea,
+                    bulletTapCallBack: (FlutterDanmakuBulletModel bulletModel) => handleBulletTap(context, bulletModel),
+                    child: Container(color: Colors.black, height: heng ? 500 : 220, width: double.infinity)),
+                Container(
+                    height: 500,
+                    child: GridView(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3, //横轴三个子widget
+                          childAspectRatio: 3),
+                      children: [
+                        MaterialButton(onPressed: () => dibudanmu(), child: Text('底部弹幕')),
+                        MaterialButton(onPressed: () => resethengshuping(), child: Text('复原横屏')),
+                        MaterialButton(onPressed: () => changeRate(0.5), child: Text('变倍率0.5')),
+                        MaterialButton(onPressed: () => changeRate(0.8), child: Text('变倍率0.8')),
+                        MaterialButton(onPressed: () => changeRate(1.2), child: Text('变倍率1.2')),
+                        MaterialButton(onPressed: () => changeRate(1.5), child: Text('变倍率1.5')),
+                        MaterialButton(onPressed: () => changeRate(3), child: Text('变倍率3')),
+                        MaterialButton(onPressed: () => changeLableSize(12), child: Text('change lable Size 12')),
+                        MaterialButton(onPressed: () => changeLableSize(16), child: Text('change lable Size 24')),
+                        MaterialButton(onPressed: () => changeLableSize(24), child: Text('change lable Size 48')),
+                        MaterialButton(onPressed: () => changeShowAreaP(0.3), child: Text('change show area 0.3')),
+                        MaterialButton(onPressed: () => changeShowAreaP(0.5), child: Text('change show area 0.5')),
+                        MaterialButton(onPressed: () => changeShowAreaP(1.0), child: Text('change show area 1')),
+                        MaterialButton(onPressed: () => changeShowOpacity(1.0), child: Text('change show opacity 1')),
+                        MaterialButton(onPressed: () => changeShowOpacity(0.5), child: Text('change show opacity 0.5')),
+                        MaterialButton(onPressed: () => changeShowOpacity(0.2), child: Text('change show opacity 0.2')),
+                        MaterialButton(onPressed: () => hengshuping(), child: Text('横屏')),
+                        MaterialButton(onPressed: () => parsud(), child: Text('暂停'))
+                      ],
+                    )),
+              ],
+            ),
           ),
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _incrementCounter,
+          tooltip: 'Increment',
+          child: Icon(Icons.add),
+        ), // This trailing comma makes auto-formatting nicer for build methods.
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

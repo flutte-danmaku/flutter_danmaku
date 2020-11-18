@@ -68,13 +68,17 @@ class FlutterDanmakuBulletUtils {
   }
 
   // 构建子弹
-  static Widget buildBulletToScreen(BuildContext context, FlutterDanmakuBulletModel bulletModel, {Widget Function(Text) builder}) {
+  static Widget buildBulletToScreen(BuildContext context, FlutterDanmakuBulletModel bulletModel,
+      {Widget Function(Text) builder, Function(FlutterDanmakuBulletModel) bulletTapCallBack}) {
     FlutterDanmakuBullet bullet = FlutterDanmakuBullet(bulletModel.id, bulletModel.text, color: bulletModel.color);
-    return Positioned(right: bulletModel.offsetX, top: bulletModel.offsetY + FlutterDanmakuConfig.areaOfChildOffsetY, child: bullet);
+    return Positioned(
+        right: bulletModel.offsetX,
+        top: bulletModel.offsetY + FlutterDanmakuConfig.areaOfChildOffsetY,
+        child: bulletTapCallBack == null ? bullet : GestureDetector(onTap: () => bulletTapCallBack(bulletModel), child: bullet));
   }
 
-  static List<Widget> buildAllBullet(BuildContext context) {
-    return FlutterDanmakuManager.bullets.map((e) => buildBulletToScreen(context, e)).toList();
+  static List<Widget> buildAllBullet(BuildContext context, {Function(FlutterDanmakuBulletModel) bulletTapCallBack}) {
+    return FlutterDanmakuManager.bullets.map((FlutterDanmakuBulletModel e) => buildBulletToScreen(context, e, bulletTapCallBack: bulletTapCallBack)).toList();
   }
 
   // 剩余多少帧离开屏幕

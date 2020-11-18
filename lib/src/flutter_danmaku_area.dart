@@ -6,11 +6,13 @@ import 'package:flutter_danmaku/src/flutter_danmaku_bullet_manager.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_manager.dart';
 
 class FlutterDanmakuArea extends StatefulWidget {
-  FlutterDanmakuArea({this.key, @required this.child}) : super(key: key);
+  FlutterDanmakuArea({this.key, @required this.child, this.bulletTapCallBack}) : super(key: key);
 
   final Widget child;
 
   final GlobalKey<FlutterDanmakuAreaState> key;
+
+  Function(FlutterDanmakuBulletModel) bulletTapCallBack;
 
   @override
   State<FlutterDanmakuArea> createState() => FlutterDanmakuAreaState();
@@ -125,7 +127,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
         Container(
           child: widget.child,
         ),
-        ...FlutterDanmakuBulletUtils.buildAllBullet(context)
+        ...FlutterDanmakuBulletUtils.buildAllBullet(context, bulletTapCallBack: widget.bulletTapCallBack)
       ],
     );
   }

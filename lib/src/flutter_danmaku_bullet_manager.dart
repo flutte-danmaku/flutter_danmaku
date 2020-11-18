@@ -70,7 +70,7 @@ class FlutterDanmakuBulletUtils {
   // 构建子弹
   static Widget buildBulletToScreen(BuildContext context, FlutterDanmakuBulletModel bulletModel, {Widget Function(Text) builder}) {
     FlutterDanmakuBullet bullet = FlutterDanmakuBullet(bulletModel.id, bulletModel.text, color: bulletModel.color);
-    return Positioned(right: bulletModel.offsetX, top: bulletModel.offsetY, child: bullet);
+    return Positioned(right: bulletModel.offsetX, top: bulletModel.offsetY + FlutterDanmakuConfig.areaOfChildOffsetY, child: bullet);
   }
 
   static List<Widget> buildAllBullet(BuildContext context) {

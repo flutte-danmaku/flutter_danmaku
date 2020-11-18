@@ -5,6 +5,8 @@
 
 一个普通的flutter弹幕项目。纯dart项目
 
+<video src="https://raw.githubusercontent.com/flutte-danmaku/flutter_danmaku/dev/example/demo_record.mp4" controls width="200">
+
 ## Features
 * 色彩弹幕
 * 静止弹幕

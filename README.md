@@ -5,7 +5,7 @@
 
 一个普通的flutter弹幕项目。纯dart项目
 
-[![Watch the video](http://i3.ytimg.com/vi/APfIEgJct4I/hqdefault.jpg)](https://youtu.be/APfIEgJct4I)
+[![Watch the video](https://i.loli.net/2020/11/18/LCjhTrm56Ypinls.png)](https://youtu.be/APfIEgJct4I)
 
 
 ## Features

@@ -2,11 +2,10 @@
 <img src="https://socialify.git.ci/flutte-danmaku/flutter_danmaku/image?description=1&descriptionEditable=a%20normal%20danmaku%20by%20flutter.%20live%20comment%20hohoho%F0%9F%98%8A%20all%20in%20dart.&font=Source%20Code%20Pro&language=1&pattern=Overlapping%20Hexagons&theme=Light&submit" alt="flutter_danmaku" width="400" />  <br />
 [![Coverage Status](https://coveralls.io/repos/github/flutte-danmaku/flutter_danmaku/badge.svg?branch=dev)](https://coveralls.io/github/flutte-danmaku/flutter_danmaku?branch=dev)
 ![Flutter CI](https://github.com/flutte-danmaku/flutter_danmaku/workflows/Flutter%20CI/badge.svg)
-
+[![pub package](https://img.shields.io/pub/v/flutter_danmaku.svg)](https://pub.dev/packages/flutter_danmaku)
 一个普通的flutter弹幕项目。纯dart项目
 
 [![Watch the video](https://i.loli.net/2020/11/18/LCjhTrm56Ypinls.png)](https://youtu.be/APfIEgJct4I)
-
 
 ## Features
 * 色彩弹幕
@@ -23,9 +22,35 @@
 
 ## How to use
 
+1. Depend on it
+Add this to your package's pubspec.yaml file:
+
+[![pub package](https://img.shields.io/pub/v/flutter_danmaku.svg)](https://pub.dev/packages/flutter_danmaku)
+
+``` json
+dependencies:
+  flutter_danmaku: ^least
+```
+
+
+2. Install it
+You can install packages from the command line:
+
+with Flutter:
+
+``` bash
+$ flutter pub get
+```
+
+3. Import it
+
+Now in your Dart code, you can use:
+
 ``` Dart
 import 'package:flutter_danmaku/flutter_danmaku.dart';
 ```
+
+
 
 ``` Dart
 class _MyHomePageState extends State<MyHomePage> {

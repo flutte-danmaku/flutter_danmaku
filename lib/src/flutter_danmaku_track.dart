@@ -80,7 +80,7 @@ class FlutterDanmakuTrackManager {
   // 补足屏幕内轨道
   static void buildTrackFullScreen() {
     Size singleTextSize = FlutterDanmakuBulletUtils.getDanmakuBulletSizeByText('s');
-    while (FlutterDanmakuManager.allTrackHeight < FlutterDanmakuConfig.areaSize.height) {
+    while (FlutterDanmakuManager.allTrackHeight < (FlutterDanmakuConfig.areaSize.height - singleTextSize.height)) {
       buildTrack(singleTextSize.height);
     }
   }

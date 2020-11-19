@@ -6,11 +6,13 @@ import 'package:flutter_danmaku/src/flutter_danmaku_bullet_manager.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_manager.dart';
 
 class FlutterDanmakuArea extends StatefulWidget {
-  FlutterDanmakuArea({this.key, @required this.child}) : super(key: key);
+  FlutterDanmakuArea({this.key, @required this.child, this.bulletTapCallBack}) : super(key: key);
 
   final Widget child;
 
   final GlobalKey<FlutterDanmakuAreaState> key;
+
+  Function(FlutterDanmakuBulletModel) bulletTapCallBack;
 
   @override
   State<FlutterDanmakuArea> createState() => FlutterDanmakuAreaState();
@@ -89,6 +91,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   void changeLableSize(int size) {
     assert(size > 0);
     FlutterDanmakuConfig.bulletLableSize = size.toDouble();
+    FlutterDanmakuConfig.areaOfChildOffsetY = FlutterDanmakuConfig.getAreaOfChildOffsetY();
     FlutterDanmakuTrackManager.recountTrackOffset();
     FlutterDanmakuBulletUtils.recountBulletsOffset();
   }
@@ -96,6 +99,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   // 改变视图尺寸后调用，比如全屏
   void resizeArea({Size size = const Size(0, 0)}) {
     FlutterDanmakuConfig.areaSize = context?.size ?? size;
+    FlutterDanmakuConfig.areaOfChildOffsetY = FlutterDanmakuConfig.getAreaOfChildOffsetY();
     FlutterDanmakuTrackManager.recountTrackOffset();
     if (FlutterDanmakuConfig.pause) {
       _danmakuManager.randerNextFrame();
@@ -123,7 +127,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
         Container(
           child: widget.child,
         ),
-        ...FlutterDanmakuBulletUtils.buildAllBullet(context)
+        ...FlutterDanmakuBulletUtils.buildAllBullet(context, bulletTapCallBack: widget.bulletTapCallBack)
       ],
     );
   }

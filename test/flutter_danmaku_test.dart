@@ -159,6 +159,8 @@ void main() {
       FlutterDanmakuTrackManager.buildTrack(trackHeight);
       expect(FlutterDanmakuConfig.remainderHeight, FlutterDanmakuConfig.showAreaHeight - trackHeight - trackHeight);
       expect(FlutterDanmakuConfig.bulletBaseShowDuration.runtimeType, Duration);
+      Size textSize = Size(10, 10);
+      expect(FlutterDanmakuConfig.getAreaOfChildOffsetY(textSize: textSize), (areaHeight % textSize.height) / 2);
     });
   });
 

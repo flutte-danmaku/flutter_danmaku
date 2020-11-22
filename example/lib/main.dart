@@ -60,38 +60,38 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   bool heng = false;
 
-  GlobalKey<FlutterDanmakuAreaState> danmuarea = GlobalKey();
+  FlutterDanmakuController flutterDanmakuController = FlutterDanmakuController();
 
   void changeShowAreaP(double p) {
-    danmuarea.currentState.changeShowArea(p);
+    flutterDanmakuController.changeShowArea(p);
   }
 
   void changeRate(double rate) {
-    danmuarea.currentState.changeRate(rate);
+    flutterDanmakuController.changeRate(rate);
   }
 
   void changeLableSize(int size) {
-    danmuarea.currentState.changeLableSize(size);
+    flutterDanmakuController.changeLableSize(size);
   }
 
   void changeShowOpacity(double opacity) {
-    danmuarea.currentState.changeOpacity(opacity);
+    flutterDanmakuController.changeOpacity(opacity);
   }
 
   void parsud() {
-    if (danmuarea.currentState.isPause) {
-      danmuarea.currentState.play();
+    if (flutterDanmakuController.isPause) {
+      flutterDanmakuController.play();
     } else {
-      danmuarea.currentState.pause();
+      flutterDanmakuController.pause();
     }
   }
 
   addDanmaku() {
     int random = Random().nextInt(20);
-    danmuarea.currentState.addDanmaku('s' + 's' * random, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
+    flutterDanmakuController.addDanmaku('s' + 's' * random, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
     int random1 = Random().nextInt(20);
-    danmuarea.currentState
-        .addDanmaku('s' + 's' * random1, bulletType: FlutterDanmakuBulletType.fixed, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
+    flutterDanmakuController.addDanmaku('s' + 's' * random1,
+        bulletType: FlutterDanmakuBulletType.fixed, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
   }
 
   handleBulletTap(BuildContext context, FlutterDanmakuBulletModel bulletModel) {
@@ -108,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   addBuilderDanmaku() {
     int random = Random().nextInt(20);
-    danmuarea.currentState.addDanmaku('s' + 's' * random, builder: (Text textWidget) {
+    flutterDanmakuController.addDanmaku('s' + 's' * random, builder: (Text textWidget) {
       return Container(
         child: textWidget,
         decoration: BoxDecoration(border: Border.all(color: Colors.red)),
@@ -121,8 +121,8 @@ class _MyHomePageState extends State<MyHomePage> {
     addDanmaku();
     addBuilderDanmaku();
     int random = Random().nextInt(20);
-    danmuarea.currentState
-        .addDanmaku('s' + 's' * random, bulletType: FlutterDanmakuBulletType.fixed, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
+    flutterDanmakuController.addDanmaku('s' + 's' * random,
+        bulletType: FlutterDanmakuBulletType.fixed, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
@@ -137,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     Future.delayed(Duration(milliseconds: 500), () {
-      danmuarea.currentState.init();
+      flutterDanmakuController.init();
     });
   }
 
@@ -148,12 +148,12 @@ class _MyHomePageState extends State<MyHomePage> {
       heng = true;
     });
     Future.delayed(Duration(milliseconds: 500), () {
-      danmuarea.currentState.resizeArea();
+      flutterDanmakuController.resizeArea();
     });
   }
 
   void dibudanmu() {
-    danmuarea.currentState.addDanmaku('我是底部弹幕我是底部弹幕',
+    flutterDanmakuController.addDanmaku('我是底部弹幕我是底部弹幕',
         bulletType: FlutterDanmakuBulletType.fixed,
         position: FlutterDanmakuBulletPosition.bottom,
         color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
@@ -167,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
       heng = false;
     });
     Future.delayed(Duration(milliseconds: 500), () {
-      danmuarea.currentState.resizeArea();
+      flutterDanmakuController.resizeArea();
     });
   }
 
@@ -203,8 +203,8 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 FlutterDanmakuArea(
-                    key: danmuarea,
-                    bulletTapCallBack: (FlutterDanmakuBulletModel bulletModel) => handleBulletTap(context, bulletModel),
+                    controller: flutterDanmakuController,
+                    // bulletTapCallBack: (FlutterDanmakuBulletModel bulletModel) => handleBulletTap(context, bulletModel),
                     child: Container(color: Colors.black, height: heng ? 500 : 220, width: double.infinity)),
                 Container(
                     height: 500,

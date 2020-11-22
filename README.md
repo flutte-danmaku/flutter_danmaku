@@ -150,7 +150,7 @@ enum AddBulletResBody {
 |  text  | String |   弹幕的文字（必填  | / |  
 |  color  | Color |   弹幕的颜色 | Colors.black|  
 | bulletType | FlutterDanmakuBulletType | 弹幕从右边滚动到左边 或者 弹幕居中静止展示 | FlutterDanmakuBulletType.scroll|
-| position | FlutterDanmakuBulletPosition | 按顺序插入弹幕 或者 只插入到底部弹幕（插入的弹幕只为静止弹幕 |FlutterDanmakuBulletPosition.any |  
+| position | FlutterDanmakuBulletPosition | 按顺序注入弹幕 或者 只注入到底部弹幕（注入的弹幕只为静止弹幕 |FlutterDanmakuBulletPosition.any |  
 | builder | Widget Function(Text) | 需要自定义弹幕背景 通过编写builder函数来实现 | null |  
 
 

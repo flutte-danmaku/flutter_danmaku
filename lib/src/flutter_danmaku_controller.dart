@@ -77,6 +77,10 @@ class FlutterDanmakuController {
     _run();
   }
 
+  void removeAllBullet() {
+    _bulletManager.removeAllBullet();
+  }
+
   // 暂停
   void pause() {
     FlutterDanmakuConfig.pause = true;

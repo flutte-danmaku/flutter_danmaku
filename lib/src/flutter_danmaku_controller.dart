@@ -122,7 +122,7 @@ class FlutterDanmakuController {
     FlutterDanmakuConfig.areaOfChildOffsetY = FlutterDanmakuConfig.getAreaOfChildOffsetY();
     _trackManager.recountTrackOffset();
     if (FlutterDanmakuConfig.pause) {
-      _renderManager.renderNextFramerate(_bulletManager.bulletsMap, allOutLeaveCallBack);
+      _renderManager.renderNextFramerate(_bulletManager.bulletsMap, _allOutLeaveCallBack);
     }
   }
 
@@ -134,13 +134,18 @@ class FlutterDanmakuController {
     _trackManager.buildTrackFullScreen();
   }
 
-  void allOutLeaveCallBack(UniqueKey bulletId) {
+  void delBulletById(UniqueKey bulletId) {
+    _bulletManager.removeBulletByKey(bulletId);
+    _trackManager.removeTrackBindIdByBulletId(bulletId);
+  }
+
+  void _allOutLeaveCallBack(UniqueKey bulletId) {
     _bulletManager.bulletsMap.remove(bulletId);
     _trackManager.removeTrackBindIdByBulletId(bulletId);
   }
 
   void _run() => _renderManager.run(() {
-        _renderManager.renderNextFramerate(_bulletManager.bulletsMap, allOutLeaveCallBack);
+        _renderManager.renderNextFramerate(_bulletManager.bulletsMap, _allOutLeaveCallBack);
       }, setState);
 
   // 获取允许注入的轨道

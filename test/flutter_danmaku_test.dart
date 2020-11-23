@@ -301,7 +301,7 @@ void main() {
       await tester.pumpWidget(Directionality(textDirection: TextDirection.ltr, child: area));
       controller.init();
       await tester.pump(Duration(seconds: 1));
-      controller.addDanmaku('hello world');
+      UniqueKey firstBulletId = controller.addDanmaku('hello world').data;
       controller.addDanmaku('hello world');
       expect(key.currentState.buildAllBullet(key.currentContext).length, 2);
       Widget builder(Text text) {
@@ -322,10 +322,32 @@ void main() {
       FlutterDanmakuBulletModel bottom1Bullet = controller.bullets.last;
       expect(bottom1Bullet.position, FlutterDanmakuBulletPosition.bottom);
       expect(bottom1Bullet.trackId, controller.tracks.last.id);
+      // 底部弹幕轨道不绑定弹幕ID
+      expect(controller.tracks.last.bindFixedBulletId, null);
       controller.addDanmaku('hello world', position: FlutterDanmakuBulletPosition.bottom);
       controller.addDanmaku('hello world', position: FlutterDanmakuBulletPosition.bottom);
       AddBulletResBody addRes = controller.addDanmaku('hello world', position: FlutterDanmakuBulletPosition.bottom);
       expect(addRes.code, AddBulletResCode.noSpace);
+      UniqueKey tapId;
+      void tapCallBack(FlutterDanmakuBulletModel bulletModel) {
+        tapId = bulletModel.id;
+      }
+
+      controller.setBulletTapCallBack(tapCallBack);
+      FlutterDanmakuConfig.bulletTapCallBack(controller.bullets.last);
+      expect(tapId, controller.bullets.last.id);
+      controller.delBulletById(bottom1Bullet.id);
+      bool hasBullet = controller.bullets.contains(bottom1Bullet);
+      expect(hasBullet, false);
+      controller.delBulletById(firstBulletId);
+      expect(controller.bullets.singleWhere((element) => element.id == firstBulletId, orElse: () => null), null);
+      expect(controller.tracks.first.lastBulletId, null);
+      UniqueKey fixedBulletId = controller.addDanmaku('hello world', bulletType: FlutterDanmakuBulletType.fixed).data;
+      FlutterDanmakuBulletModel fixedBullet = controller.bullets.singleWhere((element) => element.id == fixedBulletId);
+      expect(fixedBullet.id, fixedBulletId);
+      controller.delBulletById(fixedBulletId);
+      expect(controller.bullets.contains(fixedBullet), false);
+      expect(controller.tracks.first.bindFixedBulletId, null);
     });
 
     test('play status', () {

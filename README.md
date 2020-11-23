@@ -217,6 +217,17 @@ void changeOpacity(int opacity)
 void setBulletTapCallBack(Function(FlutterDanmakuBulletModel))
 ```
 
+### delBulletById
+从弹幕上删除子弹
+
+``` dart
+void delBulletById(UniqueKey bulletId)
+```
+
+| Params |  Type | Description | default |
+| ------ | -------- | ----------  | ------- |
+| bulletId | UniqueKey | 子弹ID | / |
+
 <hr>
 <hr>
 

@@ -34,8 +34,8 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
   }
 
   // 构建子弹
-  Widget buildBulletToScreen(BuildContext context, FlutterDanmakuBulletModel bulletModel, {Widget Function(Text) builder}) {
-    FlutterDanmakuBullet bullet = FlutterDanmakuBullet(bulletModel.id, bulletModel.text, color: bulletModel.color, builder: builder);
+  Widget buildBulletToScreen(BuildContext context, FlutterDanmakuBulletModel bulletModel) {
+    FlutterDanmakuBullet bullet = FlutterDanmakuBullet(bulletModel.id, bulletModel.text, color: bulletModel.color, builder: bulletModel.builder);
     return Positioned(
         right: bulletModel.offsetX,
         top: bulletModel.offsetY + FlutterDanmakuConfig.areaOfChildOffsetY,

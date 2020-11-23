@@ -315,9 +315,6 @@ void main() {
       FlutterDanmakuBullet bullet2 = FlutterDanmakuBullet(controller.bullets.last.id, controller.bullets.last.text, builder: controller.bullets.last.builder);
       expect(bullet2.buildText().runtimeType, Container);
       expect(bullet2.buildStrokeText().runtimeType, Container);
-      // controller.pause();
-      // controller.resizeArea(size: Size(400, 400));
-      // controller.play();
       controller.dispose();
       expect(controller.bullets.length, 3);
 

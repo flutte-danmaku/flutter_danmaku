@@ -81,33 +81,35 @@ class FlutterDanmakuController {
     _bulletManager.removeAllBullet();
   }
 
-  // 暂停
+  /// 暂停
   void pause() {
     FlutterDanmakuConfig.pause = true;
   }
 
-  // 播放
+  /// 播放
   void play() {
     FlutterDanmakuConfig.pause = false;
   }
 
-  // 修改弹幕速率
+  /// 修改弹幕速率
   void changeRate(double rate) {
     assert(rate > 0);
     FlutterDanmakuConfig.bulletRate = rate;
   }
 
+  /// 设置子弹单击事件
   void setBulletTapCallBack(Function(FlutterDanmakuBulletModel) cb) {
     FlutterDanmakuConfig.bulletTapCallBack = cb;
   }
 
+  /// 修改透明度
   void changeOpacity(double opacity) {
     assert(opacity <= 1);
     assert(opacity >= 0);
     FlutterDanmakuConfig.opacity = opacity;
   }
 
-  // 修改文字大小
+  /// 修改文字大小
   void changeLableSize(int size) {
     assert(size > 0);
     FlutterDanmakuConfig.bulletLableSize = size.toDouble();
@@ -116,7 +118,7 @@ class FlutterDanmakuController {
     _recountBulletsOffset();
   }
 
-  // 改变视图尺寸后调用，比如全屏
+  /// 改变视图尺寸后调用，比如全屏
   void resizeArea({Size size}) {
     FlutterDanmakuConfig.areaSize = size ?? context.size;
     FlutterDanmakuConfig.areaOfChildOffsetY = FlutterDanmakuConfig.getAreaOfChildOffsetY();
@@ -126,7 +128,7 @@ class FlutterDanmakuController {
     }
   }
 
-  // 修改弹幕最大可展示场景的百分比
+  /// 修改弹幕最大可展示场景的百分比
   void changeShowArea(double percent) {
     assert(percent <= 1);
     assert(percent >= 0);
@@ -135,20 +137,22 @@ class FlutterDanmakuController {
   }
 
   void delBulletById(UniqueKey bulletId) {
+    _trackManager.removeTrackBindIdByBulletModel(_bulletManager.bulletsMap[bulletId]);
     _bulletManager.removeBulletByKey(bulletId);
-    _trackManager.removeTrackBindIdByBulletId(bulletId);
   }
 
   void _allOutLeaveCallBack(UniqueKey bulletId) {
-    _bulletManager.bulletsMap.remove(bulletId);
-    _trackManager.removeTrackBindIdByBulletId(bulletId);
+    if (_bulletManager.bulletsMap[bulletId].trackId != null) {
+      _trackManager.removeTrackBindIdByBulletModel(_bulletManager.bulletsMap[bulletId]);
+      _bulletManager.bulletsMap.remove(bulletId);
+    }
   }
 
   void _run() => _renderManager.run(() {
         _renderManager.renderNextFramerate(_bulletManager.bulletsMap, _allOutLeaveCallBack);
       }, setState);
 
-  // 获取允许注入的轨道
+  /// 获取允许注入的轨道
   FlutterDanmakuTrack _findAllowInsertTrack(Size bulletSize, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
     FlutterDanmakuTrack _track;
     // 在现有轨道里找
@@ -164,7 +168,7 @@ class FlutterDanmakuController {
     return _track;
   }
 
-  // 查询该轨道是否允许注入
+  /// 查询该轨道是否允许注入
   bool _trackAllowInsert(FlutterDanmakuTrack track, Size needInsertBulletSize, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
     UniqueKey lastBulletId;
     assert(needInsertBulletSize.height > 0);

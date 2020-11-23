@@ -96,15 +96,14 @@ class FlutterDanmakuTrackManager {
     return remainderHeight >= needBuildTrackHeight;
   }
 
-  // 删除轨道上绑定的子弹ID
-  void removeTrackBindIdByBulletId(UniqueKey bulletId) {
-    int lastBulletIdx;
-    lastBulletIdx = tracks.indexWhere((element) => element.lastBulletId == bulletId || element.bindFixedBulletId == bulletId);
-    if (lastBulletIdx == -1) return;
-    if (tracks[lastBulletIdx].bindFixedBulletId == bulletId) {
-      tracks[lastBulletIdx].unloadFixedBulletId();
-    } else {
-      tracks[lastBulletIdx].unloadLastBulletId();
+  /// 删除轨道上绑定的子弹ID
+  void removeTrackBindIdByBulletModel(FlutterDanmakuBulletModel bulletModel) {
+    // 底部弹幕并没有绑定到轨道上
+    if (bulletModel.position == FlutterDanmakuBulletPosition.bottom) return;
+    if (bulletModel.bulletType == FlutterDanmakuBulletType.scroll) {
+      tracks.firstWhere((element) => element.lastBulletId == bulletModel.id, orElse: () => null)?.unloadLastBulletId();
+    } else if (bulletModel.bulletType == FlutterDanmakuBulletType.fixed) {
+      tracks.firstWhere((element) => element.bindFixedBulletId == bulletModel.id, orElse: () => null)?.unloadFixedBulletId();
     }
   }
 }

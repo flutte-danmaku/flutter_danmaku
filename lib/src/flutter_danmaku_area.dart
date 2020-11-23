@@ -30,7 +30,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
 
   // 构建全部的子弹
   List<Widget> buildAllBullet(BuildContext context) {
-    return controller.bullets.map((FlutterDanmakuBulletModel e) => buildBulletToScreen(context, e)).toList();
+    return List.generate(controller.bullets.length, (index) => buildBulletToScreen(context, controller.bullets[index]));
   }
 
   // 构建子弹

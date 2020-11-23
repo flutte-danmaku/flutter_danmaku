@@ -290,12 +290,42 @@ void main() {
     // });
 
     testWidgets('FlutterDanmakuArea', (WidgetTester tester) async {
-      // Widget childArea = Container(height: 400, width: 400);
-      // await tester.pumpWidget(Directionality(
-      //     textDirection: TextDirection.ltr,
-      //     child: FlutterDanmakuArea(
-      //       child: childArea,
-      //     )));
+      Widget childArea = Container(height: 400, width: 400);
+      GlobalKey<FlutterDanmakuAreaState> key = GlobalKey<FlutterDanmakuAreaState>();
+      FlutterDanmakuController controller = FlutterDanmakuController();
+      Widget area = FlutterDanmakuArea(
+        key: key,
+        controller: controller,
+        child: childArea,
+      );
+      await tester.pumpWidget(Directionality(textDirection: TextDirection.ltr, child: area));
+      controller.init();
+      await tester.pump(Duration(seconds: 1));
+      controller.addDanmaku('hello world');
+      controller.addDanmaku('hello world');
+      expect(key.currentState.buildAllBullet(key.currentContext).length, 2);
+      Widget builder(Text text) {
+        return Container(child: text);
+      }
+
+      Widget bullet1 = key.currentState.buildBulletToScreen(key.currentContext, controller.bullets.last);
+      expect(bullet1.runtimeType, Positioned);
+
+      controller.addDanmaku('hello world', builder: builder);
+      FlutterDanmakuBullet bullet2 = FlutterDanmakuBullet(controller.bullets.last.id, controller.bullets.last.text, builder: controller.bullets.last.builder);
+      expect(bullet2.buildText().runtimeType, Container);
+      expect(bullet2.buildStrokeText().runtimeType, Container);
+      controller.dispose();
+      expect(controller.bullets.length, 3);
+
+      controller.addDanmaku('hello world', position: FlutterDanmakuBulletPosition.bottom);
+      FlutterDanmakuBulletModel bottom1Bullet = controller.bullets.last;
+      expect(bottom1Bullet.position, FlutterDanmakuBulletPosition.bottom);
+      expect(bottom1Bullet.trackId, controller.tracks.last.id);
+      controller.addDanmaku('hello world', position: FlutterDanmakuBulletPosition.bottom);
+      controller.addDanmaku('hello world', position: FlutterDanmakuBulletPosition.bottom);
+      AddBulletResBody addRes = controller.addDanmaku('hello world', position: FlutterDanmakuBulletPosition.bottom);
+      expect(addRes.code, AddBulletResCode.noSpace);
     });
 
     test('play status', () {

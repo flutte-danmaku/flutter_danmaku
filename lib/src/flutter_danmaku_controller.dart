@@ -37,7 +37,7 @@ class FlutterDanmakuController {
   bool _inited = false;
 
   /// 清除定时器
-  void get dispose => _renderManager.dispose;
+  void dispose() => _renderManager.dispose();
 
   // 成功返回AddBulletResBody.data为bulletId
   AddBulletResBody addDanmaku(String text,

@@ -6,7 +6,7 @@ import 'package:flutter_danmaku/src/flutter_danmaku_bullet_manager.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_controller.dart';
 
 class FlutterDanmakuArea extends StatefulWidget {
-  FlutterDanmakuArea({@required this.child, @required this.controller});
+  FlutterDanmakuArea({Key key, @required this.child, @required this.controller}) : super(key: key);
 
   final Widget child;
 

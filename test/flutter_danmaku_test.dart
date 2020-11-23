@@ -315,6 +315,9 @@ void main() {
       FlutterDanmakuBullet bullet2 = FlutterDanmakuBullet(controller.bullets.last.id, controller.bullets.last.text, builder: controller.bullets.last.builder);
       expect(bullet2.buildText().runtimeType, Container);
       expect(bullet2.buildStrokeText().runtimeType, Container);
+      // controller.pause();
+      // controller.resizeArea(size: Size(400, 400));
+      // controller.play();
       controller.dispose();
       expect(controller.bullets.length, 3);
 
@@ -336,6 +339,9 @@ void main() {
       controller.setBulletTapCallBack(tapCallBack);
       FlutterDanmakuConfig.bulletTapCallBack(controller.bullets.last);
       expect(tapId, controller.bullets.last.id);
+      bullet1 = key.currentState.buildBulletToScreen(key.currentContext, controller.bullets.last);
+      expect(bullet1.runtimeType, Positioned);
+
       controller.delBulletById(bottom1Bullet.id);
       bool hasBullet = controller.bullets.contains(bottom1Bullet);
       expect(hasBullet, false);
@@ -348,6 +354,32 @@ void main() {
       controller.delBulletById(fixedBulletId);
       expect(controller.bullets.contains(fixedBullet), false);
       expect(controller.tracks.first.bindFixedBulletId, null);
+
+      FlutterDanmakuRenderManager flutterDanmakuRenderManager = FlutterDanmakuRenderManager();
+      FlutterDanmakuBulletModel bulletMap1 = controller.bullets.first;
+      Map<UniqueKey, FlutterDanmakuBulletModel> bulletMap = {bulletMap1.id: bulletMap1};
+      UniqueKey leaveId;
+      Function leaveCallBack(UniqueKey id) {
+        leaveId = id;
+      }
+
+      expect(bulletMap[bulletMap1.id].allOutLeave, false);
+      expect(null, leaveId);
+
+      for (int i = 0; i < 300; i++) {
+        flutterDanmakuRenderManager.renderNextFramerate(bulletMap, leaveCallBack);
+      }
+      expect(bulletMap[bulletMap1.id].allOutRight, true);
+
+      expect(FlutterDanmakuUtils.trackInsertBulletHasBump(bulletMap1, Size(30, 50)), false);
+      expect(FlutterDanmakuUtils.trackInsertBulletHasBump(bulletMap1, Size(5, 50)), false);
+      expect(FlutterDanmakuUtils.trackInsertBulletHasBump(bulletMap1, Size(1200, 50)), true);
+
+      for (int i = 0; i < 10000; i++) {
+        flutterDanmakuRenderManager.renderNextFramerate(bulletMap, leaveCallBack);
+      }
+      expect(bulletMap[bulletMap1.id].allOutLeave, true);
+      expect(bulletMap1.id, leaveId);
     });
 
     test('play status', () {

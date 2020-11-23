@@ -19,8 +19,6 @@ class FlutterDanmakuBulletManager {
     _bullets[bullet.id] = bullet;
   }
 
-  bool hasBulletKey(UniqueKey id) => _bullets.containsKey(id);
-
   void removeBulletByKey(UniqueKey id) => _bullets.remove(id);
 
   void removeAllBullet() {

@@ -354,28 +354,28 @@ void main() {
 
       FlutterDanmakuRenderManager flutterDanmakuRenderManager = FlutterDanmakuRenderManager();
       FlutterDanmakuBulletModel bulletMap1 = controller.bullets.first;
-      Map<UniqueKey, FlutterDanmakuBulletModel> bulletMap = {bulletMap1.id: bulletMap1};
+      List<FlutterDanmakuBulletModel> bullets = [bulletMap1];
       UniqueKey leaveId;
       Function leaveCallBack(UniqueKey id) {
         leaveId = id;
       }
 
-      expect(bulletMap[bulletMap1.id].allOutLeave, false);
+      expect(bullets.first.allOutLeave, false);
       expect(null, leaveId);
 
       for (int i = 0; i < 300; i++) {
-        flutterDanmakuRenderManager.renderNextFramerate(bulletMap, leaveCallBack);
+        flutterDanmakuRenderManager.renderNextFramerate(bullets, leaveCallBack);
       }
-      expect(bulletMap[bulletMap1.id].allOutRight, true);
+      expect(bullets.first.allOutRight, true);
 
       expect(FlutterDanmakuUtils.trackInsertBulletHasBump(bulletMap1, Size(30, 50)), false);
       expect(FlutterDanmakuUtils.trackInsertBulletHasBump(bulletMap1, Size(5, 50)), false);
       expect(FlutterDanmakuUtils.trackInsertBulletHasBump(bulletMap1, Size(1200, 50)), true);
 
       for (int i = 0; i < 10000; i++) {
-        flutterDanmakuRenderManager.renderNextFramerate(bulletMap, leaveCallBack);
+        flutterDanmakuRenderManager.renderNextFramerate(bullets, leaveCallBack);
       }
-      expect(bulletMap[bulletMap1.id].allOutLeave, true);
+      expect(bullets.first.allOutLeave, true);
       expect(bulletMap1.id, leaveId);
     });
 

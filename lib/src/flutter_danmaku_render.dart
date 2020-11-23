@@ -24,12 +24,14 @@ class FlutterDanmakuRenderManager {
   }
 
   // 渲染下一帧
-  renderNextFramerate(Map<UniqueKey, FlutterDanmakuBulletModel> bulletMap, Function(UniqueKey) allOutLeaveCallBack) {
-    bulletMap.forEach((UniqueKey bulletId, FlutterDanmakuBulletModel bulletModel) {
+  List<FlutterDanmakuBulletModel> renderNextFramerate(List<FlutterDanmakuBulletModel> bullets, Function(UniqueKey) allOutLeaveCallBack) {
+    List<FlutterDanmakuBulletModel> _bullets = List.generate(bullets.length, (index) => bullets[index]);
+    _bullets.forEach((FlutterDanmakuBulletModel bulletModel) {
       bulletModel.runNextFrame();
       if (bulletModel.allOutLeave) {
-        allOutLeaveCallBack(bulletId);
+        allOutLeaveCallBack(bulletModel.id);
       }
     });
+    return _bullets;
   }
 }

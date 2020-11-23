@@ -54,12 +54,11 @@ import 'package:flutter_danmaku/flutter_danmaku.dart';
 
 ``` Dart
 class _MyHomePageState extends State<MyHomePage> {
-    GlobalKey<FlutterDanmakuAreaState> danmakuarea = GlobalKey();
+    FlutterDanmakuController flutterDanmakuController = FlutterDanmakuController();
 
     void addDanmaku () {
         String text = 'hello world!';
-        danmakuarea
-            .currentState.
+        flutterDanmakuController.
             addDanmaku(text);
     }
 
@@ -68,13 +67,13 @@ class _MyHomePageState extends State<MyHomePage> {
         super.initState();
         // page mounted after
         Future.delayed(Duration(milliseconds: 500), () {
-        danmuarea.currentState.init();
+        flutterDanmakuController.init();
         });
     }
 
     @override
     Widget build (BuildContext context) {
-        return FlutterDanmakuArea(key: danmakuarea, child: Container(height: 220, width: double.infinity)),
+        return FlutterDanmakuArea(controller: flutterDanmakuController, child: Container(height: 220, width: double.infinity)),
     }
 }
 ```
@@ -88,32 +87,23 @@ class _MyHomePageState extends State<MyHomePage> {
 @override
 Widget build (BuildContext context) {
     return FlutterDanmakuArea(
-        key: danmakuarea, 
-        // 子弹单击回调
-        bulletTapCallBack: handleBulletTap,
+        contoller: flutterDanmakuController, 
         child: Container(height: 220, width: double.infinity)),
-}
-
-void handleBulletTap(FlutterDanmakuBulletModel bulletModel) {
-    print(bulletModel.text);
 }
 ```
 
 ### Widget child
 将需要展示在弹幕下方的画面放进去
 
-### Function(FlutterDanmakuBulletModel) bulletTapCallBack;
-子弹单击的回调
-
-## FlutterDanmakuAreaState
-通过globalKey调用
+## FlutterDanmakuController
 
 ``` dart
-GlobalKey<FlutterDanmakuAreaState> danmakuarea = GlobalKey();
+FlutterDanmakuController flutterDanmakuController = FlutterDanmakuController();
 
-FlutterDanmakuArea(key: danmakuarea, child: Container(height: 220, width: double.infinity)),
+FlutterDanmakuArea(controller: flutterDanmakuController, child: Container(height: 220, width: double.infinity)),
 
-danmakuarea.currentState.init()
+flutterDanmakuController.init()
+
 ```
 
 ### init
@@ -150,7 +140,7 @@ enum AddBulletResBody {
 |  text  | String |   弹幕的文字（必填  | / |  
 |  color  | Color |   弹幕的颜色 | Colors.black|  
 | bulletType | FlutterDanmakuBulletType | 弹幕从右边滚动到左边 或者 弹幕居中静止展示 | FlutterDanmakuBulletType.scroll|
-| position | FlutterDanmakuBulletPosition | 按顺序插入弹幕 或者 只插入到底部弹幕（插入的弹幕只为静止弹幕 |FlutterDanmakuBulletPosition.any |  
+| position | FlutterDanmakuBulletPosition | 按顺序注入弹幕 或者 只注入到底部弹幕（注入的弹幕只为静止弹幕 |FlutterDanmakuBulletPosition.any |  
 | builder | Widget Function(Text) | 需要自定义弹幕背景 通过编写builder函数来实现 | null |  
 
 
@@ -221,7 +211,23 @@ void changeOpacity(int opacity)
 | ------ | -------- | ----------  | ------- |
 | opacity | double | 修改文字透明度 会将所有弹幕文字透明度调整 0 ～ 1 | 1
 
+### setBulletTapCallBack
+设置子弹单击事件
 
+``` dart
+void setBulletTapCallBack(Function(FlutterDanmakuBulletModel))
+```
+
+### delBulletById
+从弹幕上删除子弹
+
+``` dart
+void delBulletById(UniqueKey bulletId)
+```
+
+| Params |  Type | Description | default |
+| ------ | -------- | ----------  | ------- |
+| bulletId | UniqueKey | 子弹ID | / |
 
 <hr>
 <hr>

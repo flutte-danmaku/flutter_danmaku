@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_danmaku/src/config.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_bullet_manager.dart';
-import 'package:flutter_danmaku/src/flutter_danmaku_manager.dart';
+import 'package:flutter_danmaku/src/flutter_danmaku_controller.dart';
+import 'package:flutter_danmaku/src/flutter_danmaku_utils.dart';
 
 enum FlutterDanmakuBulletType { scroll, fixed }
 enum FlutterDanmakuBulletPosition { any, bottom }
@@ -63,16 +64,18 @@ class FlutterDanmakuBulletModel {
       this.color,
       this.builder,
       this.position}) {
-    everyFrameRunDistance = FlutterDanmakuBulletUtils.getBulletEveryFramerateRunDistance(bulletSize.width);
+    everyFrameRunDistance = FlutterDanmakuUtils.getBulletEveryFramerateRunDistance(bulletSize.width);
   }
 }
 
 class FlutterDanmakuBullet extends StatelessWidget {
-  FlutterDanmakuBullet(this.danmakuId, this.text, {this.color = Colors.black});
+  FlutterDanmakuBullet(this.danmakuId, this.text, {this.color = Colors.black, this.builder});
 
   String text;
   UniqueKey danmakuId;
   Color color;
+
+  Widget Function(Text) builder;
 
   GlobalKey key;
 
@@ -85,8 +88,8 @@ class FlutterDanmakuBullet extends StatelessWidget {
         color: color.withOpacity(FlutterDanmakuConfig.opacity),
       ),
     );
-    if (FlutterDanmakuManager.bulletsMap[danmakuId] != null && FlutterDanmakuManager.bulletsMap[danmakuId].builder != null) {
-      return FlutterDanmakuManager.bulletsMap[danmakuId].builder(textWidget);
+    if (builder != null) {
+      return builder(textWidget);
     }
     return textWidget;
   }
@@ -103,8 +106,8 @@ class FlutterDanmakuBullet extends StatelessWidget {
           ..color = Colors.white.withOpacity(FlutterDanmakuConfig.opacity),
       ),
     );
-    if (FlutterDanmakuManager.bulletsMap[danmakuId] != null && FlutterDanmakuManager.bulletsMap[danmakuId].builder != null) {
-      return FlutterDanmakuManager.bulletsMap[danmakuId].builder(textWidget);
+    if (builder != null) {
+      return builder(textWidget);
     }
     return textWidget;
   }

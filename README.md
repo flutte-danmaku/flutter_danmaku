@@ -29,7 +29,7 @@ Add this to your package's pubspec.yaml file:
 
 ``` json
 dependencies:
-  flutter_danmaku: ^least
+  flutter_danmaku: ^latest
 ```
 
 

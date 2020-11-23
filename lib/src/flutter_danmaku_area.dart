@@ -12,6 +12,8 @@ class FlutterDanmakuArea extends StatefulWidget {
 
   FlutterDanmakuController controller;
 
+  Function(FlutterDanmakuBulletModel) bulletTapCallBack;
+
   @override
   State<FlutterDanmakuArea> createState() => FlutterDanmakuAreaState();
 }
@@ -52,6 +54,7 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
           child: widget.child,
         ),
         ...buildAllBullet(context)
+
       ],
     );
   }

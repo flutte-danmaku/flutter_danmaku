@@ -103,6 +103,7 @@ FlutterDanmakuController flutterDanmakuController = FlutterDanmakuController();
 FlutterDanmakuArea(controller: flutterDanmakuController, child: Container(height: 220, width: double.infinity)),
 
 flutterDanmakuController.init()
+
 ```
 
 ### init

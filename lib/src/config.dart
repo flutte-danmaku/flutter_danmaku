@@ -5,6 +5,7 @@ import 'package:flutter_danmaku/src/flutter_danmaku_bullet_manager.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_controller.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_utils.dart';
 
+
 class FlutterDanmakuConfig {
   // 帧率
   static int framerate = 60;
@@ -41,6 +42,7 @@ class FlutterDanmakuConfig {
   /// 获取弹幕场景基于子组件高度的偏移量。为了居中展示
   static double getAreaOfChildOffsetY({Size textSize}) {
     Size _textSize = textSize ?? FlutterDanmakuUtils.getDanmakuBulletSizeByText('s');
+
     return (FlutterDanmakuConfig.areaSize.height % _textSize.height) / 2;
   }
 }

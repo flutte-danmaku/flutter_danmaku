@@ -8,7 +8,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: example
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-java@v1
@@ -21,11 +23,7 @@ jobs:
     - name: Install dependencies
       run: flutter pub get
     - run: flutter build web
-    - run: ls
-    - name: Push changes
-      uses: ad-m/github-push-action@master
+    - uses: actions/upload-artifact@v2
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: webexample
-        force: true
-        directory: ../dist/
+        name: web_example
+        path: dist/

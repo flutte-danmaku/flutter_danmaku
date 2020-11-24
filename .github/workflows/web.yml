@@ -2,7 +2,7 @@ name: web CI
 
 on:
   push:
-    branches: [ development ]
+    branches: [ build_web ]
 
 jobs:
   build:

@@ -106,18 +106,6 @@ class _MyHomePageState extends State<MyHomePage> {
         fontSize: 16.0);
   }
 
-  handleBulletTap(BuildContext context, FlutterDanmakuBulletModel bulletModel) {
-    print(bulletModel.text);
-    Fluttertoast.showToast(
-        msg: bulletModel.text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
-  }
-
   addBuilderDanmaku() {
     int random = Random().nextInt(20);
     flutterDanmakuController.addDanmaku('s' + 's' * random, builder: (Text textWidget) {

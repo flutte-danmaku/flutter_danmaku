@@ -26,7 +26,12 @@ jobs:
     - run: flutter doctor
     - run: flutter build web
     - run: pwd
-    - uses: actions/upload-artifact@v2
+    # - uses: actions/upload-artifact@v2
+    #   with:
+    #     name: web_example
+    #     path: ${{ github.workspace }}/example/build/web/
+    - name: HTML Preview
+      id: html_preview
+      uses: pavi2410/html-preview-action@v2
       with:
-        name: web_example
-        path: ${{ github.workspace }}/example/build/web/
+        html_file: '${{ github.workspace }}/example/build/web/index.html'

@@ -25,7 +25,8 @@ jobs:
     - run: flutter pub get
     - run: flutter doctor
     - run: flutter build web
+    - run: pwd
     - uses: actions/upload-artifact@v2
       with:
         name: web_example
-        path: ${{ github.workspace }}\build\web\
+        path: ${{ github.workspace }}/build/web/

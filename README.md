@@ -20,6 +20,11 @@
 * 自定义弹幕背景
 * 弹幕点击回调
 
+## live demo
+
+https://a62527776a.github.io/flutter_danmaku_demo/index.html  web demo
+
+
 ## How to use
 
 1. Depend on it

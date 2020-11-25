@@ -123,6 +123,7 @@ class FlutterDanmakuController {
     FlutterDanmakuConfig.areaSize = size ?? context.size;
     FlutterDanmakuConfig.areaOfChildOffsetY = FlutterDanmakuConfig.getAreaOfChildOffsetY();
     _trackManager.recountTrackOffset();
+    _trackManager.resetBottomBullets(_bulletManager.bottomBullets);
     if (FlutterDanmakuConfig.pause) {
       _renderManager.renderNextFramerate(_bulletManager.bullets, _allOutLeaveCallBack);
     }

@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_danmaku/flutter_danmaku.dart';
 import 'package:english_words/english_words.dart';
+import 'package:flutter_driver/driver_extension.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
+  enableFlutterDriverExtension();
+
   runApp(MyApp());
 }
 
@@ -96,14 +99,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   handleBulletTap(BuildContext context, FlutterDanmakuBulletModel bulletModel) {
     print(bulletModel.text);
-    Fluttertoast.showToast(
-        msg: bulletModel.text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
   }
 
   addBuilderDanmaku() {
@@ -114,6 +109,18 @@ class _MyHomePageState extends State<MyHomePage> {
         decoration: BoxDecoration(border: Border.all(color: Colors.red)),
       );
     }, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
+  }
+
+  setBulletTapCallBack(FlutterDanmakuBulletModel bulletModel) {
+    Fluttertoast.cancel();
+    Fluttertoast.showToast(
+        msg: bulletModel.text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: bulletModel.color,
+        fontSize: 16.0);
   }
 
   void _incrementCounter() {
@@ -138,6 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     Future.delayed(Duration(milliseconds: 500), () {
       flutterDanmakuController.init();
+      flutterDanmakuController.setBulletTapCallBack(setBulletTapCallBack);
     });
   }
 
@@ -238,6 +246,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
+          key: Key('incrementBullet'),
           onPressed: _incrementCounter,
           tooltip: 'Increment',
           child: Icon(Icons.add),

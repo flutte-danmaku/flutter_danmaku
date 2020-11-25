@@ -191,17 +191,6 @@ void main() {
       track.loadFixedBulletId(bulletId);
       expect(track.allowInsertFixedBullet, false);
     });
-    test('findAvailableTrack', () async {
-      FlutterDanmakuConfig.areaSize = Size(999, 999);
-      // String bulletText = 'hello world';
-      // Size bulletSize = FlutterDanmakuUtils.getDanmakuBulletSizeByText(bulletText);
-      // AddBulletResBody resBoyd1 = flutterDanmakuController.addDanmaku(bulletText);
-      // expect(resBoyd1.code, AddBulletResCode.success);
-      // expect(FlutterDanmakuTrackManager.findAvailableTrack(bulletSize, position: FlutterDanmakuBulletPosition.bottom).id, track5.id);
-      // flutterDanmakuController.addDanmaku('底部弹幕', position: FlutterDanmakuBulletPosition.bottom, bulletType: FlutterDanmakuBulletType.fixed);
-      // expect(FlutterDanmakuTrackManager.findAvailableTrack(bulletSize, position: FlutterDanmakuBulletPosition.bottom).id, track4.id);
-      // expect(flutterDanmakuBulletManager.bottomBullets.firstWhere((element) => element.trackId == track5.id).trackId, track5.id);
-    });
 
     test('areaAllowBuildNewTrack', () {
       flutterDanmakuTrackManager.tracks = [];
@@ -229,65 +218,27 @@ void main() {
       expect(flutterDanmakuTrackManager.areaAllowBuildNewTrack(trackHeight), false);
     });
 
-    test('trackInsertBulletHasBump', () async {
-      // String text = 'hello world';
-      // Size textSize = FlutterDanmakuUtils.getDanmakuBulletSizeByText(text);
-      // flutterDanmakuController.resizeArea(size: Size(500, 500));
-      // AddBulletResBody bulletResBody = flutterDanmakuController.addDanmaku(text);
-      // FlutterDanmakuBulletModel bullet = flutterDanmakuBulletManager.bulletsMap[bulletResBody.data];
-      // expect(bullet.runtimeType, FlutterDanmakuBulletModel);
-      // bool willBump = FlutterDanmakuUtils.trackInsertBulletHasBump(bullet, textSize);
-      // expect(willBump, true);
-      // bool willBump2 = FlutterDanmakuUtils.trackInsertBulletHasBump(bullet, FlutterDanmakuUtils.getDanmakuBulletSizeByText(text * 2));
-      // expect(willBump2, true);
-      // for (int i = 0; i < 200; i++) {
-      //   bullet.runNextFrame();
-      // }
-      // bool willBump1 = FlutterDanmakuUtils.trackInsertBulletHasBump(bullet, textSize);
-      // expect(willBump1, false);
-      // expect(FlutterDanmakuUtils.trackAllowInsert(FlutterDanmakuController.tracks[0], textSize), true);
-      // expect(flutterDanmakuTrackManager.tracks.where((element) => element.id == bullet.trackId).first.lastBulletId, null);
-      // AddBulletResBody bulletResBody1 = flutterDanmakuController.addDanmaku(text, bulletType: FlutterDanmakuBulletType.fixed);
-      // expect(flutterDanmakuTrackManager.tracks.where((element) => element.id == bullet.trackId).first.bindFixedBulletId, null);
-      // FlutterDanmakuTrackManager.recountTrackOffset();
+    testWidgets('Flutter bottomBUllet resizeArea', (WidgetTester tester) async {
+      Widget childArea = Container(height: 400, width: 400);
+      GlobalKey<FlutterDanmakuAreaState> key = GlobalKey<FlutterDanmakuAreaState>();
+      FlutterDanmakuController controller = FlutterDanmakuController();
+      Widget area = FlutterDanmakuArea(
+        key: key,
+        controller: controller,
+        child: childArea,
+      );
+      await tester.pumpWidget(Directionality(textDirection: TextDirection.ltr, child: area));
+      controller.init();
+      await tester.pump(Duration(seconds: 1));
+      controller.addDanmaku('hello world', position: FlutterDanmakuBulletPosition.bottom);
+      FlutterDanmakuBulletModel bottom1Bullet = controller.bullets.last;
+      expect(bottom1Bullet.position, FlutterDanmakuBulletPosition.bottom);
+      expect(bottom1Bullet.trackId, controller.tracks.last.id);
+      controller.resizeArea(size: Size(400, 800));
+      expect(bottom1Bullet.trackId, controller.tracks.last.id);
+      expect(bottom1Bullet.offsetY, controller.tracks.last.offsetTop);
+      controller.dispose();
     });
-  });
-
-  group('FlutterDanmakuController', () {
-    test('run', () async {
-      int mycount = 0;
-      // flutterDanmakuController.run(() => {if (mycount == 3) flutterDanmakuManager.dispose(), mycount += 1});
-      // await Future.delayed(Duration(seconds: 1));
-      // expect(mycount, 4);
-    });
-  });
-
-  group('FlutterDanmakuAreaState', () {
-    test('addDanmaku', () {
-      // flutterDanmakuBulletManager.removeAllBullet();
-      // String text = 'text';
-      // expect(flutterDanmakuTrackManager.tracks.isEmpty, true);
-      // AddBulletResBody resBody = flutterDanmakuController.addDanmaku(text);
-      // expect(resBody.code, AddBulletResCode.noSpace);
-      // Size textSize = FlutterDanmakuUtils.getDanmakuBulletSizeByText(text);
-      // FlutterDanmakuTrack track = flutterDanmakuTrackManager.buildTrack(textSize.height);
-      // AddBulletResBody resBody1 = flutterDanmakuController.addDanmaku(text);
-      // expect(resBody1.code, AddBulletResCode.success);
-      // expect(track.lastBulletId, flutterDanmakuBulletManager.bullets[0].id);
-      // FlutterDanmakuArea(child: Container(height: 500, width: 500));
-    });
-
-    //     testWidgets('FlutterDanmakuBullet', (WidgetTester tester) async {
-    //   String text = 'hello world';
-    //   // Create the widget by telling the tester to build it.
-    //   await tester.pumpWidget(Directionality(
-    //       textDirection: TextDirection.ltr,
-    //       child: FlutterDanmakuBullet(
-    //         UniqueKey(),
-    //         text,
-    //         color: Colors.red,
-    //       )));
-    // });
 
     testWidgets('FlutterDanmakuArea', (WidgetTester tester) async {
       Widget childArea = Container(height: 400, width: 400);

@@ -11,7 +11,20 @@ jobs:
       run:
         working-directory: example
     steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: 'stable'
+    - name: Install dependencies
+      run: flutter pub get
     - name: pwd
-      run: echo pwd
-
+      run: pwd
+    - name: run tests
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 29
+        script: ${{env.working-directory}}/integration_testing
 

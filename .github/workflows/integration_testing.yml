@@ -15,6 +15,18 @@ jobs:
       run:
         working-directory: example
     steps:
+    - name: "List all simulators"
+      run: "xcrun instruments -s"
+    - name: "Start Simulator"
+      run: |
+        UDID=$(
+          xcrun instruments -s |
+          awk \
+            -F ' *[][]' \
+            -v 'device=${{ matrix.device }}' \
+            '$1 == device { print $2 }'
+        )
+        xcrun simctl boot "${UDID:?No Simulator with this name found}"
     - uses: actions/checkout@v2
     - uses: actions/setup-java@v1
       with:

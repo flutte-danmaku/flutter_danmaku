@@ -89,6 +89,15 @@ class FlutterDanmakuTrackManager {
     buildTrackFullScreen();
   }
 
+  // 重置底部弹幕位置
+  void resetBottomBullets(List<FlutterDanmakuBulletModel> bottomBullets) {
+    if (bottomBullets.isEmpty) return;
+    for (int i = 0; i < bottomBullets.length; i++) {
+      bottomBullets[i].trackId = tracks[tracks.length - 1 - i].id;
+      bottomBullets[i].offsetY = tracks[tracks.length - 1 - i].offsetTop;
+    }
+  }
+
   // 是否允许建立新轨道
   bool areaAllowBuildNewTrack(double needBuildTrackHeight) {
     assert(needBuildTrackHeight > 0);

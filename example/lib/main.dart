@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_danmaku/flutter_danmaku.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter_driver/driver_extension.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
   enableFlutterDriverExtension();
@@ -110,6 +111,18 @@ class _MyHomePageState extends State<MyHomePage> {
     }, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
   }
 
+  setBulletTapCallBack(FlutterDanmakuBulletModel bulletModel) {
+    Fluttertoast.cancel();
+    Fluttertoast.showToast(
+        msg: bulletModel.text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: bulletModel.color,
+        fontSize: 16.0);
+  }
+
   void _incrementCounter() {
     addDanmaku();
     addDanmaku();
@@ -132,6 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     Future.delayed(Duration(milliseconds: 500), () {
       flutterDanmakuController.init();
+      flutterDanmakuController.setBulletTapCallBack(setBulletTapCallBack);
     });
   }
 

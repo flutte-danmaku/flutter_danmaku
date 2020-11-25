@@ -218,6 +218,28 @@ void main() {
       expect(flutterDanmakuTrackManager.areaAllowBuildNewTrack(trackHeight), false);
     });
 
+    testWidgets('Flutter bottomBUllet resizeArea', (WidgetTester tester) async {
+      Widget childArea = Container(height: 400, width: 400);
+      GlobalKey<FlutterDanmakuAreaState> key = GlobalKey<FlutterDanmakuAreaState>();
+      FlutterDanmakuController controller = FlutterDanmakuController();
+      Widget area = FlutterDanmakuArea(
+        key: key,
+        controller: controller,
+        child: childArea,
+      );
+      await tester.pumpWidget(Directionality(textDirection: TextDirection.ltr, child: area));
+      controller.init();
+      await tester.pump(Duration(seconds: 1));
+      controller.addDanmaku('hello world', position: FlutterDanmakuBulletPosition.bottom);
+      FlutterDanmakuBulletModel bottom1Bullet = controller.bullets.last;
+      expect(bottom1Bullet.position, FlutterDanmakuBulletPosition.bottom);
+      expect(bottom1Bullet.trackId, controller.tracks.last.id);
+      controller.resizeArea(size: Size(400, 800));
+      expect(bottom1Bullet.trackId, controller.tracks.last.id);
+      expect(bottom1Bullet.offsetY, controller.tracks.last.offsetTop);
+      controller.dispose();
+    });
+
     testWidgets('FlutterDanmakuArea', (WidgetTester tester) async {
       Widget childArea = Container(height: 400, width: 400);
       GlobalKey<FlutterDanmakuAreaState> key = GlobalKey<FlutterDanmakuAreaState>();

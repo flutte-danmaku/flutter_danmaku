@@ -10,6 +10,7 @@ jobs:
     defaults:
       run:
         working-directory: example
+    steps:
     - name: pwd
       run: pwd
 

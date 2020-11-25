@@ -20,8 +20,6 @@ jobs:
         channel: 'stable'
     - name: Install dependencies
       run: flutter pub get
-    - name: pwd
-      run: pwd
     - name: run tests
       uses: reactivecircus/android-emulator-runner@v2
       with:

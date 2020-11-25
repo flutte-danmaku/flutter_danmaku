@@ -5,12 +5,8 @@ on:
     branches: [ develop ]
 
 jobs:
-  build:
-    runs-on: macOS-latest
-    strategy:
-      matrix:
-        destination: ['platform=iOS Simulator,OS=14.1,name=iPhone 8']
-      fail-fast: false
+  test:
+    runs-on: macos-latest
     defaults:
       run:
         working-directory: example
@@ -19,13 +15,14 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: '12.x'
-    - name: start Simulator
-      run: open -a Simulator
     - uses: subosito/flutter-action@v1
       with:
         channel: 'stable'
     - name: Install dependencies
       run: flutter pub get
-    - name: Run tests
-      run: flutter drive --profile
+    - name: run tests
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 29
+        script: ./integration_testing
 

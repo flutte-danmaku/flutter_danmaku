@@ -93,8 +93,7 @@ class FlutterDanmakuTrackManager {
   void resetBottomBullets(List<FlutterDanmakuBulletModel> bottomBullets) {
     if (bottomBullets.isEmpty) return;
     for (int i = 0; i < bottomBullets.length; i++) {
-      bottomBullets[i].trackId = tracks[tracks.length - 1 - i].id;
-      bottomBullets[i].offsetY = tracks[tracks.length - 1 - i].offsetTop;
+      bottomBullets[i].rebindTrack(tracks[tracks.length - 1 - i]);
     }
   }
 

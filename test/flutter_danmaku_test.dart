@@ -67,8 +67,10 @@ void main() {
       expect(bullet1.builder(Text('hello world')).runtimeType, Container);
       flutterDanmakuController.changeLableSize(10);
       expect(flutterDanmakuController.bullets.isEmpty, false);
-      flutterDanmakuController.removeAllBullet();
+      flutterDanmakuController.clearScreen();
       expect(flutterDanmakuController.bullets.isEmpty, true);
+      expect(flutterDanmakuController.tracks.first.lastBulletId, null);
+      expect(flutterDanmakuController.tracks.first.bindFixedBulletId, null);
     });
   });
 

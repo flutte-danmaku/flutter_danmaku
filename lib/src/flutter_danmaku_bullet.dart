@@ -69,9 +69,11 @@ class FlutterDanmakuBulletModel {
       this.offsetY,
       this.bulletType = FlutterDanmakuBulletType.scroll,
       this.color,
+      int offsetMS,
       this.builder,
       this.position}) {
     everyFrameRunDistance = FlutterDanmakuUtils.getBulletEveryFramerateRunDistance(bulletSize.width);
+    _runDistance = offsetMS != null ? (offsetMS / FlutterDanmakuConfig.unitTimer) * everyFrameRunDistance : 0;
   }
 }
 

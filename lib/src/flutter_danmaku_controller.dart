@@ -44,19 +44,20 @@ class FlutterDanmakuController {
       {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll,
       Color color,
       Widget Function(Text) builder,
+      int offsetMS,
       FlutterDanmakuBulletPosition position = FlutterDanmakuBulletPosition.any}) {
     assert(text.isNotEmpty);
     // 先获取子弹尺寸
     Size bulletSize = FlutterDanmakuUtils.getDanmakuBulletSizeByText(text);
     // 寻找可用的轨道
-    FlutterDanmakuTrack track = _findAvailableTrack(bulletSize, bulletType: bulletType, position: position);
+    FlutterDanmakuTrack track = _findAvailableTrack(bulletSize, bulletType: bulletType, position: position, offsetMS: offsetMS);
     // 如果没有找到可用的轨道
     if (track == null)
       return AddBulletResBody(
         AddBulletResCode.noSpace,
       );
-    FlutterDanmakuBulletModel bullet =
-        _bulletManager.initBullet(text, track.id, bulletSize, track.offsetTop, position: position, bulletType: bulletType, color: color, builder: builder);
+    FlutterDanmakuBulletModel bullet = _bulletManager.initBullet(text, track.id, bulletSize, track.offsetTop,
+        position: position, bulletType: bulletType, color: color, builder: builder, offsetMS: offsetMS);
     if (bulletType == FlutterDanmakuBulletType.scroll) {
       track.lastBulletId = bullet.id;
     } else {
@@ -77,8 +78,10 @@ class FlutterDanmakuController {
     _run();
   }
 
-  void removeAllBullet() {
+  // 弹幕清屏
+  void clearScreen() {
     _bulletManager.removeAllBullet();
+    _trackManager.unloadAllBullet();
   }
 
   /// 暂停
@@ -154,13 +157,13 @@ class FlutterDanmakuController {
       }, setState);
 
   /// 获取允许注入的轨道
-  FlutterDanmakuTrack _findAllowInsertTrack(Size bulletSize, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
+  FlutterDanmakuTrack _findAllowInsertTrack(Size bulletSize, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, int offsetMS = 0}) {
     FlutterDanmakuTrack _track;
     // 在现有轨道里找
     for (int i = 0; i < tracks.length; i++) {
       // 当前轨道溢出可用轨道
       if (FlutterDanmakuUtils.isEnableTrackOverflowArea(tracks[i])) break;
-      bool allowInsert = _trackAllowInsert(tracks[i], bulletSize, bulletType: bulletType);
+      bool allowInsert = _trackAllowInsert(tracks[i], bulletSize, bulletType: bulletType, offsetMS: offsetMS);
       if (allowInsert) {
         _track = tracks[i];
         break;
@@ -170,7 +173,8 @@ class FlutterDanmakuController {
   }
 
   /// 查询该轨道是否允许注入
-  bool _trackAllowInsert(FlutterDanmakuTrack track, Size needInsertBulletSize, {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll}) {
+  bool _trackAllowInsert(FlutterDanmakuTrack track, Size needInsertBulletSize,
+      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, int offsetMS = 0}) {
     UniqueKey lastBulletId;
     assert(needInsertBulletSize.height > 0);
     assert(needInsertBulletSize.width > 0);
@@ -180,15 +184,17 @@ class FlutterDanmakuController {
     lastBulletId = track.lastBulletId;
     FlutterDanmakuBulletModel lastBullet = _bulletManager.bulletsMap[lastBulletId];
     if (lastBullet == null) return true;
-    return !FlutterDanmakuUtils.trackInsertBulletHasBump(lastBullet, needInsertBulletSize);
+    return !FlutterDanmakuUtils.trackInsertBulletHasBump(lastBullet, needInsertBulletSize, offsetMS: offsetMS);
   }
 
   FlutterDanmakuTrack _findAvailableTrack(Size bulletSize,
-      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll, FlutterDanmakuBulletPosition position = FlutterDanmakuBulletPosition.any}) {
+      {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll,
+      int offsetMS = 0,
+      FlutterDanmakuBulletPosition position = FlutterDanmakuBulletPosition.any}) {
     assert(bulletSize.height > 0);
     assert(bulletSize.width > 0);
     if (position == FlutterDanmakuBulletPosition.any) {
-      return _findAllowInsertTrack(bulletSize, bulletType: bulletType);
+      return _findAllowInsertTrack(bulletSize, bulletType: bulletType, offsetMS: offsetMS);
     } else {
       return _findAllowInsertBottomTrack(bulletSize);
     }

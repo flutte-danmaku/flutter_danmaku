@@ -126,6 +126,7 @@ AddBulletResBody addDanmaku(
         Color color,
         FlutterDanmakuBulletType bulletType,
         FlutterDanmakuBulletPosition position,
+        int offsetMS
         Widget Function(Text) builder
     }
 )
@@ -147,6 +148,7 @@ enum AddBulletResBody {
 | bulletType | FlutterDanmakuBulletType | 弹幕从右边滚动到左边 或者 弹幕居中静止展示 | FlutterDanmakuBulletType.scroll|
 | position | FlutterDanmakuBulletPosition | 按顺序注入弹幕 或者 只注入到底部弹幕（注入的弹幕只为静止弹幕 |FlutterDanmakuBulletPosition.any |  
 | builder | Widget Function(Text) | 需要自定义弹幕背景 通过编写builder函数来实现 | null |  
+| offsetMS | int | 弹幕偏移量 | 插入弹幕偏移量 用于弹幕seek 需要先清空屏幕 然后按照偏移量从大到小的顺序插入 |  
 
 
 ### resizeArea
@@ -223,16 +225,12 @@ void changeOpacity(int opacity)
 void setBulletTapCallBack(Function(FlutterDanmakuBulletModel))
 ```
 
-### delBulletById
-从弹幕上删除子弹
+### clearScreen
+清空全部弹幕
 
 ``` dart
-void delBulletById(UniqueKey bulletId)
+void clearScreen()
 ```
-
-| Params |  Type | Description | default |
-| ------ | -------- | ----------  | ------- |
-| bulletId | UniqueKey | 子弹ID | / |
 
 <hr>
 <hr>

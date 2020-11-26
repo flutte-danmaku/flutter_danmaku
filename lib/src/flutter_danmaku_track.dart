@@ -114,4 +114,12 @@ class FlutterDanmakuTrackManager {
       tracks.firstWhere((element) => element.bindFixedBulletId == bulletModel.id, orElse: () => null)?.unloadFixedBulletId();
     }
   }
+
+  // 卸载全部轨道上绑定的弹幕ID
+  unloadAllBullet() {
+    tracks.forEach((track) {
+      track.unloadFixedBulletId();
+      track.unloadLastBulletId();
+    });
+  }
 }

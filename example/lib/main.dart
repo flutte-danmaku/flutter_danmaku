@@ -65,6 +65,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   FlutterDanmakuController flutterDanmakuController = FlutterDanmakuController();
 
+  void clearScreen() {
+    flutterDanmakuController.clearScreen();
+  }
+
   void changeShowAreaP(double p) {
     flutterDanmakuController.changeShowArea(p);
   }
@@ -99,6 +103,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
   handleBulletTap(BuildContext context, FlutterDanmakuBulletModel bulletModel) {
     print(bulletModel.text);
+  }
+
+  danmakuSeek() {
+    flutterDanmakuController.clearScreen();
+    random100().forEach((randomInt) {
+      print(randomInt);
+      addOffsetDanmaku(randomInt);
+    });
+  }
+
+  List<int> random100() {
+    List<int> randomList = List.generate(100, (index) => Random().nextInt(3000))..sort();
+    return randomList.reversed.toList();
+  }
+
+  addOffsetDanmaku(int offsetMS) {
+    int random = Random().nextInt(20);
+    flutterDanmakuController.addDanmaku('s' + 's' * random, offsetMS: offsetMS, builder: (Text textWidget) {
+      return Container(
+        child: textWidget,
+        decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+      );
+    }, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
   }
 
   addBuilderDanmaku() {
@@ -221,8 +248,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           crossAxisCount: 3, //横轴三个子widget
                           childAspectRatio: 3),
                       children: [
+                        MaterialButton(onPressed: () => danmakuSeek(), child: Text('弹幕seek')),
                         MaterialButton(onPressed: () => dibudanmu(), child: Text('底部弹幕')),
                         MaterialButton(onPressed: () => resethengshuping(), child: Text('复原横屏')),
+                        MaterialButton(onPressed: () => clearScreen(), child: Text('清除全部弹幕')),
                         MaterialButton(onPressed: () => changeRate(0.5), child: Text('变倍率0.5')),
                         MaterialButton(onPressed: () => changeRate(0.8), child: Text('变倍率0.8')),
                         MaterialButton(onPressed: () => changeRate(1.2), child: Text('变倍率1.2')),

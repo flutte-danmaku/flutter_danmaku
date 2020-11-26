@@ -140,6 +140,7 @@ class FlutterDanmakuController {
     _trackManager.buildTrackFullScreen();
   }
 
+  /// 请不要调用这个函数
   void delBulletById(UniqueKey bulletId) {
     _trackManager.removeTrackBindIdByBulletModel(_bulletManager.bulletsMap[bulletId]);
     _bulletManager.removeBulletByKey(bulletId);

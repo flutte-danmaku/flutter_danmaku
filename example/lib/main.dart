@@ -173,6 +173,9 @@ class _MyHomePageState extends State<MyHomePage> {
     Future.delayed(Duration(milliseconds: 500), () {
       flutterDanmakuController.init();
       flutterDanmakuController.setBulletTapCallBack(setBulletTapCallBack);
+      this.addDanmaku();
+      this.addBuilderDanmaku();
+      this.dibudanmu();
     });
   }
 

@@ -5,7 +5,28 @@
 [![pub package](https://img.shields.io/pub/v/flutter_danmaku.svg)](https://pub.dev/packages/flutter_danmaku)
 一个普通的flutter弹幕项目。纯dart项目
 
-[![Watch the video](https://i.loli.net/2020/11/18/LCjhTrm56Ypinls.png)](https://youtu.be/APfIEgJct4I)
+- [👏 Flutter Danmaku](#-flutter-danmaku)
+  - [Features](#features)
+  - [live&nbsp;demo](#livedemo)
+  - [How to use](#how-to-use)
+- [API](#api)
+  - [FlutterDanmakuArea](#flutterdanmakuarea)
+    - [Widget child](#widget-child)
+  - [FlutterDanmakuController](#flutterdanmakucontroller)
+    - [init](#init)
+    - [dipose](#dipose)
+    - [addDanmaku](#adddanmaku)
+    - [resizeArea](#resizearea)
+    - [pause&play](#pauseplay)
+    - [changeShowArea](#changeshowarea)
+    - [changeRate](#changerate)
+    - [changeLableSize](#changelablesize)
+    - [changeOpacity](#changeopacity)
+    - [setBulletTapCallBack](#setbullettapcallback)
+    - [clearScreen](#clearscreen)
+  - [Tip](#tip)
+    - [如何seek弹幕](#如何seek弹幕)
+  - [感谢](#感谢)
 
 ## Features
 * 色彩弹幕
@@ -20,9 +41,11 @@
 * 自定义弹幕背景
 * 弹幕点击回调
 
-## live demo
+## live&nbsp;demo
 
 https://a62527776a.github.io/flutter_danmaku_demo/index.html  web demo
+
+[![Watch the video](https://i.loli.net/2020/11/18/LCjhTrm56Ypinls.png)](https://youtu.be/APfIEgJct4I)
 
 
 ## How to use
@@ -163,7 +186,7 @@ void resizeArea({
 | ------ | -------- | ----------  | ------- |  
 | size | Size | 改变子视图尺寸并等待视图渲染完成后调用 通常用于切换全屏 参数可选 不传默认为子组件context.size | context.size |  
 
-### pause & play
+### pause&play
 
 暂停或者播放弹幕
 
@@ -234,6 +257,46 @@ void clearScreen()
 
 <hr>
 <hr>
+
+## Tip
+
+### 如何seek弹幕  
+比如视频seek到3:10:55  
+需要取出3:07:55 ~ 3:10:55这三秒内的所有弹幕
+按照最早到最晚的排序 调用addDanmaku 传入offsetMS参数
+就能实现按照时间轴seek弹幕
+
+``` dart
+
+  danmakuSeek() {
+    // 先清空屏幕
+    flutterDanmakuController.clearScreen();
+    // 取出seek前3秒到seek时间区间的所有弹幕
+    // 需要按照时间偏移量从早到晚排序好
+    random100().forEach((randomInt) {
+      print(randomInt);
+      addOffsetDanmaku(randomInt);
+    });
+  }
+
+  List<int> random100() {
+    // 模拟seek时间的毫秒偏移量
+    List<int> randomList = List.generate(100, (index) => Random().nextInt(3000))..sort();
+    return randomList.reversed.toList();
+  }
+
+  addOffsetDanmaku(int offsetMS) {
+    int random = Random().nextInt(20);
+    flutterDanmakuController.addDanmaku('s' + 's' * random, offsetMS: offsetMS, builder: (Text textWidget) {
+      return Container(
+        child: textWidget,
+        decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+      );
+    }, color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
+  }
+
+```
+
 
 ## 感谢
 

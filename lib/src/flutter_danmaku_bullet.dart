@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_danmaku/src/config.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_bullet_manager.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_controller.dart';
+import 'package:flutter_danmaku/src/flutter_danmaku_track.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_utils.dart';
 
 enum FlutterDanmakuBulletType { scroll, fixed }
@@ -54,6 +55,12 @@ class FlutterDanmakuBulletModel {
     _runDistance += everyFrameRunDistance * FlutterDanmakuConfig.bulletRate;
   }
 
+  // 重新绑定轨道
+  void rebindTrack(FlutterDanmakuTrack track) {
+    offsetY = track.offsetTop;
+    trackId = track.id;
+  }
+
   FlutterDanmakuBulletModel(
       {this.id,
       this.trackId,
@@ -62,9 +69,11 @@ class FlutterDanmakuBulletModel {
       this.offsetY,
       this.bulletType = FlutterDanmakuBulletType.scroll,
       this.color,
+      int offsetMS,
       this.builder,
       this.position}) {
     everyFrameRunDistance = FlutterDanmakuUtils.getBulletEveryFramerateRunDistance(bulletSize.width);
+    _runDistance = offsetMS != null ? (offsetMS / FlutterDanmakuConfig.unitTimer) * everyFrameRunDistance : 0;
   }
 }
 

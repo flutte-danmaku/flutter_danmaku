@@ -30,6 +30,7 @@ class FlutterDanmakuBulletManager {
       {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll,
       FlutterDanmakuBulletPosition position,
       Color color,
+      int offsetMS = 0,
       Widget Function(Text) builder}) {
     assert(bulletSize.height > 0);
     assert(bulletSize.width > 0);
@@ -43,6 +44,7 @@ class FlutterDanmakuBulletManager {
         position: position,
         bulletSize: bulletSize,
         offsetY: offsetY,
+        offsetMS: offsetMS,
         bulletType: bulletType,
         builder: builder);
     // 记录到表上

@@ -76,17 +76,27 @@ class FlutterDanmakuTrackManager {
 
   // 重新计算轨道高度和距顶
   void recountTrackOffset() {
+    bool needBuildTrackFullScreen = true;
     Size currentLabelSize = FlutterDanmakuUtils.getDanmakuBulletSizeByText('s');
     for (int i = 0; i < tracks.length; i++) {
       tracks[i].trackHeight = currentLabelSize.height;
       tracks[i].offsetTop = currentLabelSize.height * i;
       // 把溢出可用区域的轨道之后全部删掉
-      if (isTrackOverflowArea) {
+      if ((tracks[i].trackHeight + tracks[i].offsetTop) > FlutterDanmakuConfig.areaSize.height) {
         tracks.removeRange(i, tracks.length);
+        needBuildTrackFullScreen = false;
         break;
       }
     }
-    buildTrackFullScreen();
+    if (needBuildTrackFullScreen) buildTrackFullScreen();
+  }
+
+  // 重置底部弹幕位置
+  void resetBottomBullets(List<FlutterDanmakuBulletModel> bottomBullets) {
+    if (bottomBullets.isEmpty) return;
+    for (int i = 0; i < bottomBullets.length; i++) {
+      bottomBullets[i].rebindTrack(tracks[tracks.length - 1 - i]);
+    }
   }
 
   // 是否允许建立新轨道
@@ -105,5 +115,13 @@ class FlutterDanmakuTrackManager {
     } else if (bulletModel.bulletType == FlutterDanmakuBulletType.fixed) {
       tracks.firstWhere((element) => element.bindFixedBulletId == bulletModel.id, orElse: () => null)?.unloadFixedBulletId();
     }
+  }
+
+  // 卸载全部轨道上绑定的弹幕ID
+  unloadAllBullet() {
+    tracks.forEach((track) {
+      track.unloadFixedBulletId();
+      track.unloadLastBulletId();
+    });
   }
 }

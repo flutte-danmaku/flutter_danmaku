@@ -118,6 +118,7 @@ class FlutterDanmakuController {
     FlutterDanmakuConfig.bulletLableSize = size.toDouble();
     FlutterDanmakuConfig.areaOfChildOffsetY = FlutterDanmakuConfig.getAreaOfChildOffsetY();
     _trackManager.recountTrackOffset();
+    _trackManager.resetBottomBullets(_bulletManager.bottomBullets);
     _recountBulletsOffset();
   }
 
@@ -222,9 +223,11 @@ class FlutterDanmakuController {
     // 写的非常脏 但是太累了
     bullets.forEach((FlutterDanmakuBulletModel bullet) {
       FlutterDanmakuTrack track = tracks.firstWhere((element) => element.id == bullet.trackId, orElse: () => null);
+      if (track == null && bullet.position != FlutterDanmakuBulletPosition.bottom) return _bulletManager.removeBulletByKey(bullet.id);
       if (track == null) return;
       bullet.offsetY = track.offsetTop;
-      bullet.bulletSize = FlutterDanmakuUtils.getDanmakuBulletSizeByText(bullet.text);
+      Size newBulletSize = FlutterDanmakuUtils.getDanmakuBulletSizeByText(bullet.text);
+      bullet.bulletSize = newBulletSize;
     });
   }
 }

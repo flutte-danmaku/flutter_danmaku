@@ -47,7 +47,6 @@ https://a62527776a.github.io/flutter_danmaku_demo/index.html  web demo
 
 [![Watch the video](https://i.loli.net/2020/11/18/LCjhTrm56Ypinls.png)](https://youtu.be/APfIEgJct4I)
 
-
 ## How to use
 
 1. Depend on it

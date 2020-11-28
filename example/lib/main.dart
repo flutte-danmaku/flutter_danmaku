@@ -108,7 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
   danmakuSeek() {
     flutterDanmakuController.clearScreen();
     random100().forEach((randomInt) {
-      print(randomInt);
       addOffsetDanmaku(randomInt);
     });
   }

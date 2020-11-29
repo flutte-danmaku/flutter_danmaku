@@ -132,7 +132,16 @@ void main() {
       flutterDanmakuController.addDanmaku('hello world');
       flutterDanmakuController.addDanmaku('hello world');
       flutterDanmakuController.addDanmaku('hello world');
-      // flutterDanmakuController.recountBulletsOffset();
+      flutterDanmakuController.addDanmaku('hello world', position: FlutterDanmakuBulletPosition.bottom);
+      flutterDanmakuController.resizeArea(Size(500, 1));
+      expect(flutterDanmakuController.bullets.length, 0);
+      flutterDanmakuController.resizeArea(Size(500, 500));
+      flutterDanmakuController.addDanmaku('hello world');
+      UniqueKey bottomBulletId = flutterDanmakuController.addDanmaku('hello world', position: FlutterDanmakuBulletPosition.bottom).data;
+      expect(flutterDanmakuController.bullets.last.id, bottomBulletId);
+      flutterDanmakuController.resizeArea(Size(20, 500));
+      expect(flutterDanmakuController.bullets.firstWhere((element) => element.id == bottomBulletId).trackId, flutterDanmakuController.tracks.last.id);
+      flutterDanmakuController.resizeArea(Size(500, 500));
     });
   });
 

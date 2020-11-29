@@ -57,7 +57,7 @@ class FlutterDanmakuController {
         AddBulletResCode.noSpace,
       );
     FlutterDanmakuBulletModel bullet = _bulletManager.initBullet(text, track.id, bulletSize, track.offsetTop,
-        position: position, bulletType: bulletType, color: color, builder: builder, offsetMS: offsetMS);
+        prevBulletId: track.lastBulletId, position: position, bulletType: bulletType, color: color, builder: builder, offsetMS: offsetMS);
     if (bulletType == FlutterDanmakuBulletType.scroll) {
       track.lastBulletId = bullet.id;
     } else {
@@ -117,16 +117,15 @@ class FlutterDanmakuController {
     assert(size > 0);
     FlutterDanmakuConfig.bulletLableSize = size.toDouble();
     FlutterDanmakuConfig.areaOfChildOffsetY = FlutterDanmakuConfig.getAreaOfChildOffsetY();
-    _trackManager.recountTrackOffset();
-    _trackManager.resetBottomBullets(_bulletManager.bottomBullets);
-    _recountBulletsOffset();
+    _trackManager.recountTrackOffset(_bulletManager.bulletsMap);
+    _trackManager.resetBottomBullets(_bulletManager.bottomBullets, reSize: true);
   }
 
   /// 改变视图尺寸后调用，比如全屏
   void resizeArea({Size size}) {
     FlutterDanmakuConfig.areaSize = size ?? context.size;
     FlutterDanmakuConfig.areaOfChildOffsetY = FlutterDanmakuConfig.getAreaOfChildOffsetY();
-    _trackManager.recountTrackOffset();
+    _trackManager.recountTrackOffset(_bulletManager.bulletsMap);
     _trackManager.resetBottomBullets(_bulletManager.bottomBullets);
     if (FlutterDanmakuConfig.pause) {
       _renderManager.renderNextFramerate(_bulletManager.bullets, _allOutLeaveCallBack);
@@ -216,18 +215,5 @@ class FlutterDanmakuController {
       }
     }
     return _track;
-  }
-
-  // 重制子弹数值
-  _recountBulletsOffset() {
-    // 写的非常脏 但是太累了
-    bullets.forEach((FlutterDanmakuBulletModel bullet) {
-      FlutterDanmakuTrack track = tracks.firstWhere((element) => element.id == bullet.trackId, orElse: () => null);
-      if (track == null && bullet.position != FlutterDanmakuBulletPosition.bottom) return _bulletManager.removeBulletByKey(bullet.id);
-      if (track == null) return;
-      bullet.offsetY = track.offsetTop;
-      Size newBulletSize = FlutterDanmakuUtils.getDanmakuBulletSizeByText(bullet.text);
-      bullet.bulletSize = newBulletSize;
-    });
   }
 }

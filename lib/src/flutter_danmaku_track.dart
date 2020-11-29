@@ -75,14 +75,18 @@ class FlutterDanmakuTrackManager {
   }
 
   // 重新计算轨道高度和距顶
-  void recountTrackOffset() {
+  void recountTrackOffset(Map<UniqueKey, FlutterDanmakuBulletModel> bulletMap) {
     bool needBuildTrackFullScreen = true;
     Size currentLabelSize = FlutterDanmakuUtils.getDanmakuBulletSizeByText('s');
     for (int i = 0; i < tracks.length; i++) {
       tracks[i].trackHeight = currentLabelSize.height;
       tracks[i].offsetTop = currentLabelSize.height * i;
+      resetBullletsByTrack(tracks[i], bulletMap);
       // 把溢出可用区域的轨道之后全部删掉
       if ((tracks[i].trackHeight + tracks[i].offsetTop) > FlutterDanmakuConfig.areaSize.height) {
+        for (int j = tracks.length - 1; j >= i; j--) {
+          delBullletsByTrack(tracks[j], bulletMap);
+        }
         tracks.removeRange(i, tracks.length);
         needBuildTrackFullScreen = false;
         break;
@@ -91,11 +95,41 @@ class FlutterDanmakuTrackManager {
     if (needBuildTrackFullScreen) buildTrackFullScreen();
   }
 
+  // 删除轨道上的所有子弹
+  void delBullletsByTrack(FlutterDanmakuTrack track, Map<UniqueKey, FlutterDanmakuBulletModel> bulletMap) {
+    if (track.bindFixedBulletId != null) bulletMap.remove(track.bindFixedBulletId);
+    UniqueKey prevBulletId = track.lastBulletId;
+    while (prevBulletId != null) {
+      UniqueKey _prevBulletId = bulletMap[prevBulletId]?.prevBulletId;
+      bulletMap.remove(prevBulletId);
+      prevBulletId = _prevBulletId;
+    }
+  }
+
+  // 重设轨道上的所有子弹
+  void resetBullletsByTrack(FlutterDanmakuTrack track, Map<UniqueKey, FlutterDanmakuBulletModel> bulletMap) {
+    if (track.bindFixedBulletId != null) {
+      if (bulletMap[track.bindFixedBulletId] == null) return;
+      bulletMap[track.bindFixedBulletId].offsetY = track.offsetTop;
+      Size newBulletSize = FlutterDanmakuUtils.getDanmakuBulletSizeByText(bulletMap[track.bindFixedBulletId].text);
+      bulletMap[track.bindFixedBulletId].bulletSize = newBulletSize;
+    }
+    UniqueKey prevBulletId = track.lastBulletId;
+    while (prevBulletId != null) {
+      UniqueKey _prevBulletId = bulletMap[prevBulletId]?.prevBulletId;
+      if (bulletMap[prevBulletId] == null) return;
+      bulletMap[prevBulletId].offsetY = track.offsetTop;
+      bulletMap[prevBulletId].completeSize();
+      prevBulletId = _prevBulletId;
+    }
+  }
+
   // 重置底部弹幕位置
-  void resetBottomBullets(List<FlutterDanmakuBulletModel> bottomBullets) {
+  void resetBottomBullets(List<FlutterDanmakuBulletModel> bottomBullets, {bool reSize = false}) {
     if (bottomBullets.isEmpty) return;
     for (int i = 0; i < bottomBullets.length; i++) {
       bottomBullets[i].rebindTrack(tracks[tracks.length - 1 - i]);
+      if (reSize) bottomBullets[i].completeSize();
     }
   }
 

@@ -1,6 +1,6 @@
 name: flutter_danmaku
 description: normal danmaku by flutter. all in dart. live comment hohohohohohohoho.
-version: 0.0.4
+version: 0.0.5
 homepage: https://github.com/flutte-danmaku/flutter_danmaku
 
 environment:

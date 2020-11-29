@@ -54,7 +54,6 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
           child: widget.child,
         ),
         ...buildAllBullet(context)
-
       ],
     );
   }

@@ -144,6 +144,7 @@ class FlutterDanmakuController {
     _bulletManager.removeBulletByKey(bulletId);
   }
 
+  // 子弹完全离开后回调
   void _allOutLeaveCallBack(UniqueKey bulletId) {
     if (_bulletManager.bulletsMap[bulletId].trackId != null) {
       _trackManager.removeTrackBindIdByBulletModel(_bulletManager.bulletsMap[bulletId]);
@@ -186,6 +187,7 @@ class FlutterDanmakuController {
     return !FlutterDanmakuUtils.trackInsertBulletHasBump(lastBullet, needInsertBulletSize, offsetMS: offsetMS);
   }
 
+  // 查询可用轨道
   FlutterDanmakuTrack _findAvailableTrack(Size bulletSize,
       {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll,
       int offsetMS = 0,

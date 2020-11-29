@@ -138,7 +138,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.4"
+    version: "0.0.5"
   flutter_driver:
     dependency: "direct dev"
     description: flutter

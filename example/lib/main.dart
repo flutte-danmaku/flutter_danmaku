@@ -175,6 +175,12 @@ class _MyHomePageState extends State<MyHomePage> {
       this.addDanmaku();
       this.addBuilderDanmaku();
       this.dibudanmu();
+      this.addDanmaku();
+      this.addBuilderDanmaku();
+      this.dibudanmu();
+      this.addDanmaku();
+      this.addBuilderDanmaku();
+      this.dibudanmu();
     });
   }
 
@@ -242,7 +248,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 FlutterDanmakuArea(
                     controller: flutterDanmakuController,
                     // bulletTapCallBack: (FlutterDanmakuBulletModel bulletModel) => handleBulletTap(context, bulletModel),
-                    child: Container(color: Colors.black, height: heng ? 500 : 220, width: double.infinity)),
+                    child: Container(color: Colors.black, height: heng ? MediaQuery.of(context).size.height : 220, width: double.infinity)),
                 Container(
                     height: 500,
                     child: GridView(

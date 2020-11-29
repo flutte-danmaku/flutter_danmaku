@@ -22,8 +22,6 @@ class FlutterDanmakuController {
   FlutterDanmakuBulletManager _bulletManager = FlutterDanmakuBulletManager();
   FlutterDanmakuRenderManager _renderManager = FlutterDanmakuRenderManager();
 
-  BuildContext context;
-
   List<FlutterDanmakuTrack> get tracks => _trackManager.tracks;
   List<FlutterDanmakuBulletModel> get bullets => _bulletManager.bullets;
 
@@ -70,8 +68,8 @@ class FlutterDanmakuController {
     return AddBulletResBody(AddBulletResCode.success, data: bullet.id);
   }
 
-  void init({Size size}) {
-    resizeArea(size: size);
+  void init(Size size) {
+    resizeArea(size);
     _trackManager.buildTrackFullScreen();
     if (_inited) return;
     _inited = true;
@@ -122,8 +120,8 @@ class FlutterDanmakuController {
   }
 
   /// 改变视图尺寸后调用，比如全屏
-  void resizeArea({Size size}) {
-    FlutterDanmakuConfig.areaSize = size ?? context.size;
+  void resizeArea(Size size) {
+    FlutterDanmakuConfig.areaSize = size;
     FlutterDanmakuConfig.areaOfChildOffsetY = FlutterDanmakuConfig.getAreaOfChildOffsetY();
     _trackManager.recountTrackOffset(_bulletManager.bulletsMap);
     _trackManager.resetBottomBullets(_bulletManager.bottomBullets);

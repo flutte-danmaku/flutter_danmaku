@@ -6,9 +6,7 @@ import 'package:flutter_danmaku/src/flutter_danmaku_bullet_manager.dart';
 import 'package:flutter_danmaku/src/flutter_danmaku_controller.dart';
 
 class FlutterDanmakuArea extends StatefulWidget {
-  FlutterDanmakuArea({Key key, @required this.child, @required this.controller}) : super(key: key);
-
-  final Widget child;
+  FlutterDanmakuArea({Key key, @required this.controller}) : super(key: key);
 
   FlutterDanmakuController controller;
 
@@ -26,7 +24,6 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
     super.initState();
     assert(widget.controller != null);
     widget.controller.setState = setState;
-    widget.controller.context = context;
     controller = widget.controller;
   }
 
@@ -48,13 +45,12 @@ class FlutterDanmakuAreaState extends State<FlutterDanmakuArea> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          child: widget.child,
-        ),
-        ...buildAllBullet(context)
-      ],
+    return Container(
+      height: FlutterDanmakuConfig.areaSize.height,
+      width: FlutterDanmakuConfig.areaSize.width,
+      child: Stack(
+        children: [...buildAllBullet(context)],
+      ),
     );
   }
 }

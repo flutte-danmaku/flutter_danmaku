@@ -25,7 +25,6 @@ class FlutterDanmakuRenderManager {
 
   // 渲染下一帧
   List<FlutterDanmakuBulletModel> renderNextFramerate(List<FlutterDanmakuBulletModel> bullets, Function(UniqueKey) allOutLeaveCallBack) {
-    print(bullets.length);
     List<FlutterDanmakuBulletModel> _bullets = List.generate(bullets.length, (index) => bullets[index]);
     _bullets.forEach((FlutterDanmakuBulletModel bulletModel) {
       bulletModel.runNextFrame();

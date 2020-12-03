@@ -22,8 +22,6 @@ class FlutterDanmakuController {
   FlutterDanmakuBulletManager _bulletManager = FlutterDanmakuBulletManager();
   FlutterDanmakuRenderManager _renderManager = FlutterDanmakuRenderManager();
 
-  BuildContext context;
-
   List<FlutterDanmakuTrack> get tracks => _trackManager.tracks;
   List<FlutterDanmakuBulletModel> get bullets => _bulletManager.bullets;
 
@@ -57,7 +55,7 @@ class FlutterDanmakuController {
         AddBulletResCode.noSpace,
       );
     FlutterDanmakuBulletModel bullet = _bulletManager.initBullet(text, track.id, bulletSize, track.offsetTop,
-        position: position, bulletType: bulletType, color: color, builder: builder, offsetMS: offsetMS);
+        prevBulletId: track.lastBulletId, position: position, bulletType: bulletType, color: color, builder: builder, offsetMS: offsetMS);
     if (bulletType == FlutterDanmakuBulletType.scroll) {
       track.lastBulletId = bullet.id;
     } else {
@@ -70,8 +68,8 @@ class FlutterDanmakuController {
     return AddBulletResBody(AddBulletResCode.success, data: bullet.id);
   }
 
-  void init({Size size}) {
-    resizeArea(size: size);
+  void init(Size size) {
+    resizeArea(size);
     _trackManager.buildTrackFullScreen();
     if (_inited) return;
     _inited = true;
@@ -117,16 +115,15 @@ class FlutterDanmakuController {
     assert(size > 0);
     FlutterDanmakuConfig.bulletLableSize = size.toDouble();
     FlutterDanmakuConfig.areaOfChildOffsetY = FlutterDanmakuConfig.getAreaOfChildOffsetY();
-    _trackManager.recountTrackOffset();
-    _trackManager.resetBottomBullets(_bulletManager.bottomBullets);
-    _recountBulletsOffset();
+    _trackManager.recountTrackOffset(_bulletManager.bulletsMap);
+    _trackManager.resetBottomBullets(_bulletManager.bottomBullets, reSize: true);
   }
 
   /// 改变视图尺寸后调用，比如全屏
-  void resizeArea({Size size}) {
-    FlutterDanmakuConfig.areaSize = size ?? context.size;
+  void resizeArea(Size size) {
+    FlutterDanmakuConfig.areaSize = size;
     FlutterDanmakuConfig.areaOfChildOffsetY = FlutterDanmakuConfig.getAreaOfChildOffsetY();
-    _trackManager.recountTrackOffset();
+    _trackManager.recountTrackOffset(_bulletManager.bulletsMap);
     _trackManager.resetBottomBullets(_bulletManager.bottomBullets);
     if (FlutterDanmakuConfig.pause) {
       _renderManager.renderNextFramerate(_bulletManager.bullets, _allOutLeaveCallBack);
@@ -147,6 +144,7 @@ class FlutterDanmakuController {
     _bulletManager.removeBulletByKey(bulletId);
   }
 
+  // 子弹完全离开后回调
   void _allOutLeaveCallBack(UniqueKey bulletId) {
     if (_bulletManager.bulletsMap[bulletId].trackId != null) {
       _trackManager.removeTrackBindIdByBulletModel(_bulletManager.bulletsMap[bulletId]);
@@ -189,6 +187,7 @@ class FlutterDanmakuController {
     return !FlutterDanmakuUtils.trackInsertBulletHasBump(lastBullet, needInsertBulletSize, offsetMS: offsetMS);
   }
 
+  // 查询可用轨道
   FlutterDanmakuTrack _findAvailableTrack(Size bulletSize,
       {FlutterDanmakuBulletType bulletType = FlutterDanmakuBulletType.scroll,
       int offsetMS = 0,
@@ -216,18 +215,5 @@ class FlutterDanmakuController {
       }
     }
     return _track;
-  }
-
-  // 重制子弹数值
-  _recountBulletsOffset() {
-    // 写的非常脏 但是太累了
-    bullets.forEach((FlutterDanmakuBulletModel bullet) {
-      FlutterDanmakuTrack track = tracks.firstWhere((element) => element.id == bullet.trackId, orElse: () => null);
-      if (track == null && bullet.position != FlutterDanmakuBulletPosition.bottom) return _bulletManager.removeBulletByKey(bullet.id);
-      if (track == null) return;
-      bullet.offsetY = track.offsetTop;
-      Size newBulletSize = FlutterDanmakuUtils.getDanmakuBulletSizeByText(bullet.text);
-      bullet.bulletSize = newBulletSize;
-    });
   }
 }

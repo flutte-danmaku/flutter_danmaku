@@ -13,6 +13,7 @@ enum FlutterDanmakuBulletPosition { any, bottom }
 class FlutterDanmakuBulletModel {
   UniqueKey id;
   UniqueKey trackId;
+  UniqueKey prevBulletId;
   Size bulletSize;
   String text;
   double offsetY;
@@ -61,6 +62,11 @@ class FlutterDanmakuBulletModel {
     trackId = track.id;
   }
 
+  // 计算文字尺寸
+  void completeSize() {
+    bulletSize = FlutterDanmakuUtils.getDanmakuBulletSizeByText(text);
+  }
+
   FlutterDanmakuBulletModel(
       {this.id,
       this.trackId,
@@ -69,6 +75,7 @@ class FlutterDanmakuBulletModel {
       this.offsetY,
       this.bulletType = FlutterDanmakuBulletType.scroll,
       this.color,
+      this.prevBulletId,
       int offsetMS,
       this.builder,
       this.position}) {

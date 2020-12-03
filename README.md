@@ -13,7 +13,7 @@
   - [FlutterDanmakuArea](#flutterdanmakuarea)
     - [Widget child](#widget-child)
   - [FlutterDanmakuController](#flutterdanmakucontroller)
-    - [init](#init)
+    - [init(Size size)](#initsize-size)
     - [dipose](#dipose)
     - [addDanmaku](#adddanmaku)
     - [resizeArea](#resizearea)
@@ -89,18 +89,29 @@ class _MyHomePageState extends State<MyHomePage> {
             addDanmaku(text);
     }
 
+    // 幕布尺寸
+    Size get areaSize => Size(MediaQuery.of(context).size.width, 220)
+
     @override
     void initState() {
         super.initState();
         // page mounted after
         Future.delayed(Duration(milliseconds: 500), () {
-        flutterDanmakuController.init();
+          // 初始化弹幕
+        flutterDanmakuController.init(areaSize);
+        flutterDanmakuController.addDanmaku('hello world')
         });
     }
 
     @override
     Widget build (BuildContext context) {
-        return FlutterDanmakuArea(controller: flutterDanmakuController, child: Container(height: 220, width: double.infinity)),
+        return Stack(
+            children: [
+              // 比如这个是在弹幕下面的播放器
+              Container(height: areaSize.height, width: areaSize.width),
+              FlutterDanmakuArea(controller: flutterDanmakuController),
+            ],
+          ),
     }
 }
 ```
@@ -113,9 +124,13 @@ class _MyHomePageState extends State<MyHomePage> {
 ``` dart
 @override
 Widget build (BuildContext context) {
-    return FlutterDanmakuArea(
-        contoller: flutterDanmakuController, 
-        child: Container(height: 220, width: double.infinity)),
+    return Stack(
+        children: [
+          // 比如这个是在弹幕下面的播放器
+          Container(height: 220, width: areaSize.width),
+          FlutterDanmakuArea(controller: flutterDanmakuController),
+        ],
+      ),
 }
 ```
 
@@ -125,16 +140,24 @@ Widget build (BuildContext context) {
 ## FlutterDanmakuController
 
 ``` dart
-FlutterDanmakuController flutterDanmakuController = FlutterDanmakuController();
-
-FlutterDanmakuArea(controller: flutterDanmakuController, child: Container(height: 220, width: double.infinity)),
-
-flutterDanmakuController.init()
+Stack(
+  children: [
+    // 比如这个是在弹幕下面的播放器
+    Container(height: 220, width: MediaQuery.of(context).size.width),
+    FlutterDanmakuArea(controller: flutterDanmakuController),
+  ],
+)
+// 需要在页面渲染完之后初始化
+flutterDanmakuController.init(Size(MediaQuery.of(context).size.width, 220))
 
 ```
 
-### init
+### init(Size size)
 在页面渲染之后 需要初始化的时候调用 会启动定时器渲染
+
+| Params |  Type | Description | default |  
+| ------ | -------- | ----------  | ------- |  
+| size | Size | 初始化幕布 宽高不能用double.infinity | / |  
 
 ### dipose
 页面销毁时调用，会清空数据并且停止定时器
@@ -176,14 +199,12 @@ enum AddBulletResBody {
 ### resizeArea
 
 ``` dart
-void resizeArea({
-    Size size // default context.size
-})
+void resizeArea(Size size)
 ```
 
 | Params |  Type | Description | default |  
 | ------ | -------- | ----------  | ------- |  
-| size | Size | 改变子视图尺寸并等待视图渲染完成后调用 通常用于切换全屏 参数可选 不传默认为子组件context.size | context.size |  
+| size | Size | 改变视图尺寸并等待视图渲染完成后调用 通常用于切换全屏 宽高不能用double.infinity | / |  
 
 ### pause&play
 
@@ -273,7 +294,6 @@ void clearScreen()
     // 取出seek前3秒到seek时间区间的所有弹幕
     // 需要按照时间偏移量从早到晚排序好
     random100().forEach((randomInt) {
-      print(randomInt);
       addOffsetDanmaku(randomInt);
     });
   }

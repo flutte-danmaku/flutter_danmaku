@@ -63,6 +63,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   bool heng = false;
 
+  Size get areaSize => heng ? MediaQuery.of(context).size : Size(MediaQuery.of(context).size.width, 220);
+
   FlutterDanmakuController flutterDanmakuController = FlutterDanmakuController();
 
   void clearScreen() {
@@ -108,7 +110,6 @@ class _MyHomePageState extends State<MyHomePage> {
   danmakuSeek() {
     flutterDanmakuController.clearScreen();
     random100().forEach((randomInt) {
-      print(randomInt);
       addOffsetDanmaku(randomInt);
     });
   }
@@ -171,8 +172,14 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     Future.delayed(Duration(milliseconds: 500), () {
-      flutterDanmakuController.init();
+      flutterDanmakuController.init(areaSize);
       flutterDanmakuController.setBulletTapCallBack(setBulletTapCallBack);
+      this.addDanmaku();
+      this.addBuilderDanmaku();
+      this.dibudanmu();
+      this.addDanmaku();
+      this.addBuilderDanmaku();
+      this.dibudanmu();
       this.addDanmaku();
       this.addBuilderDanmaku();
       this.dibudanmu();
@@ -186,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
       heng = true;
     });
     Future.delayed(Duration(milliseconds: 500), () {
-      flutterDanmakuController.resizeArea();
+      flutterDanmakuController.resizeArea(areaSize);
     });
   }
 
@@ -205,7 +212,7 @@ class _MyHomePageState extends State<MyHomePage> {
       heng = false;
     });
     Future.delayed(Duration(milliseconds: 500), () {
-      flutterDanmakuController.resizeArea();
+      flutterDanmakuController.resizeArea(areaSize);
     });
   }
 
@@ -240,10 +247,12 @@ class _MyHomePageState extends State<MyHomePage> {
               // horizontal).
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                FlutterDanmakuArea(
-                    controller: flutterDanmakuController,
-                    // bulletTapCallBack: (FlutterDanmakuBulletModel bulletModel) => handleBulletTap(context, bulletModel),
-                    child: Container(color: Colors.black, height: heng ? 500 : 220, width: double.infinity)),
+                Stack(
+                  children: [
+                    Container(color: Colors.black, height: areaSize.height, width: areaSize.width),
+                    FlutterDanmakuArea(controller: flutterDanmakuController),
+                  ],
+                ),
                 Container(
                     height: 500,
                     child: GridView(

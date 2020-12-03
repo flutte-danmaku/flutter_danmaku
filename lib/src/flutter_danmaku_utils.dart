@@ -51,8 +51,9 @@ class FlutterDanmakuUtils {
     if (willInsertBulletEveryFramerateRunDistance > trackLastBullet.everyFrameRunDistance) {
       // 是否会追尾
       // 将要注入的弹幕全部离开减去上一个弹幕宽度需要的时间
-      double willInsertBulletEveryFramerateRunDistance = FlutterDanmakuUtils.getBulletEveryFramerateRunDistance(needInsertBulletSize.width);
       double willInsertBulletLeaveScreenRemainderTime = remainderTimeLeaveScreen(willInsertBulletRunDistance, 0, willInsertBulletEveryFramerateRunDistance);
+      print(trackLastBullet.leaveScreenRemainderTime);
+      print(willInsertBulletLeaveScreenRemainderTime);
       return trackLastBullet.leaveScreenRemainderTime > willInsertBulletLeaveScreenRemainderTime;
     } else {
       return false;

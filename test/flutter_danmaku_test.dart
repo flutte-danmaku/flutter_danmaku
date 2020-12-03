@@ -61,7 +61,7 @@ void main() {
       expect(bulletModel.remanderDistance, bulletModel.needRunDistace - bulletModel.runDistance);
       expect(bulletModel.leaveScreenRemainderTime, bulletModel.remanderDistance / bulletModel.everyFrameRunDistance);
       expect(bullet.buildText().runtimeType, Text);
-      flutterDanmakuController.resizeArea(size: Size(500, 500));
+      flutterDanmakuController.resizeArea(Size(500, 500));
       AddBulletResBody addRes = flutterDanmakuController.addDanmaku('hello world', builder: (Text textWidget) => Container(child: textWidget));
       FlutterDanmakuBulletModel bullet1 = flutterDanmakuController.bullets.firstWhere((element) => element.id == addRes.data, orElse: () => null);
       expect(bullet1.builder(Text('hello world')).runtimeType, Container);
@@ -127,12 +127,21 @@ void main() {
     });
 
     test('recountBulletsOffset', () {
-      flutterDanmakuController.resizeArea(size: Size(500, 500));
+      flutterDanmakuController.resizeArea(Size(500, 500));
       flutterDanmakuController.addDanmaku('hello world');
       flutterDanmakuController.addDanmaku('hello world');
       flutterDanmakuController.addDanmaku('hello world');
       flutterDanmakuController.addDanmaku('hello world');
-      // flutterDanmakuController.recountBulletsOffset();
+      flutterDanmakuController.addDanmaku('hello world', position: FlutterDanmakuBulletPosition.bottom);
+      flutterDanmakuController.resizeArea(Size(500, 1));
+      expect(flutterDanmakuController.bullets.length, 0);
+      flutterDanmakuController.resizeArea(Size(500, 500));
+      flutterDanmakuController.addDanmaku('hello world');
+      UniqueKey bottomBulletId = flutterDanmakuController.addDanmaku('hello world', position: FlutterDanmakuBulletPosition.bottom).data;
+      expect(flutterDanmakuController.bullets.last.id, bottomBulletId);
+      flutterDanmakuController.resizeArea(Size(20, 500));
+      expect(flutterDanmakuController.bullets.firstWhere((element) => element.id == bottomBulletId).trackId, flutterDanmakuController.tracks.last.id);
+      flutterDanmakuController.resizeArea(Size(500, 500));
     });
   });
 
@@ -227,32 +236,30 @@ void main() {
       Widget area = FlutterDanmakuArea(
         key: key,
         controller: controller,
-        child: childArea,
       );
       await tester.pumpWidget(Directionality(textDirection: TextDirection.ltr, child: area));
-      controller.init();
+      controller.init(Size(400, 400));
       await tester.pump(Duration(seconds: 1));
       controller.addDanmaku('hello world', position: FlutterDanmakuBulletPosition.bottom);
       FlutterDanmakuBulletModel bottom1Bullet = controller.bullets.last;
       expect(bottom1Bullet.position, FlutterDanmakuBulletPosition.bottom);
       expect(bottom1Bullet.trackId, controller.tracks.last.id);
-      controller.resizeArea(size: Size(400, 800));
+      controller.resizeArea(Size(400, 800));
       expect(bottom1Bullet.trackId, controller.tracks.last.id);
       expect(bottom1Bullet.offsetY, controller.tracks.last.offsetTop);
       controller.dispose();
     });
 
     testWidgets('FlutterDanmakuArea', (WidgetTester tester) async {
-      Widget childArea = Container(height: 400, width: 400);
       GlobalKey<FlutterDanmakuAreaState> key = GlobalKey<FlutterDanmakuAreaState>();
       FlutterDanmakuController controller = FlutterDanmakuController();
       Widget area = FlutterDanmakuArea(
         key: key,
         controller: controller,
-        child: childArea,
       );
-      await tester.pumpWidget(Directionality(textDirection: TextDirection.ltr, child: area));
-      controller.init();
+      Widget childArea = Container(height: 400, width: 400, child: area);
+      await tester.pumpWidget(Directionality(textDirection: TextDirection.ltr, child: childArea));
+      controller.init(Size(400, 400));
       await tester.pump(Duration(seconds: 1));
       UniqueKey firstBulletId = controller.addDanmaku('hello world').data;
       controller.addDanmaku('hello world');
@@ -316,14 +323,14 @@ void main() {
       expect(bullets.first.allOutLeave, false);
       expect(null, leaveId);
 
-      for (int i = 0; i < 300; i++) {
+      for (int i = 0; i < 200; i++) {
         flutterDanmakuRenderManager.renderNextFramerate(bullets, leaveCallBack);
       }
       expect(bullets.first.allOutRight, true);
 
       expect(FlutterDanmakuUtils.trackInsertBulletHasBump(bulletMap1, Size(30, 50)), false);
       expect(FlutterDanmakuUtils.trackInsertBulletHasBump(bulletMap1, Size(5, 50)), false);
-      expect(FlutterDanmakuUtils.trackInsertBulletHasBump(bulletMap1, Size(1200, 50)), true);
+      expect(FlutterDanmakuUtils.trackInsertBulletHasBump(bulletMap1, Size(500, 50)), true);
 
       for (int i = 0; i < 10000; i++) {
         flutterDanmakuRenderManager.renderNextFramerate(bullets, leaveCallBack);
@@ -346,7 +353,7 @@ void main() {
       FlutterDanmakuRenderManager renderManager = FlutterDanmakuRenderManager();
       expect(flutterDanmakuController.inited, false);
       expect(renderManager.timer, null);
-      flutterDanmakuController.init(size: Size(500, 500));
+      flutterDanmakuController.init(Size(500, 500));
       expect(flutterDanmakuController.inited, true);
       // expect(renderManager.timer.isActive, true);
       renderManager.dispose();
@@ -360,7 +367,7 @@ void main() {
     });
 
     test('resizeArea', () {
-      flutterDanmakuController.resizeArea(size: Size(10, 50));
+      flutterDanmakuController.resizeArea(Size(10, 50));
       expect(FlutterDanmakuConfig.areaSize, Size(10, 50));
     });
 

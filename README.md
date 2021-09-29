@@ -5,6 +5,8 @@
 [![pub package](https://img.shields.io/pub/v/flutter_danmaku.svg)](https://pub.dev/packages/flutter_danmaku)
 一个普通的flutter弹幕项目。纯dart项目
 
+[https://github.com/a62527776a/read-record/issues/5](https://github.com/a62527776a/read-record/issues/5) 设计思路
+
 - [👏 Flutter Danmaku](#-flutter-danmaku)
   - [Features](#features)
   - [live&nbsp;demo](#livedemo)
